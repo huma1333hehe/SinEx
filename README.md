@@ -1,5 +1,5 @@
 # SinEx
 
-##HKUST COMP 3111 Le Chuangji 
+## HKUST COMP 3111 Le Chuangji 
 
 hehe
