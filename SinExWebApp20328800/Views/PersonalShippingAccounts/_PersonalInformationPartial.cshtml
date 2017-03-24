@@ -1,0 +1,107 @@
+﻿@model SinExWebApp20328800.ViewModels.RegisterCustomerViewModel
+
+<hr />
+<h3>Personal Information</h3>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.PersonalInformation.FirstName, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.FirstName, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.LastName, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.LastName, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.LastName, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.PhoneNumber, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.EmailAddress, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.EmailAddress, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<hr />
+<h3>Address Information</h3>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.PersonalInformation.BuildingInformation, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.BuildingInformation, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.BuildingInformation, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.StreetInformation, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.StreetInformation, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.StreetInformation, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.City, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.City, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.City, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.ProvinceCode, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.ProvinceCode, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.ProvinceCode, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.PostalCode, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.PostalCode, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.PostalCode, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<hr />
+<h3>Credit Card Information</h3>
+<div class="form-group">
+
+
+    @Html.LabelFor(model => model.PersonalInformation.Number, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.Number, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.Number, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.SecurityNumber, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.SecurityNumber, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.SecurityNumber, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.CardholderName, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.PersonalInformation.CardholderName, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.CardholderName, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.ExpiryMonth, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.DropDownListFor(model => model.PersonalInformation.ExpiryMonth, new SelectList(new List<string> { "1", "2", "3", "4", "5", "6", "8", "9", "10", "11", "12" }).ToList(), "Please select", new { @class = "form-control dropdwn" })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.ExpiryMonth, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.ExpiryYear, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.DropDownListFor(model => model.PersonalInformation.ExpiryYear, new SelectList(new List<string> { "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035", "2036", "2037", "2038", "2039", "2040", "2041", "2042", "2043", "2044", "2045", "2046", "2047" }).ToList(), "Please select", new { @class = "form-control dropdwn" })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.ExpiryYear, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.LabelFor(model => model.PersonalInformation.Type, htmlAttributes: new { @class = "control-label col-md-4" })
+    <div class="col-md-8">
+        @Html.DropDownListFor(model => model.PersonalInformation.Type, new SelectList(new List<string> { "American Express", "Diners Club", "Discover", "masterCard", "UnionPay", "Visa" }).ToList(), "Please select", new { @class = "form-control dropdwn" })
+        @Html.ValidationMessageFor(model => model.PersonalInformation.Type, "", new { @class = "text-danger" })
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿@model SinExWebApp20328800.ViewModels.ShipmentsSearchViewModel
+
+@using (Html.BeginForm("GenerateHistoryReport", "Shipments", FormMethod.Get))
+{
+    <div class="form-group">
+        @if (User.IsInRole("Employee"))
+        {
+            <div class="col-md-12">
+            @Html.LabelFor(a => a.ShippingAccountId, "Shipping Account: ")
+            @Html.DropDownListFor(a => a.ShippingAccountId, Model.ShippingAccounts, new { @Value = ViewBag.currentShippingAccountId })
+            </div>
+        }
+        <div class="col-md-12">
+            @Html.LabelFor(a => a.StartingDate, "Date from ")
+            @Html.TextBoxFor(a => a.StartingDate, new { @Value = ViewBag.CurrentStartingDate != null ? ViewBag.CurrentStartingDate : new DateTime(2014, 1, 1) })
+            @Html.ValidationMessageFor(model => model.StartingDate, "", new { @class = "text-danger" })
+
+            @Html.LabelFor(a => a.EndingDate, "To ")
+            @Html.TextBoxFor(a => a.EndingDate, new { @Value = ViewBag.CurrentEndingDate != null ? ViewBag.CurrentEndingDate : new DateTime(2017, 6, 1) })
+            @Html.ValidationMessageFor(model => model.EndingDate, "", new { @class = "text-danger" })
+
+            <input type="submit" value="Search" />
+            </div>
+        </div>
+}
+
