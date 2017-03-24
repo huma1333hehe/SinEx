@@ -152,6 +152,7 @@ namespace SinExWebApp20328800.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterCustomerViewModel model)
         {
+           
             if (ModelState.IsValid)
             {
                 if (model.PersonalInformation != null)
