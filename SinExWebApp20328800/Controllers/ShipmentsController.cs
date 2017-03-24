@@ -14,6 +14,7 @@ using X.PagedList;
 //yang comment
 namespace SinExWebApp20328800.Controllers
 {
+
     public class ShipmentsController : Controller
     {
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
