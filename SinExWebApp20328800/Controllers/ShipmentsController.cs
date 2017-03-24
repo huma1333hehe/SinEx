@@ -10,8 +10,11 @@ using SinExWebApp20328800.Models;
 using SinExWebApp20328800.ViewModels;
 using X.PagedList;
 
+
+
 namespace SinExWebApp20328800.Controllers
 {
+    [Authorize(Roles = "Customer,Employee")]
     public class ShipmentsController : Controller
     {
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
