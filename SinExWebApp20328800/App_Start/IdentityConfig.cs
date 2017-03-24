@@ -54,10 +54,10 @@ namespace SinExWebApp20328800
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 8,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                RequireNonLetterOrDigit = false,
+                RequireDigit = false,
+                RequireLowercase = false,
+                RequireUppercase = false,
             };
 
             // Configure user lockout defaults
