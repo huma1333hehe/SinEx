@@ -52,8 +52,10 @@ namespace SinExWebApp20328800.Controllers
             }
         }
 
+
         //
         // GET: /Manage/Index
+        [Authorize(Roles = "Customer,Employee")]
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
