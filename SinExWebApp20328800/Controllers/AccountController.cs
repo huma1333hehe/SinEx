@@ -13,6 +13,8 @@ using SinExWebApp20328800.ViewModels;
 
 namespace SinExWebApp20328800.Controllers
 {
+
+    //ZHANG
     [Authorize]
     public class AccountController : Controller
     {
