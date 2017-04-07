@@ -40,7 +40,6 @@ namespace SinExWebApp20328800.Models
         [StringLength(2, MinimumLength = 2)]
         [Display(Name = "Province Code")]
         public virtual string ProvinceCode { get; set; }
-        [Required]
         [StringLength(6, MinimumLength = 5)]
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Postal code must be numeric")]
         [Display(Name = "Postal Code")]
@@ -64,7 +63,7 @@ namespace SinExWebApp20328800.Models
         [Display(Name = "Cardholder Name")]
         public virtual string CardholderName { get; set; }
         [Required]
-        [StringLength(2, ErrorMessage ="Please enter valid month number (1-12)")]
+        [StringLength(2, ErrorMessage = "Please enter valid month number (1-12)")]
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Expiry month must be numeric")]
         [Display(Name = "Expiry Month")]
         public virtual string ExpiryMonth { get; set; }
@@ -74,7 +73,7 @@ namespace SinExWebApp20328800.Models
         [Display(Name = "Expiry year")]
         public virtual string ExpiryYear { get; set; }
 
-    
+        [InverseProperty("SenderShippingAccount")]
         public virtual ICollection<Shipment> Shipments { get; set; }
     }
 }

@@ -1,87 +1,119 @@
 ﻿@model IEnumerable<SinExWebApp20328800.Models.Shipment>
 
 @{
-    ViewBag.Title = "Index";
+    Layout = null;
 }
 
-<h2>Index</h2>
+<!DOCTYPE html>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ReferenceNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ServiceType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ShippedDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DeliveredDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RecipientName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NumberOfPackages)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Origin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Destination)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ShippingAccountId)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReferenceNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ServiceType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ShippedDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DeliveredDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RecipientName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NumberOfPackages)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Origin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Destination)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ShippingAccountId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.WaybillId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.WaybillId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.WaybillId })
-        </td>
-    </tr>
-}
-
-</table>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PickupLocation.Nickname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipient.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecipientShippingAccount.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SenderShippingAccount.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServiceType.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReferenceNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumberOfPackages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShipmentPayer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TaxPayer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tax)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ConfirmOrNot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PickupOrNot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PickupDate)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PickupLocation.Nickname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Recipient.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecipientShippingAccount.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SenderShippingAccount.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceType.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReferenceNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberOfPackages)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipmentPayer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaxPayer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConfirmOrNot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PickupOrNot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PickupDate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.WaybillId }) |
+                @Html.ActionLink("Details", "Details", new { id=item.WaybillId }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.WaybillId })
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>

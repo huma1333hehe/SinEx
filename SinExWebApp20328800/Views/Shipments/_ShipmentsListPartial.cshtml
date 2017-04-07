@@ -11,12 +11,12 @@
             </th>
             <th>
                 @Html.ActionLink("Service Type", "GenerateHistoryReport", new
-       {
-           sortOrder = ViewBag.ServiceTypeSortParm,
-           currentShippingAccountId = ViewBag.CurrentShippingAccountId,
-           currentStartingDate = ViewBag.CurrentStartingDate,
-           currentEndingDate =  ViewBag.CurrentEndingDate
-       })
+           {
+               sortOrder = ViewBag.ServiceTypeSortParm,
+               currentShippingAccountId = ViewBag.CurrentShippingAccountId,
+               currentStartingDate = ViewBag.CurrentStartingDate,
+               currentEndingDate = ViewBag.CurrentEndingDate
+           })
             </th>
             <th>
                 @Html.ActionLink("Shipped Date", "GenerateHistoryReport", new

@@ -9,21 +9,20 @@ using System.Web.Mvc;
 using SinExWebApp20328800.Models;
 using SinExWebApp20328800.ViewModels;
 using X.PagedList;
-
-
-//yang comment
 namespace SinExWebApp20328800.Controllers
 {
-
     public class ShipmentsController : Controller
     {
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
-
+        [Authorize(Roles = "Customer,Employee")]
         // GET: Shipments
+        //TODO
         public ActionResult Index()
         {
-            return View(db.Shipments.ToList());
+            var shipments = db.Shipments.Include(s => s.PickupLocation).Include(s => s.Recipient).Include(s => s.RecipientShippingAccount).Include(s => s.SenderShippingAccount).Include(s => s.ServiceType);
+            return View(shipments.ToList());
         }
+        
         // GET: Shipments/GenerateHistoryReport
         [Authorize(Roles = "Customer,Employee")]
         public ActionResult GenerateHistoryReport(
@@ -80,19 +79,21 @@ namespace SinExWebApp20328800.Controllers
                 Selected = false
             });
 
-            // Initialize the query to retrieve shipments using the ShipmentsListViewModel.
+            //Initialize the query to retrieve shipments using the ShipmentsListViewModel.
             var shipmentQuery = from s in db.Shipments
                                 select new ShipmentsListViewModel
                                 {
                                     WaybillId = s.WaybillId,
-                                    ServiceType = s.ServiceType,
-                                    ShippedDate = s.ShippedDate,
-                                    DeliveredDate = s.DeliveredDate,
-                                    RecipientName = s.RecipientName,
+                                    ServiceType = s.ServiceType.Type,
+                                    //TODO
+                                    ShippedDate = new DateTime(2016,12,31),
+                                    DeliveredDate = new DateTime(2017, 2, 11),
+                                    RecipientName = s.Recipient.FullName,
                                     NumberOfPackages = s.NumberOfPackages,
-                                    Origin = s.Origin,
-                                    Destination = s.Destination,
-                                    ShippingAccountId = s.ShippingAccountId
+                                    Origin = s.SenderShippingAccount.City,
+                                    //TODO
+                                    Destination = s.SenderShippingAccount.City,
+                                    ShippingAccountId = s.SenderShippingAccountID,
                                 };
 
 
@@ -178,12 +179,11 @@ namespace SinExWebApp20328800.Controllers
         private SelectList PopulateShippingAccountsDropdownList()
         {
             // TODO: Construct the LINQ query to retrieve the unique list of shipping account ids.
-            var shippingAccountQuery = db.Shipments.Select(s => s.ShippingAccountId).Distinct().OrderBy(s => s);
+            var shippingAccountQuery = db.Shipments.Select(s => s.SenderShippingAccountID).Distinct().OrderBy(s => s);
             return new SelectList(shippingAccountQuery);
         }
 
-        [Authorize(Roles = "Employee")]
-
+        [Authorize(Roles = "Employee,Customer")]
         // GET: Shipments/Details/5
         public ActionResult Details(int? id)
         {
@@ -198,19 +198,24 @@ namespace SinExWebApp20328800.Controllers
             }
             return View(shipment);
         }
-        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Customer")]
         // GET: Shipments/Create
         public ActionResult Create()
         {
+            ViewBag.PickupLocationID = new SelectList(db.PickupLocations, "PickupLocationID", "Nickname");
+            ViewBag.RecipientID = new SelectList(db.Recipients, "RecipientID", "FullName");
+            ViewBag.RecipientShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName");
+            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName");
+            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type");
             return View();
         }
-        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Customer")]
         // POST: Shipments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,ServiceType,ShippedDate,DeliveredDate,RecipientName,NumberOfPackages,Origin,Destination,Status,ShippingAccountId")] Shipment shipment)
+        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupDate,RecipientID,ServiceTypeID,PickupLocationID,SenderShippingAccountID,RecipientShippingAccountID")] Shipment shipment)
         {
             if (ModelState.IsValid)
             {
@@ -219,9 +224,14 @@ namespace SinExWebApp20328800.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.PickupLocationID = new SelectList(db.PickupLocations, "PickupLocationID", "Nickname", shipment.PickupLocationID);
+            ViewBag.RecipientID = new SelectList(db.Recipients, "RecipientID", "FullName", shipment.RecipientID);
+            ViewBag.RecipientShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.RecipientShippingAccountID);
+            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
+            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
             return View(shipment);
         }
-        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Customer,Employee")]
         // GET: Shipments/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -234,15 +244,20 @@ namespace SinExWebApp20328800.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.PickupLocationID = new SelectList(db.PickupLocations, "PickupLocationID", "Nickname", shipment.PickupLocationID);
+            ViewBag.RecipientID = new SelectList(db.Recipients, "RecipientID", "FullName", shipment.RecipientID);
+            ViewBag.RecipientShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.RecipientShippingAccountID);
+            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
+            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
             return View(shipment);
         }
-        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Customer,Employee")]
         // POST: Shipments/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,ServiceType,ShippedDate,DeliveredDate,RecipientName,NumberOfPackages,Origin,Destination,Status,ShippingAccountId")] Shipment shipment)
+        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupDate,RecipientID,ServiceTypeID,PickupLocationID,SenderShippingAccountID,RecipientShippingAccountID")] Shipment shipment)
         {
             if (ModelState.IsValid)
             {
@@ -250,9 +265,14 @@ namespace SinExWebApp20328800.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.PickupLocationID = new SelectList(db.PickupLocations, "PickupLocationID", "Nickname", shipment.PickupLocationID);
+            ViewBag.RecipientID = new SelectList(db.Recipients, "RecipientID", "FullName", shipment.RecipientID);
+            ViewBag.RecipientShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.RecipientShippingAccountID);
+            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
+            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
             return View(shipment);
         }
-        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Customer,Employee")]
         // GET: Shipments/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -267,7 +287,7 @@ namespace SinExWebApp20328800.Controllers
             }
             return View(shipment);
         }
-        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Customer,Employee")]
         // POST: Shipments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -278,7 +298,7 @@ namespace SinExWebApp20328800.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Customer,Employee")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -287,7 +307,5 @@ namespace SinExWebApp20328800.Controllers
             }
             base.Dispose(disposing);
         }
-
-
     }
 }
