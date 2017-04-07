@@ -34,5 +34,9 @@ namespace SinExWebApp20328800.Models
         public System.Data.Entity.DbSet<SinExWebApp20328800.Models.Shipment> Shipments { get; set; }
 
         public System.Data.Entity.DbSet<SinExWebApp20328800.Models.ShippingAccount> ShippingAccounts { get; set; }
+
+        public System.Data.Entity.DbSet<SinExWebApp20328800.Models.PickupLocation> PickupLocations { get; set; }
+
+        public System.Data.Entity.DbSet<SinExWebApp20328800.Models.Recipient> Recipients { get; set; }
     }
 }
