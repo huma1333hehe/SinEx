@@ -212,6 +212,7 @@
     <Compile Include="Controllers\DestinationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PackagesController.cs" />
     <Compile Include="Controllers\PackageTypesController.cs" />
     <Compile Include="Controllers\PackageTypeSizesController.cs" />
     <Compile Include="Controllers\PersonalShippingAccountsController.cs" />
@@ -402,6 +403,11 @@
     <Content Include="Views\Recipients\Index.cshtml" />
     <Content Include="Views\PickupLocations\CreateFail.cshtml" />
     <Content Include="Views\Recipients\CreateFail.cshtml" />
+    <Content Include="Views\Packages\Create.cshtml" />
+    <Content Include="Views\Packages\Delete.cshtml" />
+    <Content Include="Views\Packages\Details.cshtml" />
+    <Content Include="Views\Packages\Edit.cshtml" />
+    <Content Include="Views\Packages\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
