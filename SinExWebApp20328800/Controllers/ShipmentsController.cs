@@ -239,7 +239,7 @@ namespace SinExWebApp20328800.Controllers
             Recipient data = query;
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
+        //heheda
         public ActionResult GetPickupLocation(string PickupLocationNickname) {
             if (string.IsNullOrEmpty(PickupLocationNickname))
             {
