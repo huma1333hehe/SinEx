@@ -27,24 +27,37 @@ namespace SinExWebApp20328800.Models
     {
         [Key]
         public virtual int WaybillId { get; set; }
+
+        [Required]
+        [StringLength(5, MinimumLength = 1)]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Reference number must be numeric")]
+        [Display(Name = "Reference Number")]
         public virtual string ReferenceNumber { get; set; }
 
-
+        [Required]
         public virtual string Origin { get; set; }
+        [Required]
         public virtual string Destination { get; set; }
 
+        [Required]
         public virtual int NumberOfPackages { get; set; }
 
+        [Required]
         public virtual ShipmentPayer ShipmentPayer { get; set; }
+        [Required]
         public virtual TaxPayer TaxPayer { get; set; }
 
         public virtual decimal? Duty { get; set; }
         public virtual decimal? Tax { get; set; }
 
+        [Required]
         public virtual bool ConfirmOrNot { get; set; }
+        [Required]
         public virtual bool PickupOrNot { get; set; }
 
+        [Required]
         public virtual PickupType PickupType { get; set; }
+        [Required]
         public virtual DateTime PickupDate { get; set; }
 
 
@@ -56,7 +69,7 @@ namespace SinExWebApp20328800.Models
         public virtual string RecipientDeliveryAddress { get; set; }
         public virtual string RecipientPhoneNumber { get; set; }
         public virtual string RecipientEmail { get; set; }
-
+        
 
         public virtual int ServiceTypeID { get; set; }
         //public virtual int PickupLocationID { get; set; }

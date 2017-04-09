@@ -57,7 +57,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RecipientAddressNickname, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientAddressNickname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownList("RecipientAddressNickname", null, "Please select...", htmlAttributes: new { @class = "form-control", onchange = "+OnRecipientAddressNicknamesChange(this)" })
                 @Html.ValidationMessageFor(model => model.RecipientAddressNickname, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -65,7 +65,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RecipientFullName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientFullName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.RecipientFullName, new { htmlAttributes = new { @class = "form-control", id = "RecipientFullName" } })
                 @Html.ValidationMessageFor(model => model.RecipientFullName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -73,7 +73,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RecipientCompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientCompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.RecipientCompanyName, new { htmlAttributes = new { @class = "form-control", id = "RecipientCompanyName" } })
                 @Html.ValidationMessageFor(model => model.RecipientCompanyName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -81,7 +81,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RecipientDepartmentName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientDepartmentName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.RecipientDepartmentName, new { htmlAttributes = new { @class = "form-control", id = "RecipientDepartmentName" } })
                 @Html.ValidationMessageFor(model => model.RecipientDepartmentName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -89,7 +89,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RecipientDeliveryAddress, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientDeliveryAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.RecipientDeliveryAddress, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientDeliveryAddress" })
                 @Html.ValidationMessageFor(model => model.RecipientDeliveryAddress, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -97,7 +97,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RecipientEmail, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientEmail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.RecipientEmail, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientEmail" })
                 @Html.ValidationMessageFor(model => model.RecipientEmail, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -113,7 +113,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PickupLocationNickname, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PickupLocationNickname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownList("PickupLocationNickname", null, "Please select...", htmlAttributes: new { @class = "form-control", onchange = "+OnPickupLocationNicknamesChange(this)" })
                 @Html.ValidationMessageFor(model => model.PickupLocationNickname, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -121,7 +121,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PickupLocation, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PickupLocation, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.PickupLocation, new { htmlAttributes = new { @class = "form-control", id = "PickupLocation" } })
                 @Html.ValidationMessageFor(model => model.PickupLocation, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -145,3 +145,52 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+
+
+<script type="text/javascript">
+    function AppendUrlParamTokens(url, params) {
+
+        for (var param in params) {
+            if (params[param] == null) {
+                delete params[param];
+            }
+        }
+
+        return url + "?" + jQuery.param(params);
+    }
+
+    function OnRecipientAddressNicknamesChange(ddl) {
+        jQuery.getJSON(AppendUrlParamTokens('@Url.Action("GetRecipient", "Shipments")', { RecipientAddressNickname: ddl.options[ddl.selectedIndex].value }), function (result) {
+            if (result.length != 0) {
+                document.getElementById("RecipientFullName").value = result.FullName;
+                document.getElementById("RecipientCompanyName").value = result.CompanyName;
+                document.getElementById("RecipientDepartmentName").value = result.DepartmentName;
+                document.getElementById("RecipientDeliveryAddress").value = result.DeliveryAddress;
+                document.getElementById("RecipientEmail").value = result.Email;
+                document.getElementById("RecipientPhoneNumber").value = result.PhoneNumber;
+            } else {
+                document.getElementById("RecipientFullName").value = "";
+                document.getElementById("RecipientCompanyName").value = "";
+                document.getElementById("RecipientDepartmentName").value = "";
+                document.getElementById("RecipientDeliveryAddress").value = "";
+                document.getElementById("RecipientEmail").value = "";
+                document.getElementById("RecipientPhoneNumber").value = "";
+            }
+
+
+        });
+    };
+
+    function OnPickupLocationNicknamesChange(ddl) {
+        jQuery.getJSON(AppendUrlParamTokens('@Url.Action("GetPickupLocation", "Shipments")', { PickupLocationNickname: ddl.options[ddl.selectedIndex].value }), function (result) {
+            if (result.length != 0) {
+                document.getElementById("PickupLocation").value = result.Location;
+            } else {
+                document.getElementById("PickupLocation").value = "";
+            }
+
+
+        });
+    };
+</script>

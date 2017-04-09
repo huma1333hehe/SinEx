@@ -209,7 +209,46 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type");
             ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
             ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
+
+            //Get the current username 
+            string username = System.Web.HttpContext.Current.User.Identity.Name;
+            if (username == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ShippingAccount account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
+            if (account == null)
+            {
+                return HttpNotFound("There is no account with user name \"" + username + "\".");
+            }
+            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == account.ShippingAccountId);
+            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == account.ShippingAccountId);
+            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
             return View();
+        }
+
+        public ActionResult GetRecipient(string RecipientAddressNickname)
+        {
+            if (string.IsNullOrEmpty(RecipientAddressNickname))
+            {
+                return Json(new List<string>(), JsonRequestBehavior.AllowGet);
+            }
+
+            var query = db.Recipients.Single(hehe => hehe.Nickname == RecipientAddressNickname);
+            Recipient data = query;
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetPickupLocation(string PickupLocationNickname) {
+            if (string.IsNullOrEmpty(PickupLocationNickname))
+            {
+                return Json(new List<string>(), JsonRequestBehavior.AllowGet);
+            }
+
+            var query = db.PickupLocations.Single(hehe => hehe.Nickname == PickupLocationNickname);
+            PickupLocation data = query;
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Shipments/Create
@@ -218,7 +257,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID")] Shipment shipment)
+        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
         {
             shipment.SenderShippingAccountID = db.ShippingAccounts.SingleOrDefault(s => s.UserName == User.Identity.Name).ShippingAccountId;
             shipment.ConfirmOrNot = false;
@@ -241,6 +280,22 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
             ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
             ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
+
+
+            string username = System.Web.HttpContext.Current.User.Identity.Name;
+            if (username == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ShippingAccount account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
+            if (account == null)
+            {
+                return HttpNotFound("There is no account with user name \"" + username + "\".");
+            }
+            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == account.ShippingAccountId);
+            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == account.ShippingAccountId);
+            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
             return View(shipment);
         }
 
@@ -269,7 +324,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer,Employee")]
-        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID")] Shipment shipment)
+        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
         {
             if (ModelState.IsValid)
             {
@@ -310,14 +365,6 @@ namespace SinExWebApp20328800.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = "Customer,Employee")]
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+
     }
 }
