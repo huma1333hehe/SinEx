@@ -228,6 +228,9 @@ namespace SinExWebApp20328800.Controllers
             return View();
         }
 
+        //xinruzhishui
+        //inner peace
+
         public ActionResult GetRecipient(string RecipientAddressNickname)
         {
             if (string.IsNullOrEmpty(RecipientAddressNickname))
