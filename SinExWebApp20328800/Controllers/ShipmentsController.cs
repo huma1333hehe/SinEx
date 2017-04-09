@@ -267,7 +267,6 @@ namespace SinExWebApp20328800.Controllers
             shipment.PickupType = PickupType.Immediate;
             shipment.PickupDate = DateTime.Now;
             shipment.NumberOfPackages = 0;
-            shipment.RecipientShippingAccountID = 0;
             if (ModelState.IsValid)
             {
                 db.Shipments.Add(shipment);
