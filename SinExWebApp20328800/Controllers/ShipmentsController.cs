@@ -241,6 +241,7 @@ namespace SinExWebApp20328800.Controllers
         }
         //heheda
         //hehehehehehedadadadadada
+        //wolegequ
         public ActionResult GetPickupLocation(string PickupLocationNickname) {
             if (string.IsNullOrEmpty(PickupLocationNickname))
             {
