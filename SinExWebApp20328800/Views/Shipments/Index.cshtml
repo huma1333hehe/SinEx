@@ -1,0 +1,166 @@
+﻿@model IEnumerable<SinExWebApp20328800.Models.Shipment>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipientShippingAccount.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SenderShippingAccount.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ServiceType.Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReferenceNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Origin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Destination)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberOfPackages)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ShipmentPayer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TaxPayer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Duty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tax)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ConfirmOrNot)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PickupOrNot)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PickupType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PickupDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipientFullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipientCompanyName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipientDepartmentName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipientDeliveryAddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipientPhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecipientEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PickupLocationNickname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PickupLocation)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipientShippingAccount.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SenderShippingAccount.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ServiceType.Type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReferenceNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Origin)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Destination)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfPackages)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShipmentPayer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TaxPayer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Duty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tax)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ConfirmOrNot)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PickupOrNot)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PickupType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PickupDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipientFullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipientCompanyName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipientDepartmentName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipientDeliveryAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipientPhoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecipientEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PickupLocationNickname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PickupLocation)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.WaybillId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.WaybillId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.WaybillId })|
+            @Html.ActionLink("Add package(s)", "../Packages/Index", new { WaybillId = item.WaybillId })
+        </td>
+    </tr>
+}
+
+</table>

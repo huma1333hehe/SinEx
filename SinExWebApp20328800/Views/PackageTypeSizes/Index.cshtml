@@ -1,0 +1,45 @@
+﻿@model IEnumerable<SinExWebApp20328800.Models.PackageTypeSize>
+
+@{
+    ViewBag.Title = "Package Type Size";
+}
+
+<h2>Package Type Sizes</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PackageType.Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TypeSize)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WeightLimit)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PackageType.Type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TypeSize)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WeightLimit)
+        </td>
+        @if (User.IsInRole("Employee"))
+        {
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.PackageTypeSizeID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.PackageTypeSizeID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.PackageTypeSizeID })
+            </td>
+        }
+    </tr>
+}
+
+</table>
