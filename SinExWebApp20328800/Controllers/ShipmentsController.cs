@@ -240,6 +240,7 @@ namespace SinExWebApp20328800.Controllers
 
             var query = db.Recipients.Single(hehe => hehe.Nickname == RecipientAddressNickname);
             Recipient data = query;
+            data.ShippingAccount = null;
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         public ActionResult GetPickupLocation(string PickupLocationNickname) {
@@ -250,6 +251,7 @@ namespace SinExWebApp20328800.Controllers
 
             var query = db.PickupLocations.Single(hehe => hehe.Nickname == PickupLocationNickname);
             PickupLocation data = query;
+            data.ShippingAccount = null;
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
