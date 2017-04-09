@@ -1,0 +1,114 @@
+﻿@model SinExWebApp20328800.Models.Package
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Package</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WaybillId, "WaybillId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <h5>
+                    @ViewBag.WaybillId.ToString("0000000000000000")
+                </h5>
+
+            </div>
+        </div>
+        @Html.TextBoxFor(model => model.WaybillId, htmlAttributes: new { @class = "form-control", @value = ViewBag.WaybillId, @type = "hidden" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PackageTypeID, "Package Type ID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("PackageTypeID", null, htmlAttributes: new { @class = "form-control", id = "packageTypes_ddl", onchange = "+OnPackageTypesChange(this)" })
+                @Html.ValidationMessageFor(model => model.PackageTypeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PackageTypeSizeID, "Package Type Size", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("PackageTypeSizeID", null, new { @class = "form-control", id = "sizes_ddl" })
+                @Html.ValidationMessageFor(a => a.PackageTypeSizeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Value, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CurrencyCode, "CurrencyCode", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CurrencyCode", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CurrencyCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeclaredWeight, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DeclaredWeight, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DeclaredWeight, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", new { WaybillId = ViewBag.WaybillId })
+</div>
+
+<script type="text/javascript">
+    function AppendUrlParamTokens(url, params) {
+
+        for (var param in params) {
+            if (params[param] == null) {
+                delete params[param];
+            }
+        }
+
+        return url + "?" + jQuery.param(params);
+    }
+
+    function OnPackageTypesChange(ddl) {
+        jQuery.getJSON(AppendUrlParamTokens('@Url.Action("GetSizesByID", "Calculate")', { packageTypeID: ddl.options[ddl.selectedIndex].value }), function (result) {
+            var target = jQuery('#sizes_ddl');
+            target.empty();
+            jQuery(result).each(function() {
+                jQuery(document.createElement('option'))
+                    .attr("value", this.Value)
+                    .text(this.Text)
+                    .appendTo(target);
+            });
+        });
+    };
+</script>
