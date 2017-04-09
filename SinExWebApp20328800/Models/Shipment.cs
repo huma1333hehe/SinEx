@@ -49,13 +49,14 @@ namespace SinExWebApp20328800.Models
 
 
         // public virtual int RecipientID { get; set; }
+        public virtual string RecipientAddressNickname { get; set; }
         public virtual string RecipientFullName { get; set; }
         public virtual string RecipientCompanyName { get; set; }
         public virtual string RecipientDepartmentName { get; set; }
         public virtual string RecipientDeliveryAddress { get; set; }
         public virtual string RecipientPhoneNumber { get; set; }
         public virtual string RecipientEmail { get; set; }
-
+        
 
         public virtual int ServiceTypeID { get; set; }
         //public virtual int PickupLocationID { get; set; }
