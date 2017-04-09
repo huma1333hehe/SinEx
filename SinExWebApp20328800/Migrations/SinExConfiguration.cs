@@ -11,6 +11,7 @@ namespace SinExWebApp20328800.Migrations
         public SinExConfiguration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
             ContextKey = "SinExWebApp20328800.Models.SinExWebApp20328800DatabaseContext";
         }
 
@@ -182,6 +183,23 @@ namespace SinExWebApp20328800.Migrations
                 new Shipment { WaybillId = 25, ReferenceNumber = "386456", ServiceType = "Same Day", ShippedDate = new DateTime(2017, 01, 05), DeliveredDate = new DateTime(2017, 01, 05), RecipientName = "Jerry Jia", NumberOfPackages = 1, Origin = "Beijing", Destination = "Hangzhou", Status = "Delivered", ShippingAccountId = 2 }
             );
             */
+            // han er leng zi
+            // Add recipient data.
+            context.Recipients.AddOrUpdate(
+                p => p.RecipientID,
+                new Recipient { RecipientID = 10, ShippingAccountId = 3, FullName = "Zhongzixuan's girlfriend", CompanyName = "HKU", DepartmentName = "Department of Art", Email = "girlfriend@zhong.com", DeliveryAddress = "HKU UG Hall 1", PhoneNumber = "12345678", Nickname = "girl's palace" },
+                new Recipient { RecipientID = 11, ShippingAccountId = 3, FullName = "Zhongzixuan's boyfriend", CompanyName = "HKUST", DepartmentName = "Department of Science", Email = "xhanad@ust.hk", DeliveryAddress = "HKUST UG Hall 5", PhoneNumber = "22222222", Nickname = "han er leng zi" }
+
+                );
+
+            //Add pickup loaction 
+            context.PickupLocations.AddOrUpdate(
+                p => p.PickupLocationID,
+                new PickupLocation { PickupLocationID = 10, ShippingAccountId = 3, Location = "Hall 5", Nickname = "home" },
+                new PickupLocation { PickupLocationID = 11, ShippingAccountId = 3, Location = "4213", Nickname = "lab" }
+                );
+
+
         }
     }
 }
