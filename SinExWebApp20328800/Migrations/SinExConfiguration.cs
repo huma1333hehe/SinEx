@@ -156,7 +156,7 @@ namespace SinExWebApp20328800.Migrations
                 new PackageTypeSize { PackageTypeSizeID = 5, TypeSize = "small - 300*250*150mm", WeightLimit = "10kg", PackageTypeID = 4 },
                 new PackageTypeSize { PackageTypeSizeID = 6, TypeSize = "medium - 400*350*250mm", WeightLimit = "20kg", PackageTypeID = 4 },
                 new PackageTypeSize { PackageTypeSizeID = 7, TypeSize = "large - 500*450*350mm", WeightLimit = "30kg", PackageTypeID = 4 },
-                new PackageTypeSize { PackageTypeSizeID = 37, TypeSize = "custom", WeightLimit = "Not Applicable", PackageTypeID = 5 }
+                new PackageTypeSize { PackageTypeSizeID = 36, TypeSize = "custom", WeightLimit = "Not Applicable", PackageTypeID = 5 }
 
                 );
 

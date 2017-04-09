@@ -157,7 +157,8 @@
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.WaybillId }) |
             @Html.ActionLink("Details", "Details", new { id=item.WaybillId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.WaybillId })
+            @Html.ActionLink("Delete", "Delete", new { id = item.WaybillId })|
+            @Html.ActionLink("Add package(s)", "../Packages/Index", new { WaybillId = item.WaybillId })
         </td>
     </tr>
 }

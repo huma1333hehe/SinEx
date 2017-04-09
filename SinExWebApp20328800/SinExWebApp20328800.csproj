@@ -228,26 +228,6 @@
     <Compile Include="Migrations\201702260643385_InitialCreate.Designer.cs">
       <DependentUpon>201702260643385_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704071509440_hehe.cs" />
-    <Compile Include="Migrations\201704071509440_hehe.Designer.cs">
-      <DependentUpon>201704071509440_hehe.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704090703331_hehe_2.cs" />
-    <Compile Include="Migrations\201704090703331_hehe_2.Designer.cs">
-      <DependentUpon>201704090703331_hehe_2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704090715222_hehe_3.cs" />
-    <Compile Include="Migrations\201704090715222_hehe_3.Designer.cs">
-      <DependentUpon>201704090715222_hehe_3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704090826179_hehe_4.cs" />
-    <Compile Include="Migrations\201704090826179_hehe_4.Designer.cs">
-      <DependentUpon>201704090826179_hehe_4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704091205249_hehe_5.cs" />
-    <Compile Include="Migrations\201704091205249_hehe_5.Designer.cs">
-      <DependentUpon>201704091205249_hehe_5.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\AspIdentityConfiguration.cs" />
     <Compile Include="Migrations\SinExConfiguration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -407,11 +387,11 @@
     <Content Include="Views\Recipients\Index.cshtml" />
     <Content Include="Views\PickupLocations\CreateFail.cshtml" />
     <Content Include="Views\Recipients\CreateFail.cshtml" />
-    <Content Include="Views\Packages\Create.cshtml" />
-    <Content Include="Views\Packages\Delete.cshtml" />
-    <Content Include="Views\Packages\Details.cshtml" />
-    <Content Include="Views\Packages\Edit.cshtml" />
     <Content Include="Views\Packages\Index.cshtml" />
+    <Content Include="Views\Packages\Details.cshtml" />
+    <Content Include="Views\Packages\Create.cshtml" />
+    <Content Include="Views\Packages\Edit.cshtml" />
+    <Content Include="Views\Packages\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -427,21 +407,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201702260643385_InitialCreate.resx">
       <DependentUpon>201702260643385_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704071509440_hehe.resx">
-      <DependentUpon>201704071509440_hehe.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704090703331_hehe_2.resx">
-      <DependentUpon>201704090703331_hehe_2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704090715222_hehe_3.resx">
-      <DependentUpon>201704090715222_hehe_3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704090826179_hehe_4.resx">
-      <DependentUpon>201704090826179_hehe_4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704091205249_hehe_5.resx">
-      <DependentUpon>201704091205249_hehe_5.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
