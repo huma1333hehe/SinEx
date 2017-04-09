@@ -10,6 +10,7 @@ using SinExWebApp20328800.Models;
 
 namespace SinExWebApp20328800.Controllers
 {
+    // lalalalala
     public class CurrenciesController : Controller
     {
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
