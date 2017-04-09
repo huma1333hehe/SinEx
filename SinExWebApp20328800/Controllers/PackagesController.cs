@@ -20,9 +20,19 @@ namespace SinExWebApp20328800.Controllers
             int WaybillId
             )
         {
-            //Shipment shipment = db.Shipments.Single(s=>s.WaybillId == );
-
-            var packages = db.Packages.Include(p => p.Currency).Include(p => p.PackageType).Include(p => p.Shipment);
+            ViewBag.Waybillid = WaybillId;
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == WaybillId);
+            if (User.IsInRole("Customer"))
+            {
+                ShippingAccount shippingAccount = db.ShippingAccounts.SingleOrDefault(s => s.UserName == User.Identity.Name);
+                //check if the waybill belongs to the current user
+                if (shipment.SenderShippingAccountID != shippingAccount.ShippingAccountId)
+                {
+                    return RedirectToAction("Shipments", "index");
+                }
+            }
+            //get packages from database
+            var packages = db.Packages.Include(p => p.Currency).Include(p => p.PackageType).Include(p => p.Shipment).Where(p => p.WaybillId == shipment.WaybillId);
             return View(packages.ToList());
         }
 
@@ -42,11 +52,20 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Packages/Create
-        public ActionResult Create()
+        public ActionResult Create(
+            int WaybillId
+            )
         {
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == WaybillId);
+            if (shipment.Packages.Count() >= 10)
+            {
+                return RedirectToAction("Details", "Shipments", new { id = WaybillId });
+            }
+
             ViewBag.CurrencyCode = new SelectList(db.Currencies, "CurrencyCode", "CurrencyCode");
             ViewBag.PackageTypeID = new SelectList(db.PackageTypes, "PackageTypeID", "Type");
-            ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "ReferenceNumber");
+            ViewBag.PackageTypeSizeID = new SelectList(db.PackageTypeSizes.Where(s => s.PackageTypeSizeID == 0), "PackageTypeSizeID", "TypeSize");
+            ViewBag.WaybillId = WaybillId;
             return View();
         }
 
@@ -55,18 +74,23 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PackageID,WaybillId,PackageTypeID,Description,Value,CurrencyCode,DeclaredWeight,ActualWeight")] Package package)
+        public ActionResult Create([Bind(Include = "PackageID,WaybillId,PackageTypeID,Description,Value,CurrencyCode,DeclaredWeight,ActualWeight,PackageTypeSizeID")] Package package)
         {
+            package.ActualWeight = null;
             if (ModelState.IsValid)
             {
                 db.Packages.Add(package);
+                Shipment shipment = db.Shipments.Single(s => s.WaybillId == package.WaybillId);
+                shipment.NumberOfPackages += 1;
+                db.Entry(shipment).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { WaybillId = package.WaybillId });
             }
 
             ViewBag.CurrencyCode = new SelectList(db.Currencies, "CurrencyCode", "CurrencyCode", package.CurrencyCode);
             ViewBag.PackageTypeID = new SelectList(db.PackageTypes, "PackageTypeID", "Type", package.PackageTypeID);
-            ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "ReferenceNumber", package.WaybillId);
+            ViewBag.PackageTypeSizeID = new SelectList(db.PackageTypeSizes.Where(s => s.PackageTypeSizeID == 0), "PackageTypeSizeID", "TypeSize");
+            ViewBag.WaybillId = package.WaybillId;
             return View(package);
         }
 
@@ -84,7 +108,8 @@ namespace SinExWebApp20328800.Controllers
             }
             ViewBag.CurrencyCode = new SelectList(db.Currencies, "CurrencyCode", "CurrencyCode", package.CurrencyCode);
             ViewBag.PackageTypeID = new SelectList(db.PackageTypes, "PackageTypeID", "Type", package.PackageTypeID);
-            ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "ReferenceNumber", package.WaybillId);
+            ViewBag.PackageTypeSizeID = new SelectList(db.PackageTypeSizes.Where(s => s.PackageTypeID == package.PackageTypeID), "PackageTypeSizeID", "TypeSize", package.PackageTypeSizeID);
+            ViewBag.WaybillId = package.WaybillId;
             return View(package);
         }
 
@@ -93,17 +118,18 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PackageID,WaybillId,PackageTypeID,Description,Value,CurrencyCode,DeclaredWeight,ActualWeight")] Package package)
+        public ActionResult Edit([Bind(Include = "PackageID,WaybillId,PackageTypeID,Description,Value,CurrencyCode,DeclaredWeight,ActualWeight,PackageTypeSizeID")] Package package)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(package).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { WaybillId = package.WaybillId });
             }
             ViewBag.CurrencyCode = new SelectList(db.Currencies, "CurrencyCode", "CurrencyCode", package.CurrencyCode);
             ViewBag.PackageTypeID = new SelectList(db.PackageTypes, "PackageTypeID", "Type", package.PackageTypeID);
-            ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "ReferenceNumber", package.WaybillId);
+            ViewBag.PackageTypeSizeID = new SelectList(db.PackageTypeSizes.Where(s => s.PackageTypeID == package.PackageTypeID), "PackageTypeSizeID", "TypeSize", package.PackageTypeSizeID);
+            ViewBag.WaybillId = package.WaybillId;
             return View(package);
         }
 
@@ -129,8 +155,11 @@ namespace SinExWebApp20328800.Controllers
         {
             Package package = db.Packages.Find(id);
             db.Packages.Remove(package);
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == package.WaybillId);
+            shipment.NumberOfPackages -= 1;
+            db.Entry(shipment).State = EntityState.Modified;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { WaybillId = package.WaybillId });
         }
 
         protected override void Dispose(bool disposing)
