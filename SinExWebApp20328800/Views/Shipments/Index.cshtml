@@ -18,12 +18,6 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PickupLocation.Nickname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipient.FullName)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.RecipientShippingAccount.UserName)
             </th>
             <th>
@@ -34,6 +28,12 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ReferenceNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Origin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Destination)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.NumberOfPackages)
@@ -59,17 +59,35 @@
             <th>
                 @Html.DisplayNameFor(model => model.PickupDate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecipientFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecipientCompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecipientDepartmentName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecipientDeliveryAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecipientPhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecipientEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PickupLocationNickname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PickupLocation)
+            </th>
             <th></th>
         </tr>
     
     @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PickupLocation.Nickname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Recipient.FullName)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RecipientShippingAccount.UserName)
             </td>
@@ -81,6 +99,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ReferenceNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Origin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Destination)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NumberOfPackages)
@@ -105,6 +129,30 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PickupDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecipientFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecipientCompanyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecipientDepartmentName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecipientDeliveryAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecipientPhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecipientEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PickupLocationNickname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PickupLocation)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id=item.WaybillId }) |

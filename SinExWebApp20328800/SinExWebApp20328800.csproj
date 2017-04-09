@@ -229,6 +229,18 @@
     <Compile Include="Migrations\201704071509440_hehe.Designer.cs">
       <DependentUpon>201704071509440_hehe.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704090703331_hehe_2.cs" />
+    <Compile Include="Migrations\201704090703331_hehe_2.Designer.cs">
+      <DependentUpon>201704090703331_hehe_2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704090715222_hehe_3.cs" />
+    <Compile Include="Migrations\201704090715222_hehe_3.Designer.cs">
+      <DependentUpon>201704090715222_hehe_3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704090826179_hehe_4.cs" />
+    <Compile Include="Migrations\201704090826179_hehe_4.Designer.cs">
+      <DependentUpon>201704090826179_hehe_4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AspIdentityConfiguration.cs" />
     <Compile Include="Migrations\SinExConfiguration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -373,9 +385,9 @@
     <Content Include="Views\Shipments\Edit.cshtml" />
     <Content Include="Views\Shipments\Index.cshtml" />
     <Content Include="Views\Shipments\GenerateHistoryReport.cshtml" />
+    <Content Include="Views\Shipments\_ShipmentsSearchPartial.cshtml" />
     <Content Include="Views\Shipments\_ShipmentsListPartial.cshtml" />
     <Content Include="Views\Shipments\_ShipmentsPagingPartial.cshtml" />
-    <Content Include="Views\Shipments\_ShipmentsSearchPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -394,6 +406,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704071509440_hehe.resx">
       <DependentUpon>201704071509440_hehe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704090703331_hehe_2.resx">
+      <DependentUpon>201704090703331_hehe_2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704090715222_hehe_3.resx">
+      <DependentUpon>201704090715222_hehe_3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704090826179_hehe_4.resx">
+      <DependentUpon>201704090826179_hehe_4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
