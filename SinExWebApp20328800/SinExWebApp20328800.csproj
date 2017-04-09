@@ -389,9 +389,13 @@
     <Content Include="Views\Recipients\CreateFail.cshtml" />
     <Content Include="Views\Packages\Index.cshtml" />
     <Content Include="Views\Packages\Details.cshtml" />
-    <Content Include="Views\Packages\Create.cshtml" />
+    <Content Include="Views\Packages\Create.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Packages\Edit.cshtml" />
-    <Content Include="Views\Packages\Delete.cshtml" />
+    <Content Include="Views\Packages\Delete.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

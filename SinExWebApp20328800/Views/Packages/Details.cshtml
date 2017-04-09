@@ -1,0 +1,82 @@
+﻿@model SinExWebApp20328800.Models.Package
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Package</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Shipment.WaybillId)
+        </dt>
+
+        <dd>
+            @Model.WaybillId.ToString("0000000000000000")
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Currency.CurrencyCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Currency.CurrencyCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PackageType.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PackageType.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PackageTypeSize.TypeSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PackageTypeSize.TypeSize)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Value)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Value)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeclaredWeight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeclaredWeight)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ActualWeight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ActualWeight)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PackageID }) |
+    @Html.ActionLink("Back to List", "Index", new { WaybillId = Model.WaybillId })
+</p>
