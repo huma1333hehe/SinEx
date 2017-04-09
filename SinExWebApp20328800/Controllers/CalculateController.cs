@@ -134,5 +134,18 @@ namespace SinExWebApp20328800.Controllers
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult GetSizesByID(int? packageTypeID)
+        {
+            if (packageTypeID == null)
+            {
+                return Json(new List<SelectListItem>(), JsonRequestBehavior.AllowGet);
+            }
+
+            var query = db.PackageTypeSizes.Where(a => a.PackageType.PackageTypeID == packageTypeID);
+            List<SelectListItem> data = new SelectList(query, "PackageTypeSizeID", "TypeSize").ToList();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

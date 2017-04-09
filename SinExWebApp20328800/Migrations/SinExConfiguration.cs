@@ -155,7 +155,9 @@ namespace SinExWebApp20328800.Migrations
                 new PackageTypeSize { PackageTypeSizeID = 4, TypeSize = "1000*80mm", WeightLimit = "Not Applicable", PackageTypeID = 3 },
                 new PackageTypeSize { PackageTypeSizeID = 5, TypeSize = "small - 300*250*150mm", WeightLimit = "10kg", PackageTypeID = 4 },
                 new PackageTypeSize { PackageTypeSizeID = 6, TypeSize = "medium - 400*350*250mm", WeightLimit = "20kg", PackageTypeID = 4 },
-                new PackageTypeSize { PackageTypeSizeID = 7, TypeSize = "large - 500*450*350mm", WeightLimit = "30kg", PackageTypeID = 4 }
+                new PackageTypeSize { PackageTypeSizeID = 7, TypeSize = "large - 500*450*350mm", WeightLimit = "30kg", PackageTypeID = 4 },
+                new PackageTypeSize { PackageTypeSizeID = 37, TypeSize = "custom", WeightLimit = "Not Applicable", PackageTypeID = 5 }
+
                 );
 
             // Add shipment data.
@@ -187,16 +189,16 @@ namespace SinExWebApp20328800.Migrations
             // Add recipient data.
             context.Recipients.AddOrUpdate(
                 p => p.RecipientID,
-                new Recipient { RecipientID = 10, ShippingAccountId = 3, FullName = "Zhongzixuan's girlfriend", CompanyName = "HKU", DepartmentName = "Department of Art", Email = "girlfriend@zhong.com", DeliveryAddress = "HKU UG Hall 1", PhoneNumber = "12345678", Nickname = "girl's palace" },
-                new Recipient { RecipientID = 11, ShippingAccountId = 3, FullName = "Zhongzixuan's boyfriend", CompanyName = "HKUST", DepartmentName = "Department of Science", Email = "xhanad@ust.hk", DeliveryAddress = "HKUST UG Hall 5", PhoneNumber = "22222222", Nickname = "han er leng zi" }
+                new Recipient { RecipientID = 1, ShippingAccountId = 3, FullName = "Zhongzixuan's girlfriend", CompanyName = "HKU", DepartmentName = "Department of Art", Email = "girlfriend@zhong.com", DeliveryAddress = "HKU UG Hall 1", PhoneNumber = "12345678", Nickname = "girl's palace" },
+                new Recipient { RecipientID = 2, ShippingAccountId = 3, FullName = "Zhongzixuan's boyfriend", CompanyName = "HKUST", DepartmentName = "Department of Science", Email = "xhanad@ust.hk", DeliveryAddress = "HKUST UG Hall 5", PhoneNumber = "22222222", Nickname = "han er leng zi" }
 
                 );
 
             //Add pickup loaction 
             context.PickupLocations.AddOrUpdate(
                 p => p.PickupLocationID,
-                new PickupLocation { PickupLocationID = 10, ShippingAccountId = 3, Location = "Hall 5", Nickname = "home" },
-                new PickupLocation { PickupLocationID = 11, ShippingAccountId = 3, Location = "4213", Nickname = "lab" }
+                new PickupLocation { PickupLocationID = 1, ShippingAccountId = 3, Location = "Hall 5", Nickname = "home" },
+                new PickupLocation { PickupLocationID = 2, ShippingAccountId = 3, Location = "4213", Nickname = "lab" }
                 );
 
 
