@@ -215,6 +215,8 @@
     <Compile Include="Controllers\PackageTypesController.cs" />
     <Compile Include="Controllers\PackageTypeSizesController.cs" />
     <Compile Include="Controllers\PersonalShippingAccountsController.cs" />
+    <Compile Include="Controllers\PickupLocationsController.cs" />
+    <Compile Include="Controllers\RecipientsController.cs" />
     <Compile Include="Controllers\ServicePackageFeesController.cs" />
     <Compile Include="Controllers\ServiceTypesController.cs" />
     <Compile Include="Controllers\ShipmentsController.cs" />
@@ -388,6 +390,18 @@
     <Content Include="Views\Shipments\_ShipmentsSearchPartial.cshtml" />
     <Content Include="Views\Shipments\_ShipmentsListPartial.cshtml" />
     <Content Include="Views\Shipments\_ShipmentsPagingPartial.cshtml" />
+    <Content Include="Views\PickupLocations\Create.cshtml" />
+    <Content Include="Views\PickupLocations\Delete.cshtml" />
+    <Content Include="Views\PickupLocations\Details.cshtml" />
+    <Content Include="Views\PickupLocations\Edit.cshtml" />
+    <Content Include="Views\PickupLocations\Index.cshtml" />
+    <Content Include="Views\Recipients\Create.cshtml" />
+    <Content Include="Views\Recipients\Delete.cshtml" />
+    <Content Include="Views\Recipients\Details.cshtml" />
+    <Content Include="Views\Recipients\Edit.cshtml" />
+    <Content Include="Views\Recipients\Index.cshtml" />
+    <Content Include="Views\PickupLocations\CreateFail.cshtml" />
+    <Content Include="Views\Recipients\CreateFail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
