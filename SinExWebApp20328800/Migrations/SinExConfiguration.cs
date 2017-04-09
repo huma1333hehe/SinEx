@@ -30,6 +30,8 @@ namespace SinExWebApp20328800.Migrations
             //    );
             //
             // Add package type data.
+
+            //nnnn
             context.PackageTypes.AddOrUpdate(
                 p => p.PackageTypeID,
                 new PackageType { PackageTypeID = 1, Type = "Envelope", Description = "for correspondence and documents only with no commercial value" },
