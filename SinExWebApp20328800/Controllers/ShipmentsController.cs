@@ -220,6 +220,14 @@ namespace SinExWebApp20328800.Controllers
         [Authorize(Roles = "Customer")]
         public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupType,PickupDate,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID")] Shipment shipment)
         {
+            shipment.SenderShippingAccountID = db.ShippingAccounts.SingleOrDefault(s => s.UserName == User.Identity.Name).ShippingAccountId;
+            shipment.ConfirmOrNot = false;
+            shipment.PickupOrNot = false;
+            shipment.Duty = null;
+            shipment.Tax = null;
+            shipment.PickupType = PickupType.Immediate;
+            shipment.PickupDate = DateTime.Now;
+            shipment.NumberOfPackages = 0;
             if (ModelState.IsValid)
             {
                 db.Shipments.Add(shipment);
