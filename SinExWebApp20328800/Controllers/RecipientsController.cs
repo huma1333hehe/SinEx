@@ -14,6 +14,18 @@ namespace SinExWebApp20328800.Controllers
     {
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
 
+
+        private ShippingAccount GetCurrentAccount()
+        {
+            string username = System.Web.HttpContext.Current.User.Identity.Name;
+            if (username == null)
+            {
+                return null;
+            }
+            ShippingAccount current_account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
+            return current_account;
+        }
+
         // GET: Recipients
         public ActionResult Index()
         {
@@ -50,21 +62,14 @@ namespace SinExWebApp20328800.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "RecipientID,FullName,CompanyName,DepartmentName,DeliveryAddress,PhoneNumber,Email,Nickname")] Recipient recipient)
         {
+
+
             if (ModelState.IsValid)
             {
-                //Get the current username 
-                string username = System.Web.HttpContext.Current.User.Identity.Name;
-                if (username == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                ShippingAccount account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
-                if (account == null)
-                {
-                    return HttpNotFound("There is no account with user name \"" + username + "\".");
-                }
+                ShippingAccount account = GetCurrentAccount();
                 recipient.ShippingAccount = account;
                 recipient.ShippingAccountId = account.ShippingAccountId;
+
 
                 //check duplicate or not 
                 bool general_duplicate = false;
@@ -104,6 +109,38 @@ namespace SinExWebApp20328800.Controllers
             return View(recipient);
         }
 
+        public ActionResult GetRecipientNickname(string Nickname)
+        {
+            if (string.IsNullOrEmpty(Nickname))
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+
+            ShippingAccount current_account = GetCurrentAccount();
+            var hehe = db.Recipients.Where(a => a.ShippingAccountId == current_account.ShippingAccountId).Select(a => a.Nickname);
+            if (hehe.Contains(Nickname))
+            {
+                return Json(current_account.UserName, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult GetGeneralRecipient(string FullName, string CompanyName, string DepartmentName, string DeliveryAddress, string PhoneNumber, string Email)
+        {
+            if (string.IsNullOrEmpty(FullName) || string.IsNullOrEmpty(CompanyName) || string.IsNullOrEmpty(DepartmentName) || string.IsNullOrEmpty(DeliveryAddress) || string.IsNullOrEmpty(PhoneNumber) || string.IsNullOrEmpty(Email))
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+            ShippingAccount current_account = GetCurrentAccount();
+            var hehe = db.Recipients.Where(a => a.ShippingAccountId == current_account.ShippingAccountId && a.FullName == FullName && a.CompanyName == CompanyName && a.DepartmentName == DepartmentName && a.DeliveryAddress == DeliveryAddress && a.PhoneNumber == PhoneNumber && a.Email == Email).Select(a => a.ShippingAccountId);
+            if (hehe.Contains(current_account.ShippingAccountId))
+            {
+                return Json(current_account.UserName, JsonRequestBehavior.AllowGet);
+            }
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
         // GET: Recipients/Edit/5
         public ActionResult Edit(int? id)
         {

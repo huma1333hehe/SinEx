@@ -17,7 +17,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Nickname, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Nickname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Nickname, new { htmlAttributes = new { @class = "form-control" , onchange = "OnNicknameChange()" } })
                 @Html.ValidationMessageFor(model => model.Nickname, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -25,7 +25,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control" , onchange = "OnLocationChange()" } })
                 @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -41,3 +41,39 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+
+<script type="text/javascript">
+    function OnNicknameChange() {
+        var Nickname = $('#Nickname').val();
+        $.ajax({
+            url: '/PickupLocations/GetPickupLocationNickname',
+            type: "GET",
+            dataType: "JSON",
+            data: { Nickname: Nickname },
+            success: function (result) {
+                if (result != null) {
+                    $("#Nickname").val("");
+                    alert("Error! The pick up nickname " + Nickname + " already exists in " + result + "'s account\n");
+                }
+            }
+        });
+    }
+
+
+    function OnLocationChange() {
+        var Location = $('#Location').val();
+        $.ajax({
+            url: '/PickupLocations/GetLocation',
+            type: "GET",
+            dataType: "JSON",
+            data: { Location: Location },
+            success: function (result) {
+                if (result != null) {
+                    $("#Location").val("");
+                    alert("Error! The pickup location " + Location + " already exists in " + result + "'s account\n");
+                }
+            }
+        });
+    }
+</script>
