@@ -385,7 +385,6 @@
     <Content Include="Views\Recipients\Details.cshtml" />
     <Content Include="Views\Recipients\Edit.cshtml" />
     <Content Include="Views\Recipients\Index.cshtml" />
-    <Content Include="Views\PickupLocations\CreateFail.cshtml" />
     <Content Include="Views\Recipients\CreateFail.cshtml" />
     <Content Include="Views\Packages\Index.cshtml" />
     <Content Include="Views\Packages\Details.cshtml" />
@@ -396,6 +395,7 @@
     <Content Include="Views\Packages\Delete.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\PickupLocations\CreateFail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

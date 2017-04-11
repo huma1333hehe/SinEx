@@ -318,6 +318,17 @@ namespace SinExWebApp20328800.Controllers
                 return RedirectToAction("Index");
             }
 
+
+            ViewBag.RecipientShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.RecipientShippingAccountID);
+            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
+            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
+            ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
+            ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
+
+            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
             return View(shipment);
         }
 

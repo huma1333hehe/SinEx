@@ -17,7 +17,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FullName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" }, onchange = "OnGeneralRecipientChange()" })
                 @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -25,7 +25,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control", onchange = "OnGeneralRecipientChange()" } })
                 @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -33,7 +33,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DepartmentName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DepartmentName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.DepartmentName, new { htmlAttributes = new { @class = "form-control", onchange = "OnGeneralRecipientChange()" } })
                 @Html.ValidationMessageFor(model => model.DepartmentName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -41,7 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DeliveryAddress, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DeliveryAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.DeliveryAddress, new { htmlAttributes = new { @class = "form-control", onchange = "OnGeneralRecipientChange()" } })
                 @Html.ValidationMessageFor(model => model.DeliveryAddress, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -49,7 +49,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", onchange = "OnGeneralRecipientChange()" } })
                 @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -57,7 +57,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", onchange = "OnGeneralRecipientChange()" } })
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -65,7 +65,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Nickname, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Nickname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Nickname, new { htmlAttributes = new { @class = "form-control", onchange = "OnNicknameChange()" } })
                 @Html.ValidationMessageFor(model => model.Nickname, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -81,3 +81,43 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+
+<script type="text/javascript">
+    function OnNicknameChange() {
+        var Nickname = $('#Nickname').val();
+        $.ajax({
+            url: '/Recipients/GetRecipientNickname',
+            type: "GET",
+            dataType: "JSON",
+            data: { Nickname: Nickname },
+            success: function (result) {
+                if (result != null) {
+                    $("#Nickname").val("");
+                    alert("Error! The recipient with nickname " + Nickname + " already exists in " + result + "'s account\n");
+                }
+            }
+        });
+    }
+
+    function OnGeneralRecipientChange() {
+        var FullName = $('#FullName').val();
+        var CompanyName = $('#CompanyName').val();
+        var DepartmentName = $('#DepartmentName').val();
+        var DeliveryAddress = $('#DeliveryAddress').val();
+        var PhoneNumber = $('#PhoneNumber').val();
+        var Email = $('#Email').val();
+        $.ajax({
+            url: '/Recipients/GetGeneralRecipient',
+            type: "GET",
+            dataType: "JSON",
+            data: { FullName: FullName, CompanyName: CompanyName, DepartmentName: DepartmentName, DeliveryAddress: DeliveryAddress, PhoneNumber: PhoneNumber, Email: Email },
+            success: function (result) {
+                if (result != null) {
+                    alert("Error! The recipient with the following information already exists in " + result + "'s account: \n\t" + "full name: " + FullName + "\n\t" + "company name: " + CompanyName + "\n\t" + "department name: " + DepartmentName + "\n\t" + "delivery address: " + DeliveryAddress + "\n\t" + "phone number: " + PhoneNumber + "\n\t" + "email address: " + Email + "\n\tPlease try agian by inputing something different!");
+                }
+            }
+        });
+    }
+
+</script>
