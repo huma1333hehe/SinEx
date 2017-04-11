@@ -204,32 +204,24 @@ namespace SinExWebApp20328800.Controllers
         [Authorize(Roles = "Customer")]
         public ActionResult Create()
         {
-            ViewBag.RecipientShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName");
             ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName");
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type");
             ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
             ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
 
-            //Get the current username 
-            string username = System.Web.HttpContext.Current.User.Identity.Name;
-            if (username == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ShippingAccount account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
-            if (account == null)
-            {
-                return HttpNotFound("There is no account with user name \"" + username + "\".");
-            }
-            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == account.ShippingAccountId);
+            ShippingAccount current_account = GetCurrentAccount();
+
+            IEnumerable<ShippingAccount> hihi = db.ShippingAccounts.Select(s => s).Where(s => s.ShippingAccountId != current_account.ShippingAccountId);
+            ViewBag.RecipientShippingAccountID = new SelectList(hihi, "ShippingAccountId", "UserName");
+
+
+            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
             ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
-            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == account.ShippingAccountId);
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
             ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
             return View();
         }
 
-        //xinruzhishui
-        //inner peace
 
         public ActionResult GetRecipient(string RecipientAddressNickname)
         {
@@ -243,7 +235,8 @@ namespace SinExWebApp20328800.Controllers
             data.ShippingAccount = null;
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult GetPickupLocation(string PickupLocationNickname) {
+        public ActionResult GetPickupLocation(string PickupLocationNickname)
+        {
             if (string.IsNullOrEmpty(PickupLocationNickname))
             {
                 return Json(new List<string>(), JsonRequestBehavior.AllowGet);
@@ -255,6 +248,43 @@ namespace SinExWebApp20328800.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetPayers(string ShipmentPayer, string TaxPayer)
+        {
+            if (string.IsNullOrEmpty(ShipmentPayer) || string.IsNullOrEmpty(TaxPayer))
+            {
+                return Json(new List<string>(2), JsonRequestBehavior.AllowGet);
+            }
+
+            List<string> result = new List<string> { ShipmentPayer, TaxPayer };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetReferenceNumber(string ReferenceNumber)
+        {
+            if (string.IsNullOrEmpty(ReferenceNumber))
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+
+            ShippingAccount current_account = GetCurrentAccount();
+            var hehe = db.Shipments.Where(a => a.SenderShippingAccountID == current_account.ShippingAccountId).Select(a => a.ReferenceNumber);
+            if (hehe.Contains(ReferenceNumber)){
+                return Json(current_account.UserName, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+        private ShippingAccount GetCurrentAccount()
+        {
+            string username = System.Web.HttpContext.Current.User.Identity.Name;
+            if (username == null)
+            {
+                return null;
+            }
+            ShippingAccount current_account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
+            return current_account;
+        }
         //.....
 
         // POST: Shipments/Create
@@ -265,6 +295,8 @@ namespace SinExWebApp20328800.Controllers
         [Authorize(Roles = "Customer")]
         public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
         {
+            ShippingAccount current_account = GetCurrentAccount();
+
             shipment.SenderShippingAccountID = db.ShippingAccounts.SingleOrDefault(s => s.UserName == User.Identity.Name).ShippingAccountId;
             shipment.ConfirmOrNot = false;
             shipment.PickupOrNot = false;
@@ -273,6 +305,12 @@ namespace SinExWebApp20328800.Controllers
             shipment.PickupType = PickupType.Immediate;
             shipment.PickupDate = DateTime.Now;
             shipment.NumberOfPackages = 0;
+            if (!(shipment.TaxPayer==TaxPayer.Recipient && shipment.ShipmentPayer == ShipmentPayer.Recipient))
+            {
+                shipment.RecipientShippingAccount = current_account;
+                shipment.RecipientShippingAccountID = current_account.ShippingAccountId;
+            }
+
             if (ModelState.IsValid)
             {
                 db.Shipments.Add(shipment);
@@ -280,27 +318,6 @@ namespace SinExWebApp20328800.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.RecipientShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.RecipientShippingAccountID);
-            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
-            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
-            ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
-            ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
-
-
-            string username = System.Web.HttpContext.Current.User.Identity.Name;
-            if (username == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ShippingAccount account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
-            if (account == null)
-            {
-                return HttpNotFound("There is no account with user name \"" + username + "\".");
-            }
-            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == account.ShippingAccountId);
-            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
-            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == account.ShippingAccountId);
-            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
             return View(shipment);
         }
 
