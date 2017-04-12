@@ -35,15 +35,25 @@
                             <li>@Html.ActionLink("Fee Calculator", "Index", "Calculate")</li>
                         </ul>
                     </li>
-                    @if (User.IsInRole("Customer")||User.IsInRole("Employee"))
+                    @if (User.IsInRole("Customer") || User.IsInRole("Employee"))
                     {
-                    <li>
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Shipping History", "GenerateHistoryReport", "Shipments")</li>
-                            <li>@Html.ActionLink("Create", "Create", "Shipments")</li>
-                        </ul>
-                    </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Shipments<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Shipping History", "GenerateHistoryReport", "Shipments")</li>
+                                <li class="divider"></li>
+                                @if (User.IsInRole("Customer"))
+                                {
+                                    <li>@Html.ActionLink("My Shipments", "Index", "Shipments")</li>
+                                    <li>@Html.ActionLink("New Shipment", "Create", "Shipments")</li>
+
+                                }
+                                @if (User.IsInRole("Employee"))
+                                {
+                                    <li>@Html.ActionLink("All Shipments", "Index", "Shipments")</li>
+                                }
+                            </ul>
+                        </li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
