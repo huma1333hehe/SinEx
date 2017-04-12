@@ -40,5 +40,7 @@ namespace SinExWebApp20328800.Models
         public System.Data.Entity.DbSet<SinExWebApp20328800.Models.Recipient> Recipients { get; set; }
 
         public System.Data.Entity.DbSet<SinExWebApp20328800.Models.Package> Packages { get; set; }
+
+        public System.Data.Entity.DbSet<SinExWebApp20328800.Models.Tracking> Trackings { get; set; }
     }
 }

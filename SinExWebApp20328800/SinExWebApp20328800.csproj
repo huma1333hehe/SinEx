@@ -221,6 +221,7 @@
     <Compile Include="Controllers\ServicePackageFeesController.cs" />
     <Compile Include="Controllers\ServiceTypesController.cs" />
     <Compile Include="Controllers\ShipmentsController.cs" />
+    <Compile Include="Controllers\TrackingsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -396,6 +397,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\PickupLocations\CreateFail.cshtml" />
+    <Content Include="Views\Trackings\Create.cshtml" />
+    <Content Include="Views\Trackings\Delete.cshtml" />
+    <Content Include="Views\Trackings\Details.cshtml" />
+    <Content Include="Views\Trackings\Edit.cshtml" />
+    <Content Include="Views\Trackings\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
