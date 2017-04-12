@@ -1,15 +1,11 @@
-﻿<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
-<link href="~/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet" />
-@model SinExWebApp20328800.Models.Shipment
+﻿@model SinExWebApp20328800.Models.Shipment
 
 @{
-    ViewBag.Title = "Confirm";
+    ViewBag.Title = "Pickup";
 }
 
-<h2>Confirm</h2>
+<h2>Pickup</h2>
 
-<h3>Are you sure you want to confirm this shipment? </h3>
-<h3>After confirmed, the shipment can not be edit but can be cancelled if it has not been picked up.</h3>
 <div>
     <h4>Shipment</h4>
     <hr />
@@ -18,8 +14,6 @@
         @Html.AntiForgeryToken()
 
         <div class="form-horizontal">
-            <h4>Shipment</h4>
-            <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.WaybillId)
             @Html.HiddenFor(model => model.ReferenceNumber)
@@ -27,8 +21,9 @@
             @Html.HiddenFor(model => model.SenderShippingAccountID)
             @Html.HiddenFor(model => model.ShipmentPayer)
             @Html.HiddenFor(model => model.TaxPayer)
-            @Html.HiddenFor(model => model.Duty)
-            @Html.HiddenFor(model => model.Tax)
+            @Html.HiddenFor(model => model.PickupLocation)
+            @Html.HiddenFor(model => model.PickupType)
+            @Html.HiddenFor(model => model.PickupDate)
             @Html.HiddenFor(model => model.ConfirmOrNot)
             @Html.HiddenFor(model => model.PickupOrNot)
             @Html.HiddenFor(model => model.ServiceTypeID)
@@ -43,52 +38,61 @@
             @Html.HiddenFor(model => model.RecipientPhoneNumber)
             @Html.HiddenFor(model => model.RecipientEmail)
             @Html.HiddenFor(model => model.RecipientDeliveryAddress)
+            @Html.HiddenFor(model => model.Packages)
 
-
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.PickupLocation, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.PickupLocation, new { htmlAttributes = new { @class = "form-control", id = "PickupLocation_edit" } })
-                    @Html.ValidationMessageFor(model => model.PickupLocation, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            <hr />
+            <h4>Input Duty and Tax Fee</h4>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.PickupType, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.Duty, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EnumDropDownListFor(model => model.PickupType, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.PickupType, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.PickupDate, "Pickup Date", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.PickupDate, new { htmlAttributes = new { @class = "form-control date-time-picker" } })
-                    @Html.ValidationMessageFor(model => model.PickupDate, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.Duty, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Duty, "", new { @class = "text-danger" })
                 </div>
             </div>
 
 
-            @if (Model.Packages != null && Model.NumberOfPackages != 0)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Tax, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Tax, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Tax, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <hr />
+            <h4>Input Actual weight For Each Package</h4>
+            <span class="field-validation-valid text-danger" data-valmsg-for="packages" data-valmsg-replace="true">@ViewBag.ErrorMsg</span>
+            @foreach (var package in Model.Packages)
+            {
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="package_@package.PackageID">@package.Description @package.PackageType.Type @package.PackageTypeSize.TypeSize </label>
+                    <div class="col-md-10">
+                        <input class="form-control text-box single-line" data-val="true" data-val-number="The field DeclaredWeight must be a number." data-val-required="The ActualWeight field is required." id="ActualWeight" name="package_@package.PackageID" value="" type="text">
+                    </div>
+                </div>
+            }
+
+
+            @if (ViewBag.Error == null)
             {
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Confirm" class="btn btn-default" />
+                        <input type="submit" value="Pickup" class="btn btn-default" />
                     </div>
                 </div>
             }
             else
             {
-                <h2>Can not confirm because there are no packages for this shipment</h2>
+                <h2>@ViewBag.Error</h2>
             }
 
 
         </div>
     }
 
-
+    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.RecipientShippingAccount.UserName)
@@ -280,34 +284,3 @@
         @Html.ActionLink("Back to List", "Index")
     </p>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
-    <script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $(function () {
-                $(".date-time-picker").datetimepicker({
-                    changeMonth: true,
-                    changeYear: true,
-                    yearRange: "-100:+0",
-                    dateFormat: 'yy-mm-dd',
-                    controlType: 'select',
-                    timeFormat: 'HH:mm'
-                });
-            });
-
-            jQuery.validator.methods.date = function (value, element) {
-                var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-                if (isChrome) {
-                    var d = new Date();
-                    return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
-                } else {
-                    return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
-                }
-            };
-        });
-
-    </script>
-}

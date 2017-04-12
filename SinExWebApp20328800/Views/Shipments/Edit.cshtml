@@ -166,7 +166,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -180,7 +180,7 @@
 
 <script type="text/javascript">
     function OnLoadCheck() {
-        if ($("#ShipmentPayer").val() == "1" && $("#TaxPayer").val() == "1")
+        if ($("#ShipmentPayer").val() == "1" || $("#TaxPayer").val() == "1")
         {
             $("#RecipientShippingAccountAll").show();
         }
@@ -242,7 +242,7 @@
             dataType: "JSON",
             data: { ShipmentPayer: ShipmentPayer, TaxPayer: TaxPayer },
             success: function (result) {
-                if (result[0] == "1" && result[1] == "1") {
+                if (result[0] == "1" || result[1] == "1") {
                     $("#RecipientShippingAccountAll").show();
                 } else {
                     $("#RecipientShippingAccountAll").hide();

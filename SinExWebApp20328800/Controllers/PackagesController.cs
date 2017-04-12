@@ -22,13 +22,22 @@ namespace SinExWebApp20328800.Controllers
         {
             ViewBag.Waybillid = WaybillId;
             Shipment shipment = db.Shipments.Single(s => s.WaybillId == WaybillId);
+            if(shipment == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                ViewBag.CancelledOrNot = shipment.CancelledOrNot;
+                ViewBag.ConfirmOrNot = shipment.ConfirmOrNot;
+            }
             if (User.IsInRole("Customer"))
             {
                 ShippingAccount shippingAccount = db.ShippingAccounts.SingleOrDefault(s => s.UserName == User.Identity.Name);
                 //check if the waybill belongs to the current user
                 if (shipment.SenderShippingAccountID != shippingAccount.ShippingAccountId)
                 {
-                    return RedirectToAction("Shipments", "index");
+                    return HttpNotFound();
                 }
             }
             //get packages from database
@@ -37,6 +46,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Packages/Details/5
+        [Authorize(Roles = "Customer,Employee")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -52,11 +62,16 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Packages/Create
+        [Authorize(Roles = "Customer")]
         public ActionResult Create(
             int WaybillId
             )
         {
-            Shipment shipment = db.Shipments.Single(s => s.WaybillId == WaybillId);
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == WaybillId && s.CancelledOrNot == false && s.ConfirmOrNot ==false);
+            if (shipment == null)
+            {
+                return HttpNotFound();
+            }
             if (shipment.Packages.Count() >= 10)
             {
                 return RedirectToAction("Details", "Shipments", new { id = WaybillId });
@@ -72,6 +87,7 @@ namespace SinExWebApp20328800.Controllers
         // POST: Packages/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "PackageID,WaybillId,PackageTypeID,Description,Value,CurrencyCode,DeclaredWeight,ActualWeight,PackageTypeSizeID")] Package package)
@@ -80,7 +96,8 @@ namespace SinExWebApp20328800.Controllers
             if (ModelState.IsValid)
             {
                 db.Packages.Add(package);
-                Shipment shipment = db.Shipments.Single(s => s.WaybillId == package.WaybillId);
+                Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == package.WaybillId && s.CancelledOrNot == false);
+                //shipment.Packages.Add(package);
                 shipment.NumberOfPackages += 1;
                 db.Entry(shipment).State = EntityState.Modified;
                 db.SaveChanges();
@@ -95,6 +112,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Packages/Edit/5
+        [Authorize(Roles = "Customer")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -103,6 +121,10 @@ namespace SinExWebApp20328800.Controllers
             }
             Package package = db.Packages.Find(id);
             if (package == null)
+            {
+                return HttpNotFound();
+            }
+            if (package.Shipment.CancelledOrNot == true || package.Shipment.ConfirmOrNot ==true)
             {
                 return HttpNotFound();
             }
@@ -116,6 +138,7 @@ namespace SinExWebApp20328800.Controllers
         // POST: Packages/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "PackageID,WaybillId,PackageTypeID,Description,Value,CurrencyCode,DeclaredWeight,ActualWeight,PackageTypeSizeID")] Package package)
@@ -134,6 +157,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Packages/Delete/5
+        [Authorize(Roles = "Customer")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -141,7 +165,12 @@ namespace SinExWebApp20328800.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Package package = db.Packages.Find(id);
-            if (package == null)
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == package.WaybillId && s.CancelledOrNot == false);
+            if (package == null || shipment == null)
+            {
+                return HttpNotFound();
+            }
+            if (package.Shipment.CancelledOrNot == true || package.Shipment.ConfirmOrNot == true)
             {
                 return HttpNotFound();
             }
@@ -149,19 +178,20 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // POST: Packages/Delete/5
+        [Authorize(Roles = "Customer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Package package = db.Packages.Find(id);
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == package.WaybillId && s.CancelledOrNot == false);
             db.Packages.Remove(package);
-            Shipment shipment = db.Shipments.Single(s => s.WaybillId == package.WaybillId);
             shipment.NumberOfPackages -= 1;
             db.Entry(shipment).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index", new { WaybillId = package.WaybillId });
         }
-
+        [Authorize(Roles = "Customer")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)

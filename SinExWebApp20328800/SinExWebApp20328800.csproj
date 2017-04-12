@@ -256,6 +256,7 @@
     <Compile Include="ViewModels\FeeCalculateViewModel.cs" />
     <Compile Include="ViewModels\RegisterCustomerViewModel.cs" />
     <Compile Include="ViewModels\ServicePackageFeesViewModel.cs" />
+    <Compile Include="ViewModels\ShipmentPackages.cs" />
     <Compile Include="ViewModels\ShipmentsListViewModel.cs" />
     <Compile Include="ViewModels\ShipmentsReportViewModel.cs" />
     <Compile Include="ViewModels\ShipmentsSearchViewModel.cs" />
@@ -499,6 +500,8 @@
     <Content Include="Views\Trackings\Edit.cshtml" />
     <Content Include="Views\Trackings\Index.cshtml" />
     <Content Include="Views\Shipments\Confirm.cshtml" />
+    <Content Include="Views\Shipments\Cancel.cshtml" />
+    <Content Include="Views\Shipments\Pickup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

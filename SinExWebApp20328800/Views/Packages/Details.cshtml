@@ -77,6 +77,9 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.PackageID }) |
+    @if(Model.Shipment.CancelledOrNot == false && Model.Shipment.ConfirmOrNot == false)
+    {
+       @Html.ActionLink("Edit", "Edit", new { id = Model.PackageID })  <text>|</text>
+    }
     @Html.ActionLink("Back to List", "Index", new { WaybillId = Model.WaybillId })
 </p>

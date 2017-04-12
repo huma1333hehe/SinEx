@@ -14,6 +14,20 @@ namespace SinExWebApp20328800.Controllers
     {
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
 
+        bool a = true;
+        //Get current account 
+        private ShippingAccount GetCurrentAccount()
+        {
+            string username = System.Web.HttpContext.Current.User.Identity.Name;
+            if (username == null)
+            {
+                return null;
+            }
+            ShippingAccount current_account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
+            return current_account;
+        }
+
+        [Authorize(Roles = "Employee")]
         // GET: Trackings
         public ActionResult Index()
         {
@@ -21,6 +35,7 @@ namespace SinExWebApp20328800.Controllers
             return View(trackings.ToList());
         }
 
+        [Authorize(Roles = "Customer,Employee")]
         // GET: Trackings/Details/5
         public ActionResult Details(int? id)
         {
@@ -33,13 +48,30 @@ namespace SinExWebApp20328800.Controllers
             {
                 return HttpNotFound();
             }
+            if(tracking.Shipment.SenderShippingAccountID != GetCurrentAccount().ShippingAccountId)
+            {
+                return HttpNotFound();
+            }
             return View(tracking);
         }
 
+        [Authorize(Roles = "Employee")]
         // GET: Trackings/Create
-        public ActionResult Create()
+        public ActionResult Create(int? WaybillId)
         {
-            ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "ReferenceNumber");
+            if (WaybillId == null)
+            {
+                a = false;
+                ViewBag.AlreadyEnterWaybillId = false;
+                ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "WaybillId");
+            }
+            else
+            {
+                a = true;
+                ViewBag.AlreadyEnterWaybillId = true;
+                ViewBag.WaybillId = WaybillId;
+            }
+
             return View();
         }
 
@@ -48,20 +80,34 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]
         public ActionResult Create([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark")] Tracking tracking)
         {
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId && s.CancelledOrNot == false);
+            tracking.Shipment = shipment;
+            if (a)
+            {
+                ViewBag.AlreadyEnterWaybillId = true;
+                ViewBag.WaybillId = tracking.WaybillId;
+            }
+            else
+            {
+                ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "WaybillId", tracking.WaybillId);
+                ViewBag.AlreadyEnterWaybillId = false;
+            }
             if (ModelState.IsValid)
             {
-                db.Trackings.Add(tracking);
+                shipment.Trackings.Add(tracking);
+                //db.Trackings.Add(tracking);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "ReferenceNumber", tracking.WaybillId);
             return View(tracking);
+
         }
 
         // GET: Trackings/Edit/5
+        [Authorize(Roles = "Employee")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -73,7 +119,8 @@ namespace SinExWebApp20328800.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "ReferenceNumber", tracking.WaybillId);
+            ViewBag.WaybillId = tracking.WaybillId;
+            ViewBag.Time = tracking.Time;
             return View(tracking);
         }
 
@@ -82,6 +129,7 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]
         public ActionResult Edit([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark")] Tracking tracking)
         {
             if (ModelState.IsValid)
@@ -90,11 +138,13 @@ namespace SinExWebApp20328800.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "ReferenceNumber", tracking.WaybillId);
+            ViewBag.WaybillId = tracking.WaybillId;
+            ViewBag.Time = tracking.Time;
             return View(tracking);
         }
 
         // GET: Trackings/Delete/5
+        [Authorize(Roles = "Employee")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -112,9 +162,13 @@ namespace SinExWebApp20328800.Controllers
         // POST: Trackings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]
         public ActionResult DeleteConfirmed(int id)
         {
+            
             Tracking tracking = db.Trackings.Find(id);
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId && s.CancelledOrNot == false);
+            //shipment.Trackings.Remove(tracking);
             db.Trackings.Remove(tracking);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -127,6 +181,33 @@ namespace SinExWebApp20328800.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult GetTime(DateTime Time, int WaybillId)
+        {
+            if (string.IsNullOrEmpty(Time.ToString()))
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+            ShippingAccount current_account = GetCurrentAccount();
+            var hehe = db.Trackings.Where(a => a.WaybillId == WaybillId).Select(a => a.Time).OrderBy(a => a);
+            bool faultornot = false;
+            DateTime haha = new DateTime();
+            foreach (DateTime hihi in hehe)
+            {
+                if (Time <= hihi)
+                {
+                    faultornot = true;
+                    haha = hihi;
+                    break;
+                }
+            }
+            if (faultornot)
+            {
+                return Json(haha, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
     }
 }

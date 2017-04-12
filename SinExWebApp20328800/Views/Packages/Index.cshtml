@@ -4,24 +4,31 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Packages for shipment (Waybill ID: @ViewBag.Waybillid.ToString("0000000000000000"))</h2>
+<h2>
+    Packages for shipment (Waybill ID: <a href="/Shipments/Details/@ViewBag.Waybillid">@ViewBag.Waybillid.ToString("0000000000000000")</a>)
+</h2>
 
-<p>
-    @Html.ActionLink("Add one more package for this shipment", "Create", new { WaybillId = ViewBag.Waybillid })
-</p>
+
+@if (ViewBag.CancelledOrNot == false && ViewBag.ConfirmOrNot== false)
+{
+    <p>
+        @Html.ActionLink("Add one more package for this shipment", "Create", new { WaybillId = ViewBag.Waybillid })
+    </p>
+}
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Currency.CurrencyCode)
-        </th>
+
         <th>
             @Html.DisplayNameFor(model => model.PackageType.Type)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PackageTypeSize.TypeSize)
+            Size
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            Currency
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Value)
@@ -38,9 +45,7 @@
     @foreach (var item in Model)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Currency.CurrencyCode)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.PackageType.Type)
             </td>
@@ -49,6 +54,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Currency.CurrencyCode)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Value)
@@ -60,9 +68,17 @@
                 @Html.DisplayFor(modelItem => item.ActualWeight)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.PackageID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.PackageID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.PackageID })
+                @if (item.Shipment.CancelledOrNot == false && item.Shipment.ConfirmOrNot == false)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PackageID }) <text>|</text>
+                    @Html.ActionLink("Details", "Details", new { id = item.PackageID }) <text>|</text>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PackageID })
+                }
+                else
+                {
+                    @Html.ActionLink("Details", "Details", new { id = item.PackageID })
+                }
+
             </td>
             <td></td>
 

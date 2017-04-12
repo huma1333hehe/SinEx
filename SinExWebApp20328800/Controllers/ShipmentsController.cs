@@ -12,6 +12,7 @@ using X.PagedList;
 
 namespace SinExWebApp20328800.Controllers
 {
+    [Authorize(Roles = "Customer,Employee")]
     public class ShipmentsController : Controller
     {
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
@@ -202,7 +203,7 @@ namespace SinExWebApp20328800.Controllers
             {
                 return HttpNotFound();
             }
-            if(shipment.SenderShippingAccountID != GetCurrentAccount().ShippingAccountId)
+            if (User.IsInRole("Customer") && shipment.SenderShippingAccountID != GetCurrentAccount().ShippingAccountId)
             {
                 return HttpNotFound();
             }
@@ -213,6 +214,8 @@ namespace SinExWebApp20328800.Controllers
         [Authorize(Roles = "Customer")]
         public ActionResult Create()
         {
+            Shipment shipment = new Shipment();
+            shipment.RecipientShippingAccountID = GetCurrentAccount().ShippingAccountId;
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type");
             ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
             ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
@@ -223,8 +226,313 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
             IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
             ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
-            return View();
+            return View(shipment);
         }
+
+
+
+        // POST: Shipments/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
+        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
+        {
+            ShippingAccount current_account = GetCurrentAccount();
+
+            shipment.SenderShippingAccountID = current_account.ShippingAccountId;
+            shipment.ConfirmOrNot = false;
+            shipment.PickupOrNot = false;
+            shipment.CancelledOrNot = false;
+            shipment.Duty = null;
+            shipment.Tax = null;
+            shipment.PickupType = PickupType.Immediate;
+            shipment.PickupDate = DateTime.Now;
+            shipment.NumberOfPackages = 0;
+
+            bool is_recipient_valid = false;
+            if (!(shipment.TaxPayer == TaxPayer.Recipient || shipment.ShipmentPayer == ShipmentPayer.Recipient))
+            {
+                shipment.RecipientShippingAccountID = current_account.ShippingAccountId;
+
+                is_recipient_valid = true;
+            }
+            else
+            {
+                ShippingAccount recipient_account = db.ShippingAccounts.SingleOrDefault(s => s.ShippingAccountId == shipment.RecipientShippingAccountID);
+                if (recipient_account != null && recipient_account != current_account)
+                {
+                    shipment.RecipientShippingAccountID = recipient_account.ShippingAccountId;
+                    is_recipient_valid = true;
+                }
+                else if (recipient_account == null)
+                {
+                    is_recipient_valid = false;
+                    ViewBag.ErrorMsg = "Recipient account ID does not exist, please input again!";
+                }
+                else if (recipient_account == current_account)
+                {
+                    is_recipient_valid = false;
+                    ViewBag.ErrorMsg = "Recipient account ID can not be yours, please input again!";
+                }
+            }
+
+
+            if (ModelState.IsValid && is_recipient_valid == true)
+            {
+                db.Shipments.Add(shipment);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+
+            ViewBag.RecipientShippingAccountID = GetCurrentAccount().ShippingAccountId;
+            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
+            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
+            ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
+            ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
+
+            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
+            return View(shipment);
+        }
+
+        // GET: Shipments/Edit/5
+        [Authorize(Roles = "Customer")]
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false && s.ConfirmOrNot==false);
+            if (shipment == null)
+            {
+                return HttpNotFound();
+            }
+            if (shipment.SenderShippingAccountID != GetCurrentAccount().ShippingAccountId)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.SenderShippingAccountID = shipment.RecipientShippingAccountID;
+            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type");
+            ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
+            ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
+
+            ShippingAccount current_account = GetCurrentAccount();
+
+            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
+            return View(shipment);
+        }
+
+        // POST: Shipments/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
+        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
+        {
+            shipment.ServiceType = db.ServiceTypes.SingleOrDefault(s => s.ServiceTypeID == shipment.ServiceTypeID);
+
+            ShippingAccount current_account = GetCurrentAccount();
+
+            bool is_recipient_valid = false;
+
+            if (!(shipment.TaxPayer == TaxPayer.Recipient || shipment.ShipmentPayer == ShipmentPayer.Recipient))
+            {
+                shipment.RecipientShippingAccount = current_account;
+                shipment.RecipientShippingAccountID = current_account.ShippingAccountId;
+
+                is_recipient_valid = true;
+            }
+            else
+            {
+                ShippingAccount recipient_account = db.ShippingAccounts.SingleOrDefault(s => s.ShippingAccountId == shipment.RecipientShippingAccountID);
+                if (recipient_account != null && recipient_account != current_account)
+                {
+                    shipment.RecipientShippingAccount = recipient_account;
+                    shipment.RecipientShippingAccountID = recipient_account.ShippingAccountId;
+                    is_recipient_valid = true;
+                }
+                else if (recipient_account == null)
+                {
+                    is_recipient_valid = false;
+                    ViewBag.ErrorMsg = "Recipient account ID does not exist, please input again!";
+                }
+                else if (recipient_account == current_account)
+                {
+                    is_recipient_valid = false;
+                    ViewBag.ErrorMsg = "Recipient account ID can not be yours, please input again!";
+                }
+            }
+
+            if (ModelState.IsValid && is_recipient_valid == true)
+            {
+                db.Entry(shipment).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+
+            ViewBag.RecipientShippingAccountID = shipment.RecipientShippingAccountID;
+            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
+            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
+            ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
+            ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
+
+            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
+            return View(shipment);
+        }
+
+        // GET: Shipments/Delete/5
+        [Authorize(Roles = "Customer")]
+        public ActionResult Cancel(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
+            if (shipment == null)
+            {
+                return HttpNotFound();
+            }
+            if (shipment.SenderShippingAccountID != GetCurrentAccount().ShippingAccountId)
+            {
+                return HttpNotFound();
+            }
+            return View(shipment);
+        }
+
+        // POST: Shipments/Delete/5
+        [HttpPost, ActionName("Cancel")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
+        public ActionResult Cancel(int id)
+        {
+            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
+            shipment.CancelledOrNot = true;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+        // GET: Shipments/Confirm/5
+        [Authorize(Roles = "Customer")]
+        public ActionResult Confirm(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
+            if (shipment == null)
+            {
+                return HttpNotFound();
+            }
+            if (shipment.SenderShippingAccountID != GetCurrentAccount().ShippingAccountId)
+            {
+                return HttpNotFound();
+            }
+            return View(shipment);
+        }
+
+        // POST: Shipments/Confirm/5
+        [HttpPost, ActionName("Confirm")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
+        public ActionResult Confirm([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
+        {
+            shipment.ConfirmOrNot = true;
+            shipment.PickupOrNot = false;
+            db.Entry(shipment).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+
+        // GET: Shipments/Pickup/5
+        [Authorize(Roles = "Employee")]
+        public ActionResult Pickup(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Shipment shipment = db.Shipments.Include(s => s.Packages).SingleOrDefault(s => s.WaybillId == id &&s.CancelledOrNot==false);
+
+            if (shipment == null)
+            {
+                return HttpNotFound();
+            }
+            if (shipment.Packages == null || shipment.NumberOfPackages == 0)
+            {
+                ViewBag.Error = "This shipment has no packages!";
+            }
+            if (shipment.PickupOrNot == true)
+            {
+                ViewBag.Error = "This shipment has been picked up!";
+            }
+            if (shipment.ConfirmOrNot == false)
+            {
+                ViewBag.Error = "This shipment has not been confirmed!";
+            }
+            return View(shipment);
+        }
+
+        // POST: Shipments/Pickup/5
+        [HttpPost, ActionName("Pickup")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]
+        public ActionResult Pickup([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,Packages")] Shipment shipment)
+        {
+            db.Shipments.Attach(shipment);
+            db.Entry(shipment).Collection(p => p.Packages).Load();
+            bool validate = true;
+            foreach (Package package in shipment.Packages)
+            {
+                string key = "package_" + package.PackageID.ToString();
+                if (Request.Form[key] != "")
+                {
+                    decimal value;
+                    if (Decimal.TryParse(Request.Form[key], out value))
+                    {
+                        package.ActualWeight = value;
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMsg = "Input must be decimal";
+                        validate = false;
+                    }
+
+                }
+            }
+            if (validate == true)
+            {
+                shipment.ConfirmOrNot = true;
+                shipment.PickupOrNot = true;
+                db.Entry(shipment).State = EntityState.Modified;
+                foreach (Package package in shipment.Packages)
+                {
+                    db.Entry(package).State = EntityState.Modified;
+                }
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(shipment);
+        }
+
 
 
         public ActionResult GetRecipient(string RecipientAddressNickname)
@@ -291,233 +599,6 @@ namespace SinExWebApp20328800.Controllers
             return current_account;
         }
         //.....
-
-        // POST: Shipments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Customer")]
-        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
-        {
-            ShippingAccount current_account = GetCurrentAccount();
-
-            shipment.SenderShippingAccountID = db.ShippingAccounts.SingleOrDefault(s => s.UserName == User.Identity.Name).ShippingAccountId;
-            shipment.ConfirmOrNot = false;
-            shipment.PickupOrNot = false;
-            shipment.Duty = null;
-            shipment.Tax = null;
-            shipment.PickupType = PickupType.Immediate;
-            shipment.PickupDate = DateTime.Now;
-            shipment.NumberOfPackages = 0;
-
-            bool is_recipient_valid = false;
-            if (!(shipment.TaxPayer == TaxPayer.Recipient || shipment.ShipmentPayer == ShipmentPayer.Recipient))
-            {
-                shipment.RecipientShippingAccount = current_account;
-                shipment.RecipientShippingAccountID = current_account.ShippingAccountId;
-
-                is_recipient_valid = true;
-            }
-            else
-            {
-                ShippingAccount recipient_account = db.ShippingAccounts.SingleOrDefault(s => s.ShippingAccountId == shipment.RecipientShippingAccountID);
-                if (recipient_account != null && recipient_account != current_account)
-                {
-                    shipment.RecipientShippingAccount = recipient_account;
-                    shipment.RecipientShippingAccountID = recipient_account.ShippingAccountId;
-                    is_recipient_valid = true;
-                }
-                else if (recipient_account == null)
-                {
-                    is_recipient_valid = false;
-                    ViewBag.ErrorMsg = "Recipient account ID does not exist, please input again!";
-                }
-                else if (recipient_account == current_account)
-                {
-                    is_recipient_valid = false;
-                    ViewBag.ErrorMsg = "Recipient account ID can not be yours, please input again!";
-                }
-            }
-
-            if (ModelState.IsValid && is_recipient_valid == true)
-            {
-                db.Shipments.Add(shipment);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-
-            ViewBag.RecipientShippingAccountID = shipment.RecipientShippingAccountID;
-            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
-            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
-            ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
-            ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
-
-            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
-            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
-            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
-            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
-            return View(shipment);
-        }
-
-        // GET: Shipments/Edit/5
-        [Authorize(Roles = "Customer,Employee")]
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Shipment shipment = db.Shipments.Find(id);
-            if (shipment == null)
-            {
-                return HttpNotFound();
-            }
-            if (shipment.SenderShippingAccountID != GetCurrentAccount().ShippingAccountId)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.SenderShippingAccountID = shipment.RecipientShippingAccountID;
-            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type");
-            ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
-            ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
-
-            ShippingAccount current_account = GetCurrentAccount();
-
-            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
-            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
-            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
-            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
-            return View(shipment);
-        }
-
-        // POST: Shipments/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Customer,Employee")]
-        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
-        {
-            ShippingAccount current_account = GetCurrentAccount();
-
-            bool is_recipient_valid = false;
-
-            if (!(shipment.TaxPayer == TaxPayer.Recipient || shipment.ShipmentPayer == ShipmentPayer.Recipient))
-            {
-                shipment.RecipientShippingAccount = current_account;
-                shipment.RecipientShippingAccountID = current_account.ShippingAccountId;
-
-                is_recipient_valid = true;
-            }
-            else
-            {
-                ShippingAccount recipient_account = db.ShippingAccounts.SingleOrDefault(s => s.ShippingAccountId == shipment.RecipientShippingAccountID);
-                if (recipient_account != null && recipient_account != current_account)
-                {
-                    shipment.RecipientShippingAccount = recipient_account;
-                    shipment.RecipientShippingAccountID = recipient_account.ShippingAccountId;
-                    is_recipient_valid = true;
-                }
-                else if (recipient_account == null)
-                {
-                    is_recipient_valid = false;
-                    ViewBag.ErrorMsg = "Recipient account ID does not exist, please input again!";
-                }
-                else if (recipient_account == current_account)
-                {
-                    is_recipient_valid = false;
-                    ViewBag.ErrorMsg = "Recipient account ID can not be yours, please input again!";
-                }
-            }
-
-            if (ModelState.IsValid && is_recipient_valid == true)
-            {
-                db.Entry(shipment).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-
-            ViewBag.RecipientShippingAccountID = shipment.RecipientShippingAccountID;
-            ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
-            ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
-            ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
-            ViewBag.Destination = new SelectList(db.Destinations, "City", "City");
-
-            IEnumerable<Recipient> hehe = db.Recipients.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
-            ViewBag.RecipientAddressNickname = new SelectList(hehe, "Nickname", "Nickname");
-            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
-            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
-            return View(shipment);
-        }
-
-        // GET: Shipments/Delete/5
-        [Authorize(Roles = "Customer,Employee")]
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Shipment shipment = db.Shipments.Find(id);
-            if (shipment == null)
-            {
-                return HttpNotFound();
-            }
-            if (shipment.SenderShippingAccountID != GetCurrentAccount().ShippingAccountId)
-            {
-                return HttpNotFound();
-            }
-            return View(shipment);
-        }
-
-        // POST: Shipments/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Customer,Employee")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Shipment shipment = db.Shipments.Find(id);
-            db.Shipments.Remove(shipment);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-
-        // GET: Shipments/Confirm/5
-        [Authorize(Roles = "Customer")]
-        public ActionResult Confirm(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Shipment shipment = db.Shipments.Find(id);
-            if (shipment == null)
-            {
-                return HttpNotFound();
-            }
-            if (shipment.SenderShippingAccountID != GetCurrentAccount().ShippingAccountId)
-            {
-                return HttpNotFound();
-            }
-            return View(shipment);
-        }
-
-        // POST: Shipments/Confirm/5
-        [HttpPost, ActionName("Confirm")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Customer")]
-        public ActionResult Confirm([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
-        {
-            shipment.ConfirmOrNot = true;
-            shipment.PickupOrNot = false;
-            db.Entry(shipment).State = EntityState.Modified;
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
     }
 }
