@@ -9,6 +9,8 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
+
 <table class="table">
     <tr>
         <th>
@@ -18,7 +20,14 @@
             @Html.DisplayNameFor(model => model.PickupOrNot)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ReferenceNumber)
+            @if (User.IsInRole("Employee"))
+            {
+                <text>Sender User Name</text>
+            }
+            @if (User.IsInRole("Customer"))
+            {
+                @Html.DisplayNameFor(model => model.ReferenceNumber)
+            }
         </th>
         <th>
             @Html.DisplayNameFor(model => model.WaybillId)
@@ -45,40 +54,83 @@
                 @Html.DisplayFor(modelItem => item.PickupOrNot)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ReferenceNumber)
+                @if (User.IsInRole("Employee"))
+                {
+                    @item.SenderShippingAccount.UserName
+                }
+                @if (User.IsInRole("Customer"))
+                {
+                    if (item.CancelledOrNot == false)
+                    {
+                        @item.ReferenceNumber
+                    }
+                    else
+                    {
+                        <s>@item.ReferenceNumber</s>
+                    }
+                }
             </td>
             <td>
-                @item.WaybillId.ToString("0000000000000000")
+                @if (item.CancelledOrNot == false)
+                {
+                    @item.WaybillId.ToString("0000000000000000")
+                }
+                else
+                {
+                    <s>@item.WaybillId.ToString("0000000000000000")</s>
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ServiceType.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NumberOfPackages)
-                @if (item.NumberOfPackages < 10)
+
+                @Html.ActionLink(item.NumberOfPackages.ToString(), "../Packages/Index", new { WaybillId = item.WaybillId })
+                @if (User.IsInRole("Customer") && item.CancelledOrNot == false && item.NumberOfPackages < 10 && item.ConfirmOrNot == false)
                 {
                     @Html.ActionLink("Add Package", "../Packages/Create", new { WaybillId = item.WaybillId })
+
                 }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RecipientFullName)
             </td>
             <td>
-                @if (item.ConfirmOrNot == false && item.PickupOrNot == false)
+                @if (User.IsInRole("Employee"))
                 {
-                    @Html.ActionLink("Edit", "Edit", new { id = item.WaybillId })   <text>|</text>
-                    @Html.ActionLink("Confirm", "Confirm", new { id = item.WaybillId })  <text>|</text>
-                    @Html.ActionLink("Details", "Details", new { id = item.WaybillId }) <text>|</text>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.WaybillId })
-                }
-                @if (item.ConfirmOrNot == true && item.PickupOrNot == false)
-                {
-                    @Html.ActionLink("Details", "Details", new { id = item.WaybillId })  <text>|</text>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.WaybillId })
-                }
-                @if (item.ConfirmOrNot == true && item.PickupOrNot == true)
-                {
+
+                    if (item.CancelledOrNot == false && item.ConfirmOrNot == true && item.PickupOrNot == false)
+                    {
+                        @Html.ActionLink("Pickup", "Pickup", new { id = item.WaybillId }) <text>|</text>
+
+                    }
                     @Html.ActionLink("Details", "Details", new { id = item.WaybillId })
+                }
+                @if (User.IsInRole("Customer"))
+                {
+                    if (item.CancelledOrNot == false)
+                    {
+                        if (item.ConfirmOrNot == false)
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { id = item.WaybillId })   <text>|</text>
+                            @Html.ActionLink("Confirm", "Confirm", new { id = item.WaybillId })  <text>|</text>
+                            @Html.ActionLink("Details", "Details", new { id = item.WaybillId }) <text>|</text>
+                            @Html.ActionLink("Cancel", "Cancel", new { id = item.WaybillId })
+                        }
+                        else if (item.PickupOrNot == false)
+                        {
+                            @Html.ActionLink("Details", "Details", new { id = item.WaybillId })  <text>|</text>
+                            @Html.ActionLink("Cancel", "Cancel", new { id = item.WaybillId })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Details", "Details", new { id = item.WaybillId })
+                        }
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.WaybillId })
+                    }
                 }
             </td>
         </tr>

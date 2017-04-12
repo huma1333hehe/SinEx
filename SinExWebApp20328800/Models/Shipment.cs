@@ -62,6 +62,9 @@ namespace SinExWebApp20328800.Models
         [Required]
         [Display(Name = "Pickup")]
         public virtual bool PickupOrNot { get; set; }
+        [Required]
+        [Display(Name = "Cancelled")]
+        public virtual bool CancelledOrNot { get; set; }
 
         [Required]
         [Display(Name = "Pickup Type")]
@@ -114,7 +117,9 @@ namespace SinExWebApp20328800.Models
         public virtual ShippingAccount SenderShippingAccount { get; set; }
         [ForeignKey("RecipientShippingAccountID")]
         public virtual ShippingAccount RecipientShippingAccount { get; set; }
+        [InverseProperty("Shipment")]
         public virtual ICollection<Package> Packages { get; set; }
+        [InverseProperty("Shipment")]
         public virtual ICollection<Tracking> Trackings { get; set; }
 
     }
