@@ -45,6 +45,16 @@
                         </ul>
                     </li>
                     }
+                    @if (User.IsInRole("Employee"))
+                    {
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracking<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Index", "Index", "Trackings")</li>
+                                <li>@Html.ActionLink("Create", "Create", "Trackings")</li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

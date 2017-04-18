@@ -11,12 +11,22 @@ namespace SinExWebApp20328800.Models
     public class Tracking
     {
         public virtual int TrackingID { get; set; }
+
+        [Required]
         public virtual int WaybillId { get; set; }
+
+        [Required]
         public virtual DateTime Time { get; set; }
+
+        [Required]
         public virtual string Description { get; set; }
+
+        [Required]
         public virtual string Location { get; set; }
+
+        [Required]
         public virtual string Remark { get; set; }
-        //
+
         [ForeignKey("WaybillId")]
         public virtual Shipment Shipment { get; set; }
     }
