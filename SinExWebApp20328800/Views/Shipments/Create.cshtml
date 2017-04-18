@@ -14,11 +14,24 @@
         <h4>Shipment</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+        <hr />
+        <h4>General Info</h4>
         <div class="form-group">
             @Html.LabelFor(model => model.ReferenceNumber, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.ReferenceNumber, new { htmlAttributes = new { @class = "form-control", onchange = "OnReferenceNumberChange()" } })
                 @Html.ValidationMessageFor(model => model.ReferenceNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ServiceTypeID, "ServiceTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ServiceTypeID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ServiceTypeID, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -41,7 +54,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShipmentPayer, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.ShipmentPayer, htmlAttributes: new { @class = "form-control", onchange = "OnPayerChange()" })
+                @Html.EnumDropDownListFor(model => model.ShipmentPayer, htmlAttributes: new { @class = "form-control", id = "ShipmentPayer", onchange = "OnPayerChange()" })
                 @Html.ValidationMessageFor(model => model.ShipmentPayer, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -49,11 +62,22 @@
         <div class="form-group">
             @Html.LabelFor(model => model.TaxPayer, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.TaxPayer, htmlAttributes: new { @class = "form-control", onchange = "OnPayerChange()" })
+                @Html.EnumDropDownListFor(model => model.TaxPayer, htmlAttributes: new { @class = "form-control", id = "TaxPayer", onchange = "OnPayerChange()" })
                 @Html.ValidationMessageFor(model => model.TaxPayer, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <div class="form-group" id="RecipientShippingAccountAll" hidden>
+            @Html.LabelFor(model => model.RecipientShippingAccountID, "Recipient Shipping Account ID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.RecipientShippingAccountID, new { @class = "form-control", value = ViewBag.RecipientShippingAccountID })
+                @if (ViewBag.ErrorMsg != null)
+                {
+                    <span class="field-validation-error text-danger" data-valmsg-for="RecipientShippingAccountID" data-valmsg-replace="true">@ViewBag.ErrorMsg</span>
+                }
+            </div>
+        </div>
+        <hr />
+        <h4>Recipient Info</h4>
         <div class="form-group">
             @Html.LabelFor(model => model.RecipientAddressNickname, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -87,10 +111,43 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.RecipientDeliveryAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.RecipientDeliveryBuilding, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientDeliveryAddress, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientDeliveryAddress" })
-                @Html.ValidationMessageFor(model => model.RecipientDeliveryAddress, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.RecipientDeliveryBuilding, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientDeliveryBuilding" })
+                @Html.ValidationMessageFor(model => model.RecipientDeliveryBuilding, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipientDeliveryStreet, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecipientDeliveryStreet, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientDeliveryStreet" })
+                @Html.ValidationMessageFor(model => model.RecipientDeliveryStreet, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipientDeliveryCity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecipientDeliveryCity, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientDeliveryCity" })
+                @Html.ValidationMessageFor(model => model.RecipientDeliveryCity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipientDeliveryProvince, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecipientDeliveryProvince, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientDeliveryProvince" })
+                @Html.ValidationMessageFor(model => model.RecipientDeliveryProvince, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipientDeliveryPostcode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecipientDeliveryPostcode, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientDeliveryPostcode" })
+                @Html.ValidationMessageFor(model => model.RecipientDeliveryPostcode, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -110,13 +167,8 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ServiceTypeID, "ServiceTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ServiceTypeID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ServiceTypeID, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <hr />
+        <h4>Pickup Info</h4>
 
         <div class="form-group">
             @Html.LabelFor(model => model.PickupLocationNickname, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -136,14 +188,6 @@
 
 
 
-        <div class="form-group" id="RecipientShippingAccountAll" hidden>
-            @Html.LabelFor(model => model.RecipientShippingAccountID, "RecipientShippingAccountID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("RecipientShippingAccountID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.RecipientShippingAccountID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
 
 
         <div class="form-group">
@@ -161,6 +205,14 @@
 
 
 <script type="text/javascript">
+    function OnLoadCheck() {
+        if ($("#ShipmentPayer").val() == "1" || $("#TaxPayer").val() == "1") {
+            $("#RecipientShippingAccountAll").show();
+        }
+    };
+
+    window.onload = OnLoadCheck;
+
     function AppendUrlParamTokens(url, params) {
 
         for (var param in params) {
@@ -178,14 +230,22 @@
                 document.getElementById("RecipientFullName").value = result.FullName;
                 document.getElementById("RecipientCompanyName").value = result.CompanyName;
                 document.getElementById("RecipientDepartmentName").value = result.DepartmentName;
-                document.getElementById("RecipientDeliveryAddress").value = result.DeliveryAddress;
+                document.getElementById("RecipientDeliveryBuilding").value = result.DeliveryBuilding;
+                document.getElementById("RecipientDeliveryStreet").value = result.DeliveryStreet;
+                document.getElementById("RecipientDeliveryCity").value = result.DeliveryCity;
+                document.getElementById("RecipientDeliveryProvince").value = result.DeliveryProvince;
+                document.getElementById("RecipientDeliveryPostcode").value = result.DeliveryPostcode;
                 document.getElementById("RecipientEmail").value = result.Email;
                 document.getElementById("RecipientPhoneNumber").value = result.PhoneNumber;
             } else {
                 document.getElementById("RecipientFullName").value = "";
                 document.getElementById("RecipientCompanyName").value = "";
                 document.getElementById("RecipientDepartmentName").value = "";
-                document.getElementById("RecipientDeliveryAddress").value = "";
+                document.getElementById("RecipientDeliveryBuilding").value = "";
+                document.getElementById("RecipientDeliveryStreet").value = "";
+                document.getElementById("RecipientDeliveryCity").value = "";
+                document.getElementById("RecipientDeliveryProvince").value = "";
+                document.getElementById("RecipientDeliveryPostcode").value = "";
                 document.getElementById("RecipientEmail").value = "";
                 document.getElementById("RecipientPhoneNumber").value = "";
             }
@@ -215,7 +275,7 @@
             dataType: "JSON",
             data: { ShipmentPayer: ShipmentPayer, TaxPayer: TaxPayer },
             success: function (result) {
-                if (result[0] == "1" && result[1] == "1") {
+                if (result[0] == "1" || result[1] == "1") {
                     $("#RecipientShippingAccountAll").show();
                 } else {
                     $("#RecipientShippingAccountAll").hide();

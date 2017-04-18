@@ -7,43 +7,13 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create") |
+    @Html.ActionLink("Multiple Confirmation", "MultipleConfirm")
 </p>
+
+
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.RecipientShippingAccount)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SenderShippingAccount)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ServiceType.Type)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ReferenceNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Origin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Destination)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NumberOfPackages)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ShipmentPayer)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TaxPayer)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Duty)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Tax)
-        </th>
         <th>
             @Html.DisplayNameFor(model => model.ConfirmOrNot)
         </th>
@@ -51,116 +21,134 @@
             @Html.DisplayNameFor(model => model.PickupOrNot)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PickupType)
+            @if (User.IsInRole("Employee"))
+            {
+                <text>Sender User Name</text>
+            }
+            @if (User.IsInRole("Customer"))
+            {
+                @Html.DisplayNameFor(model => model.ReferenceNumber)
+            }
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PickupDate)
+            @Html.DisplayNameFor(model => model.WaybillId)
+        </th>
+        <th>
+            @if (User.IsInRole("Employee"))
+            {
+                <text>Pickup Date Time</text>
+            }
+            @if (User.IsInRole("Customer"))
+            {
+                @Html.DisplayNameFor(model => model.ServiceType.Type)
+            }
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberOfPackages)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.RecipientFullName)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RecipientCompanyName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RecipientDepartmentName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RecipientDeliveryAddress)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RecipientPhoneNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RecipientEmail)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PickupLocationNickname)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PickupLocation)
-        </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.RecipientShippingAccount.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SenderShippingAccount.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ServiceType.Type)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReferenceNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Origin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Destination)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NumberOfPackages)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ShipmentPayer)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TaxPayer)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Duty)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tax)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ConfirmOrNot)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PickupOrNot)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PickupType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PickupDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RecipientFullName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RecipientCompanyName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RecipientDepartmentName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RecipientDeliveryAddress)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RecipientPhoneNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RecipientEmail)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PickupLocationNickname)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PickupLocation)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.WaybillId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.WaybillId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.WaybillId })|
-            @Html.ActionLink("Add package(s)", "../Packages/Index", new { WaybillId = item.WaybillId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConfirmOrNot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PickupOrNot)
+            </td>
+            <td>
+                @if (User.IsInRole("Employee"))
+                {
+                    @item.SenderShippingAccount.UserName
+                }
+                @if (User.IsInRole("Customer"))
+                {
+                    if (item.CancelledOrNot == false)
+                    {
+                        @item.ReferenceNumber
+                    }
+                    else
+                    {
+                        <s>@item.ReferenceNumber</s>
+                    }
+                }
+            </td>
+            <td>
+                @if (item.CancelledOrNot == false)
+                {
+                    @item.WaybillId.ToString("0000000000000000")
+                }
+                else
+                {
+                    <s>@item.WaybillId.ToString("0000000000000000")</s>
+                }
+            </td>
+            <td>
+                @if (User.IsInRole("Employee"))
+                {
+                    @Html.DisplayFor(modelItem => item.PickupDate)
+                }
+                @if (User.IsInRole("Customer"))
+                {
+                   @Html.DisplayFor(modelItem => item.ServiceType.Type)
+                }
+            </td>
+            <td>
+
+                @Html.ActionLink(item.NumberOfPackages.ToString(), "../Packages/Index", new { WaybillId = item.WaybillId })
+                @if (User.IsInRole("Customer") && item.CancelledOrNot == false && item.NumberOfPackages < 10 && item.ConfirmOrNot == false)
+                {
+                    @Html.ActionLink("Add Package", "../Packages/Create", new { WaybillId = item.WaybillId })
+
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecipientFullName)
+            </td>
+            <td>
+                @if (User.IsInRole("Employee"))
+                {
+
+                    if (item.CancelledOrNot == false && item.ConfirmOrNot == true && item.PickupOrNot == false)
+                    {
+                        @Html.ActionLink("Pickup", "Pickup", new { id = item.WaybillId }) <text>|</text>
+
+                    }
+                    @Html.ActionLink("Details", "Details", new { id = item.WaybillId })
+                }
+                @if (User.IsInRole("Customer"))
+                {
+                    if (item.CancelledOrNot == false)
+                    {
+                        if (item.ConfirmOrNot == false)
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { id = item.WaybillId })   <text>|</text>
+                            @Html.ActionLink("Confirm", "Confirm", new { id = item.WaybillId })  <text>|</text>
+                            @Html.ActionLink("Details", "Details", new { id = item.WaybillId }) <text>|</text>
+                            @Html.ActionLink("Cancel", "Cancel", new { id = item.WaybillId })
+                        }
+                        else if (item.PickupOrNot == false)
+                        {
+                            @Html.ActionLink("Details", "Details", new { id = item.WaybillId })  <text>|</text>
+                            @Html.ActionLink("Cancel", "Cancel", new { id = item.WaybillId })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Details", "Details", new { id = item.WaybillId })
+                        }
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.WaybillId })
+                    }
+                }
+            </td>
+        </tr>
+    }
 
 </table>

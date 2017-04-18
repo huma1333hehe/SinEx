@@ -1,0 +1,147 @@
+﻿<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+@model IEnumerable<SinExWebApp20328800.Models.Shipment>
+
+@{
+    ViewBag.Title = "MulipleConfirm";
+}
+
+<h2>Muliple Confirm</h2>
+
+<h3>Are you sure you want to confirm these shipment? </h3>
+<h3>After confirmed, the shipments can not be edit but can be cancelled if they have not been picked up.</h3>
+<div>
+    <h4>Shipment</h4>
+    <hr />
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Confirm Multiple Shipments</h4>
+            <hr />
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="Shipments">Choose shipments to be picked up</label>
+                <div class="col-md-10">
+                    <select class="js-example-basic-multiple form-control" multiple="multiple" name="Shipments">
+                        @foreach (var shipment in Model)
+                        {
+                            <option value="@shipment.WaybillId">@shipment.ReferenceNumber</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="PickupLocation">Pickup Location Nickname</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("PickupLocationNickname", null, "Add new...", htmlAttributes: new { @class = "form-control", onchange = "OnPickupLocationNicknamesChange(this)" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="PickupLocation">Pickup Location</label>
+                <div class="col-md-10">
+                    <input class="form-control text-box single-line" data-val="true" data-val-required="The Pickup Location field is required." id="PickupLocation_edit" name="PickupLocation" type="text">
+                    <span class="field-validation-valid text-danger" data-valmsg-for="PickupLocation" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="PickupType">Pickup Type</label>
+                <div class="col-md-10">
+                    <select class="form-control" data-val="true" data-val-required="The Pickup Type field is required." id="PickupType" name="PickupType">
+                        <option selected="selected" value="0">Immediate</option>
+                        <option value="1">Prearranged</option>
+                    </select>
+                    <span class="field-validation-valid text-danger" data-valmsg-for="PickupType" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="PickupDate">Pickup Date</label>
+                <div class="col-md-10">
+                    <input class="form-control date-time-picker text-box single-line hasDatepicker valid" data-val="true" data-val-date="The field pickup Date must be a date." data-val-required="The pickup Date field is required." id="PickupDate" name="PickupDate" value="4/18/2017 12:29:57 PM" type="datetime">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="PickupDate" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input value="Confirm" class="btn btn-default" type="submit">
+                </div>
+            </div>
+
+
+        </div>
+    }
+
+
+    <p>
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                $(".date-time-picker").datetimepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+0",
+                    dateFormat: 'yy-mm-dd',
+                    controlType: 'select',
+                    timeFormat: 'HH:mm'
+                });
+            });
+
+            jQuery.validator.methods.date = function (value, element) {
+                var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+                if (isChrome) {
+                    var d = new Date();
+                    return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
+                } else {
+                    return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
+                }
+            };
+        });
+
+        function AppendUrlParamTokens(url, params) {
+
+            for (var param in params) {
+                if (params[param] == null) {
+                    delete params[param];
+                }
+            }
+
+            return url + "?" + jQuery.param(params);
+        }
+
+        function OnPickupLocationNicknamesChange(ddl) {
+            jQuery.getJSON(AppendUrlParamTokens('@Url.Action("GetPickupLocation", "Shipments")', { PickupLocationNickname: ddl.options[ddl.selectedIndex].value }), function (result) {
+                if (result.length != 0) {
+                    document.getElementById("PickupLocation_edit").value = result.Location;
+                } else {
+                    document.getElementById("PickupLocation_edit").value = "";
+                }
+
+
+            });
+        };
+
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+    <script type="text/javascript">
+        $(".js-example-basic-multiple").select2();
+    </script>
+}

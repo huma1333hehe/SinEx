@@ -26,16 +26,18 @@ namespace SinExWebApp20328800.Controllers
             ShippingAccount current_account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
             return current_account;
         }
-
-        [Authorize(Roles = "Employee")]
         // GET: Trackings
-        public ActionResult Index()
+        public ActionResult Index(int? WaybillId)
         {
+            ViewBag.shipments = db.Shipments.Where(s => s.CancelledOrNot == false && s.PickupOrNot == true).ToList();
+            ViewBag.shipment = WaybillId;
             var trackings = db.Trackings.Include(t => t.Shipment);
+            if (WaybillId != null)
+            {
+                trackings = trackings.Where(t => t.Shipment.WaybillId == WaybillId);
+            }
             return View(trackings.ToList());
         }
-
-        [Authorize(Roles = "Customer,Employee")]
         // GET: Trackings/Details/5
         public ActionResult Details(int? id)
         {
@@ -51,15 +53,14 @@ namespace SinExWebApp20328800.Controllers
             return View(tracking);
         }
 
-        [Authorize(Roles = "Employee")]
         // GET: Trackings/Create
-        public ActionResult Create(int ? WaybillId)
+        public ActionResult Create(int? WaybillId)
         {
             if (WaybillId == null)
             {
                 a = false;
                 ViewBag.AlreadyEnterWaybillId = false;
-                ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "WaybillId");
+                ViewBag.WaybillId = new SelectList(db.Shipments.Where(s => s.CancelledOrNot == false && s.PickupOrNot == true), "WaybillId", "WaybillId");
             }
             else
             {
@@ -67,7 +68,7 @@ namespace SinExWebApp20328800.Controllers
                 ViewBag.AlreadyEnterWaybillId = true;
                 ViewBag.WaybillId = WaybillId;
             }
-            
+
             return View();
         }
 
@@ -76,10 +77,9 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Employee")]
         public ActionResult Create([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark")] Tracking tracking)
         {
-            Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId);
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId && s.CancelledOrNot == false);
             tracking.Shipment = shipment;
             if (a)
             {
@@ -93,16 +93,16 @@ namespace SinExWebApp20328800.Controllers
             }
             if (ModelState.IsValid)
             {
-                db.Trackings.Add(tracking);
+                shipment.Trackings.Add(tracking);
+                //db.Trackings.Add(tracking);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(tracking);
-            
+
         }
 
         // GET: Trackings/Edit/5
-        [Authorize(Roles = "Employee")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -124,7 +124,6 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Employee")]
         public ActionResult Edit([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark")] Tracking tracking)
         {
             if (ModelState.IsValid)
@@ -139,7 +138,6 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Trackings/Delete/5
-        [Authorize(Roles = "Employee")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -157,10 +155,12 @@ namespace SinExWebApp20328800.Controllers
         // POST: Trackings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Employee")]
         public ActionResult DeleteConfirmed(int id)
         {
+
             Tracking tracking = db.Trackings.Find(id);
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId && s.CancelledOrNot == false);
+            //shipment.Trackings.Remove(tracking);
             db.Trackings.Remove(tracking);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -175,7 +175,7 @@ namespace SinExWebApp20328800.Controllers
             base.Dispose(disposing);
         }
 
-        public ActionResult GetTime (DateTime Time, int WaybillId)
+        public ActionResult GetTime(DateTime Time, int WaybillId)
         {
             if (string.IsNullOrEmpty(Time.ToString()))
             {
@@ -185,7 +185,7 @@ namespace SinExWebApp20328800.Controllers
             var hehe = db.Trackings.Where(a => a.WaybillId == WaybillId).Select(a => a.Time).OrderBy(a => a);
             bool faultornot = false;
             DateTime haha = new DateTime();
-            foreach(DateTime hihi in hehe)
+            foreach (DateTime hihi in hehe)
             {
                 if (Time <= hihi)
                 {

@@ -1,11 +1,12 @@
 ﻿@model SinExWebApp20328800.Models.Shipment
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Cancel";
 }
 
-<h2>Details</h2>
+<h2>Cancel</h2>
 
+<h3>Are you sure you want to cancel this shipment?</h3>
 <div>
     <h4>Shipment</h4>
     <hr />
@@ -225,11 +226,14 @@
         </dd>
 
     </dl>
-</div>
-<p>
-    @if (Model.CancelledOrNot == false && Model.ConfirmOrNot == false)
+
+    @using (Html.BeginForm())
     {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.WaybillId }) <text>|</text>
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Cancel" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
     }
-    @Html.ActionLink("Back to List", "Index")
-</p>
+</div>

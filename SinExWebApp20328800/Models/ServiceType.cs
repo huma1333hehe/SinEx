@@ -11,7 +11,7 @@ namespace SinExWebApp20328800.Models
     public class ServiceType
     {
         public virtual int ServiceTypeID { get; set; }
-
+        [Display(Name = "Service Type")]
         public virtual string Type { get; set; }
         [Display(Name = "Cut Off Time")]
         public virtual string CutoffTime { get; set; }

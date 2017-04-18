@@ -26,9 +26,19 @@ namespace SinExWebApp20328800.Models
         [Display(Name = "Department Name")]
         public virtual string DepartmentName { get; set; }
 
+        [Display(Name = "Recipient Delivery Building")]
+        public virtual string DeliveryBuilding { get; set; }
         [Required]
-        [Display(Name = "Delivery address")]
-        public virtual string DeliveryAddress { get; set; }
+        [Display(Name = "Recipient Delivery Street")]
+        public virtual string DeliveryStreet { get; set; }
+        [Required]
+        [Display(Name = "Recipient Delivery City")]
+        public virtual string DeliveryCity { get; set; }
+        [Required]
+        [Display(Name = "Recipient Delivery Province")]
+        public virtual string DeliveryProvince { get; set; }
+        [Display(Name = "Recipient Delivery Postcode")]
+        public virtual string DeliveryPostcode { get; set; }
 
         [Required]
         [StringLength(maximumLength: 14, MinimumLength = 8, ErrorMessage = "Phone number should contain at least 8 digits, at most 14 digits")]
