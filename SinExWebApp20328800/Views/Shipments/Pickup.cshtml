@@ -34,11 +34,16 @@
             @Html.HiddenFor(model => model.RecipientFullName)
             @Html.HiddenFor(model => model.RecipientCompanyName)
             @Html.HiddenFor(model => model.RecipientDepartmentName)
-            @Html.HiddenFor(model => model.RecipientDeliveryAddress)
+            @Html.HiddenFor(model => model.RecipientDeliveryBuilding)
+            @Html.HiddenFor(model => model.RecipientDeliveryStreet)
+            @Html.HiddenFor(model => model.RecipientDeliveryCity)
+            @Html.HiddenFor(model => model.RecipientDeliveryProvince)
+            @Html.HiddenFor(model => model.RecipientDeliveryPostcode)
             @Html.HiddenFor(model => model.RecipientPhoneNumber)
             @Html.HiddenFor(model => model.RecipientEmail)
-            @Html.HiddenFor(model => model.RecipientDeliveryAddress)
             @Html.HiddenFor(model => model.Packages)
+
+            <span class="field-validation-valid text-danger" data-valmsg-for="packages" data-valmsg-replace="true">@ViewBag.Incomplete</span>
 
             <hr />
             <h4>Input Duty and Tax Fee</h4>
@@ -60,6 +65,24 @@
                 </div>
             </div>
 
+            <hr />
+            <h4>Input Pickup Information for Tracking</h4>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="TrackingPickupLocation">Pickup Location (recorded as tracking information)</label>
+                <div class="col-md-10">
+                    <input class="form-control text-box single-line" data-val="true" data-val-required="The Pickup Location field is required."  name="TrackingPickupLocation"  type="text">
+                    <span class="field-validation-valid text-danger" data-valmsg-for="TrackingPickupLocation" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="PickupRemark">Pickup Remark</label>
+                <div class="col-md-10">
+                    <input class="form-control text-box single-line" data-val="true" id="PickupLocation_edit" name="PickupRemark" type="text">
+                    <span class="field-validation-valid text-danger" data-valmsg-for="PickupLocation" data-valmsg-replace="true"></span>
+                </div>
+            </div>
 
             <hr />
             <h4>Input Actual weight For Each Package</h4>
@@ -95,21 +118,20 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.RecipientShippingAccount.UserName)
+            Sender User Name
         </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RecipientShippingAccount.UserName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.SenderShippingAccount.UserName)
-        </dt>
-
         <dd>
             @Html.DisplayFor(model => model.SenderShippingAccount.UserName)
         </dd>
-
+        @if (Model.ShipmentPayer == SinExWebApp20328800.Models.ShipmentPayer.Recipient || Model.TaxPayer == SinExWebApp20328800.Models.TaxPayer.Recipient)
+        {
+            <dt>
+                Recipient User Name
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.RecipientShippingAccount.UserName)
+            </dd>
+        }
         <dt>
             @Html.DisplayNameFor(model => model.ServiceType.Type)
         </dt>
@@ -197,21 +219,30 @@
         <dd>
             @Html.DisplayFor(model => model.PickupOrNot)
         </dd>
+        @if (Model.ConfirmOrNot == true)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.PickupType)
+            </dt>
 
+            <dd>
+                @Html.DisplayFor(model => model.PickupType)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PickupDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PickupDate)
+            </dd>
+        }
         <dt>
-            @Html.DisplayNameFor(model => model.PickupType)
+            @Html.DisplayNameFor(model => model.RecipientAddressNickname)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PickupType)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PickupDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PickupDate)
+            @Html.DisplayFor(model => model.RecipientAddressNickname)
         </dd>
 
         <dt>
@@ -239,13 +270,35 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RecipientDeliveryAddress)
+            @Html.DisplayNameFor(model => model.RecipientDeliveryBuilding)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.RecipientDeliveryAddress)
+            @Html.DisplayFor(model => model.RecipientDeliveryBuilding)
         </dd>
-
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipientDeliveryStreet)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RecipientDeliveryStreet)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipientDeliveryCity)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RecipientDeliveryCity)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipientDeliveryProvince)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RecipientDeliveryProvince)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipientDeliveryPostcode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RecipientDeliveryPostcode)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.RecipientPhoneNumber)
         </dt>

@@ -21,14 +21,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.WaybillId, "WaybillId", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.WaybillId, new { disabled = "disabled", @readonly = "readonly", @Value = ViewBag.WaybillId })
+                @Html.TextBoxFor(model => model.WaybillId, new { @readonly = "readonly", @Value = ViewBag.WaybillId, @class= "form-control" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Time, new { disabled = "disabled", @readonly = "readonly", @Value = ViewBag.Time })
+                @Html.TextBoxFor(model => model.Time, new { @readonly = "readonly", @Value = ViewBag.Time, @class = "form-control" })
             </div>
         </div>
 

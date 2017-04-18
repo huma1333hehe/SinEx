@@ -502,6 +502,7 @@
     <Content Include="Views\Shipments\Confirm.cshtml" />
     <Content Include="Views\Shipments\Cancel.cshtml" />
     <Content Include="Views\Shipments\Pickup.cshtml" />
+    <Content Include="Views\Shipments\MultipleConfirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

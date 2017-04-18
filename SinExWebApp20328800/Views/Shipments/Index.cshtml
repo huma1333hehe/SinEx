@@ -7,7 +7,8 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create") |
+    @Html.ActionLink("Multiple Confirmation", "MultipleConfirm")
 </p>
 
 
@@ -33,7 +34,14 @@
             @Html.DisplayNameFor(model => model.WaybillId)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ServiceType.Type)
+            @if (User.IsInRole("Employee"))
+            {
+                <text>Pickup Date Time</text>
+            }
+            @if (User.IsInRole("Customer"))
+            {
+                @Html.DisplayNameFor(model => model.ServiceType.Type)
+            }
         </th>
         <th>
             @Html.DisplayNameFor(model => model.NumberOfPackages)
@@ -81,7 +89,14 @@
                 }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ServiceType.Type)
+                @if (User.IsInRole("Employee"))
+                {
+                    @Html.DisplayFor(modelItem => item.PickupDate)
+                }
+                @if (User.IsInRole("Customer"))
+                {
+                   @Html.DisplayFor(modelItem => item.ServiceType.Type)
+                }
             </td>
             <td>
 

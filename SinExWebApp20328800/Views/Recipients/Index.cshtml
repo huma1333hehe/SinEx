@@ -24,7 +24,7 @@
             @Html.DisplayNameFor(model => model.DepartmentName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DeliveryAddress)
+            DeliveryAddress
         </th>
         <th>
             @Html.DisplayNameFor(model => model.PhoneNumber)
@@ -54,7 +54,7 @@
                 @Html.DisplayFor(modelItem => item.DepartmentName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeliveryAddress)
+                @item.DeliveryBuilding, @item.DeliveryStreet, @item.DeliveryCity, @item.DeliveryProvince, @item.DeliveryPostcode
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
