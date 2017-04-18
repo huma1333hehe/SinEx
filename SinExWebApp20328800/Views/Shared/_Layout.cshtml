@@ -51,7 +51,7 @@
                                 @if (User.IsInRole("Employee"))
                                 {
                                     <li>@Html.ActionLink("All Shipments", "Index", "Shipments")</li>
-                                    
+
                                 }
                             </ul>
                         </li>
@@ -64,7 +64,7 @@
                             <li>@Html.ActionLink("Delivery Info", "Index", "Delivery")</li>
                         </ul>
                     </li>
-                    
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

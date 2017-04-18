@@ -21,7 +21,7 @@
                 <option value="">Select A Shipment</option>
                 @foreach (var shipment in ViewBag.shipments)
                 {
-                    <option value="@shipment.WaybillId" @(shipment.WaybillId==ViewBag.shipment?"selected":"")   >@shipment.WaybillId.ToString("0000000000000000")</option>
+                    <option value="@shipment.WaybillId" @(shipment.WaybillId == ViewBag.shipment ? "selected" : "")>@shipment.WaybillId.ToString("0000000000000000")</option>
                 }
 
             </select>

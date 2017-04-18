@@ -32,7 +32,7 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.shipments = db.Shipments.Where(s => s.CancelledOrNot == false && s.PickupOrNot == true).ToList();
             ViewBag.shipment = WaybillId;
             var trackings = db.Trackings.Include(t => t.Shipment);
-            if(WaybillId != null)
+            if (WaybillId != null)
             {
                 trackings = trackings.Where(t => t.Shipment.WaybillId == WaybillId);
             }
@@ -60,7 +60,7 @@ namespace SinExWebApp20328800.Controllers
             {
                 a = false;
                 ViewBag.AlreadyEnterWaybillId = false;
-                ViewBag.WaybillId = new SelectList(db.Shipments.Where(s=>s.CancelledOrNot==false && s.PickupOrNot == true), "WaybillId", "WaybillId");
+                ViewBag.WaybillId = new SelectList(db.Shipments.Where(s => s.CancelledOrNot == false && s.PickupOrNot == true), "WaybillId", "WaybillId");
             }
             else
             {
@@ -157,7 +157,7 @@ namespace SinExWebApp20328800.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            
+
             Tracking tracking = db.Trackings.Find(id);
             Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId && s.CancelledOrNot == false);
             //shipment.Trackings.Remove(tracking);
