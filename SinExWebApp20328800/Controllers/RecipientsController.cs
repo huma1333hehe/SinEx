@@ -31,7 +31,7 @@ namespace SinExWebApp20328800.Controllers
         public ActionResult Index()
         {
             ShippingAccount currentAccount = GetCurrentAccount();
-            var recipients = db.Recipients.Include(r => r.ShippingAccount).Where(r=>r.ShippingAccountId == currentAccount.ShippingAccountId);
+            var recipients = db.Recipients.Include(r => r.ShippingAccount).Where(r => r.ShippingAccountId == currentAccount.ShippingAccountId);
             return View(recipients.ToList());
         }
 
@@ -109,6 +109,7 @@ namespace SinExWebApp20328800.Controllers
                 }
                 ViewBag.general_duplicate = general_duplicate;
                 ViewBag.nickname_duplicate = nickname_duplicate;
+
                 if (!general_duplicate && !nickname_duplicate)
                 {
                     db.Recipients.Add(recipient);
@@ -123,7 +124,7 @@ namespace SinExWebApp20328800.Controllers
             return View(recipient);
         }
 
-     
+
         // GET: Recipients/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -150,6 +151,10 @@ namespace SinExWebApp20328800.Controllers
         {
             if (ModelState.IsValid)
             {
+                ShippingAccount account = GetCurrentAccount();
+                recipient.ShippingAccount = account;
+                recipient.ShippingAccountId = account.ShippingAccountId;
+
                 db.Entry(recipient).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

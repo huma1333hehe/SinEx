@@ -138,7 +138,10 @@
         var FullName = $('#FullName').val();
         var CompanyName = $('#CompanyName').val();
         var DepartmentName = $('#DepartmentName').val();
-        var DeliveryAddress = $('#DeliveryAddress').val();
+        var DeliveryBuilding = $('#DeliveryBuilding').val();
+        var DeliveryStreet = $('#DeliveryStreet').val();
+        var DeliveryProvince = $('#DeliveryProvince').val();
+        var DeliveryCity = $('#DeliveryCity').val();
         var PhoneNumber = $('#PhoneNumber').val();
         var Email = $('#Email').val();
         $.ajax({
@@ -158,10 +161,8 @@
             },
             success: function (result) {
                 if (result != null) {
-                    alert("Error! The recipient with the following information already exists in " + result + "'s account: \n\t" + "full name: " + FullName + "\n\t" + "company name: " + CompanyName + "\n\t" + "department name: " + DepartmentName + "\n\t" + "delivery address: " + DeliveryBuilding + "," + DeliveryStreet + "," + DeliveryCity + "," + Deliveryprovince + "," + DeliveryPostcode + "\n\t" + "phone number: " + PhoneNumber + "\n\t" + "email address: " + Email + "\n\tPlease try agian by inputing something different!");
+                    alert("Error! The recipient with the following information already exists in " + result + "'s account: \n\t" + "full name: " + FullName + "\n\t" + "company name: " + CompanyName + "\n\t" + "department name: " + DepartmentName + "\n\t" + "delivery address: " + DeliveryAddress + "\n\t" + "phone number: " + PhoneNumber + "\n\t" + "email address: " + Email + "\n\tPlease try agian by inputing something different!");
                 }
             }
         });
     }
-
-</script>
