@@ -14,6 +14,9 @@
     <p>
         @Html.ActionLink("Add one more package for this shipment", "Create", new { WaybillId = ViewBag.Waybillid })
     </p>
+    <p>
+        @Html.ActionLink("Back to list", "../Shipments/Index")
+    </p>
 }
 <table class="table">
     <tr>

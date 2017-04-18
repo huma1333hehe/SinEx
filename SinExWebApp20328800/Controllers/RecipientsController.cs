@@ -28,14 +28,20 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Recipients
+        [Authorize(Roles = "Customer,Employee")]
         public ActionResult Index()
         {
-            ShippingAccount currentAccount = GetCurrentAccount();
-            var recipients = db.Recipients.Include(r => r.ShippingAccount).Where(r => r.ShippingAccountId == currentAccount.ShippingAccountId);
+            var recipients = db.Recipients.Include(p => p.ShippingAccount);
+            if (User.IsInRole("Customer"))
+            {
+                ShippingAccount shippingAccount = GetCurrentAccount();
+                recipients = recipients.Where(s => s.ShippingAccountId == shippingAccount.ShippingAccountId);
+            }
             return View(recipients.ToList());
         }
 
         // GET: Recipients/Details/5
+        [Authorize(Roles = "Customer,Employee")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -52,6 +58,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Recipients/Create
+        [Authorize(Roles = "Customer")]
         public ActionResult Create()
         {
             ViewBag.ShippingAccountId = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName");
@@ -63,6 +70,7 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
         public ActionResult Create([Bind(Include = "RecipientID,FullName,CompanyName,DepartmentName,DeliveryBuilding,DeliveryStreet,DeliveryCity,DeliveryProvince,DeliveryPostcode,PhoneNumber,Email,Nickname")] Recipient recipient)
         {
 
@@ -126,6 +134,7 @@ namespace SinExWebApp20328800.Controllers
 
 
         // GET: Recipients/Edit/5
+        [Authorize(Roles = "Customer")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -147,6 +156,7 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
         public ActionResult Edit([Bind(Include = "RecipientID,FullName,CompanyName,DepartmentName,DeliveryBuilding,DeliveryStreet,DeliveryCity,DeliveryProvince,DeliveryPostcode,PhoneNumber,Email,Nickname")] Recipient recipient)
         {
             if (ModelState.IsValid)
@@ -164,6 +174,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Recipients/Delete/5
+        [Authorize(Roles = "Customer")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -182,6 +193,7 @@ namespace SinExWebApp20328800.Controllers
         // POST: Recipients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
         public ActionResult DeleteConfirmed(int id)
         {
             Recipient recipient = db.Recipients.Find(id);

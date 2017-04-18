@@ -58,14 +58,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.NumberOfPackages)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.NumberOfPackages)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.ShipmentPayer)
         </dt>
 
@@ -127,7 +119,7 @@
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.PickupDate)
+                @Html.DisplayFor(model => model.PickupDate.Year)/@Html.DisplayFor(model => model.PickupDate.Month)/@Html.DisplayFor(model => model.PickupDate.Day) @Html.DisplayFor(model => model.PickupDate.Hour):@Html.DisplayFor(model => model.PickupDate.Minute)
             </dd>
         }
         <dt>
@@ -224,8 +216,92 @@
             @Html.DisplayFor(model => model.PickupLocation)
         </dd>
 
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfPackages)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfPackages)
+        </dd>
+
     </dl>
+
 </div>
+
+<table class="table">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Packages.Single().PackageType.Type)
+        </th>
+        <th>
+            Size
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Packages.Single().Description)
+        </th>
+        <th>
+            Currency
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Packages.Single().Value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Packages.Single().DeclaredWeight)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Packages.Single().ActualWeight)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Packages)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.PackageType.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PackageTypeSize.TypeSize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Currency.CurrencyCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeclaredWeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActualWeight)
+            </td>
+            <td>
+                @if (item.Shipment.CancelledOrNot == false && item.Shipment.ConfirmOrNot == false)
+                {
+                    @Html.ActionLink("Edit", "../Packages/Edit", new { id = item.PackageID }) <text>|</text>
+                    @Html.ActionLink("Details", "../Packages/Details", new { id = item.PackageID }) <text>|</text>
+                    @Html.ActionLink("Delete", "../Packages/Delete", new { id = item.PackageID })
+                }
+                else
+                {
+                    @Html.ActionLink("Details", "../Packages/Details", new { id = item.PackageID })
+                }
+
+            </td>
+            <td></td>
+
+        </tr>
+    }
+
+</table>
+
+
 <p>
     @if (Model.CancelledOrNot == false && Model.ConfirmOrNot == false)
     {
