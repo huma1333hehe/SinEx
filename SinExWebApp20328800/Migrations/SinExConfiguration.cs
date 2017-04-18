@@ -191,8 +191,8 @@ namespace SinExWebApp20328800.Migrations
             // Add recipient data.
             context.Recipients.AddOrUpdate(
                 p => p.RecipientID,
-                new Recipient { RecipientID = 1, ShippingAccountId = 3, FullName = "Zhongzixuan's girlfriend", CompanyName = "HKU", DepartmentName = "Department of Art", Email = "girlfriend@zhong.com", DeliveryAddress = "HKU UG Hall 1", PhoneNumber = "12345678", Nickname = "girl's palace" },
-                new Recipient { RecipientID = 2, ShippingAccountId = 3, FullName = "Zhongzixuan's boyfriend", CompanyName = "HKUST", DepartmentName = "Department of Science", Email = "xhanad@ust.hk", DeliveryAddress = "HKUST UG Hall 5", PhoneNumber = "22222222", Nickname = "han er leng zi" }
+                new Recipient { RecipientID = 1, ShippingAccountId = 3, FullName = "Zhongzixuan's girlfriend", CompanyName = "HKU", DepartmentName = "Department of Art", Email = "girlfriend@zhong.com", DeliveryBuilding = "Lady Ho Tung Hall", DeliveryCity="HK", DeliveryPostcode="999077", DeliveryProvince="HK", DeliveryStreet="Po Fu Lam Road", PhoneNumber = "12345678", Nickname = "girl's palace" },
+                new Recipient { RecipientID = 2, ShippingAccountId = 3, FullName = "Zhongzixuan's boyfriend", CompanyName = "HKUST", DepartmentName = "Department of Science", Email = "xhanad@ust.hk", DeliveryBuilding = "UG Hall  5", DeliveryCity = "HK", DeliveryPostcode = "999077", DeliveryProvince = "HK", DeliveryStreet = "University Road", PhoneNumber = "22222222", Nickname = "han er leng zi" }
 
                 );
 

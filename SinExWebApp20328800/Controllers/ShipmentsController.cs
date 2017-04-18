@@ -188,6 +188,72 @@ namespace SinExWebApp20328800.Controllers
             var shippingAccountQuery = db.Shipments.Select(s => s.SenderShippingAccountID).Distinct().OrderBy(s => s);
             return new SelectList(shippingAccountQuery);
         }
+        // GET: Shipments/MultipleConfirm
+        [Authorize(Roles = "Customer")]
+        public ActionResult MultipleConfirm()
+        {
+            var shipments = db.Shipments.Include(s => s.RecipientShippingAccount).Include(s => s.SenderShippingAccount).Include(s => s.ServiceType).
+                Where(s => s.CancelledOrNot == false && s.ConfirmOrNot == false && s.PickupOrNot == false && s.NumberOfPackages > 0);
+            ShippingAccount current_account = GetCurrentAccount();
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
+            return View(shipments.ToList());
+        }
+
+        // POST: Shipments/MultipleConfirm
+        [HttpPost, ActionName("MultipleConfirm")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
+        public ActionResult MultipleConfirm(IEnumerable<Shipment> shipments)
+        {
+            List<string> s = new List<string>();
+            if (shipments != null)
+            {
+                s = Request.Form["Shipments"].Split(',').ToList();
+            }
+
+            if (s.Count>0)
+            {
+                foreach (string WaybillId in s)
+                {
+                    Shipment shipment = db.Shipments.Find(Int32.Parse(WaybillId));
+                    shipment.PickupType = Request.Form["PickupType"].Equals("0") ? PickupType.Immediate : PickupType.Prearranged;
+                    shipment.PickupLocation = Request.Form["PickupLocation"];
+                    DateTime dt = Convert.ToDateTime(Request.Form["PickupDate"]);
+                    shipment.PickupDate = dt;
+                    shipment.PickupLocation = Request.Form["PickupLocation"];
+                    shipment.ConfirmOrNot = true;
+                    shipment.PickupOrNot = false;
+                    db.Entry(shipment).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+
+            ShippingAccount current_account = GetCurrentAccount();
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Where(x => x.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
+            var allShipments = db.Shipments.Include(a => a.RecipientShippingAccount).Include(a => a.SenderShippingAccount).Include(a => a.ServiceType).
+                     Where(a => a.CancelledOrNot == false && a.ConfirmOrNot == false && a.PickupOrNot == false && a.NumberOfPackages > 0);
+            return View(allShipments.ToList());
+            /*
+            foreach(string shipmentWaybillId in shipmentWaybillIds)
+            {
+
+            }
+
+
+            return RedirectToAction("Index");
+
+            /*
+            shipment.ConfirmOrNot = true;
+            shipment.PickupOrNot = false;
+            db.Entry(shipment).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+            */
+        }
+
 
 
         // GET: Shipments/Details/5
@@ -237,7 +303,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
+        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
         {
             ShippingAccount current_account = GetCurrentAccount();
 
@@ -308,7 +374,7 @@ namespace SinExWebApp20328800.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false && s.ConfirmOrNot==false);
+            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false && s.ConfirmOrNot == false);
             if (shipment == null)
             {
                 return HttpNotFound();
@@ -337,7 +403,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
+        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
         {
             shipment.ServiceType = db.ServiceTypes.SingleOrDefault(s => s.ServiceTypeID == shipment.ServiceTypeID);
 
@@ -431,6 +497,9 @@ namespace SinExWebApp20328800.Controllers
         [Authorize(Roles = "Customer")]
         public ActionResult Confirm(int? id)
         {
+            ShippingAccount current_account = GetCurrentAccount();
+            IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -451,7 +520,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost, ActionName("Confirm")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Confirm([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
+        public ActionResult Confirm([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
         {
             shipment.ConfirmOrNot = true;
             shipment.PickupOrNot = false;
@@ -470,7 +539,7 @@ namespace SinExWebApp20328800.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Shipment shipment = db.Shipments.Include(s => s.Packages).SingleOrDefault(s => s.WaybillId == id &&s.CancelledOrNot==false);
+            Shipment shipment = db.Shipments.Include(s => s.Packages).SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
 
             if (shipment == null)
             {
@@ -495,12 +564,22 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost, ActionName("Pickup")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Employee")]
-        public ActionResult Pickup([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryAddress,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,Packages")] Shipment shipment)
+        public ActionResult Pickup([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname")] Shipment shipment)
         {
+
             db.Shipments.Attach(shipment);
             db.Entry(shipment).Collection(p => p.Packages).Load();
+
+            Tracking tracking = new Tracking();
+            tracking.WaybillId = shipment.WaybillId;
             bool validate = true;
-            foreach (Package package in shipment.Packages)
+            if(Request.Form["Duty"] == "" || Request.Form["Tax"] == "" || Request.Form["TrackingPickupLocation"] == "" || Request.Form["PickupRemark"] == "")
+            {
+                ViewBag.Incomplete = "Input Incomplete";
+                validate = false;
+            }
+
+                foreach (Package package in shipment.Packages)
             {
                 string key = "package_" + package.PackageID.ToString();
                 if (Request.Form[key] != "")
@@ -517,6 +596,11 @@ namespace SinExWebApp20328800.Controllers
                     }
 
                 }
+                else
+                {
+                    ViewBag.Incomplete = "Input Incomplete";
+                    validate = false;
+                }
             }
             if (validate == true)
             {
@@ -527,6 +611,14 @@ namespace SinExWebApp20328800.Controllers
                 {
                     db.Entry(package).State = EntityState.Modified;
                 }
+               
+                tracking.Description = "Picked up";
+                tracking.Location = Request.Form["TrackingPickupLocation"];
+                tracking.Remark = Request.Form["PickupRemark"];
+                tracking.Time = DateTime.Now;
+                db.Trackings.Add(tracking);
+
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

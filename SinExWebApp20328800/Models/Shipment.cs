@@ -85,9 +85,19 @@ namespace SinExWebApp20328800.Models
         public virtual string RecipientCompanyName { get; set; }
         [Display(Name = "Recipient Department Name")]
         public virtual string RecipientDepartmentName { get; set; }
+        [Display(Name = "Recipient Delivery Building")]
+        public virtual string RecipientDeliveryBuilding { get; set; }
         [Required]
-        [Display(Name = "Recipient Delivery Address")]
-        public virtual string RecipientDeliveryAddress { get; set; }
+        [Display(Name = "Recipient Delivery Street")]
+        public virtual string RecipientDeliveryStreet { get; set; }
+        [Required]
+        [Display(Name = "Recipient Delivery City")]
+        public virtual string RecipientDeliveryCity { get; set; }
+        [Required]
+        [Display(Name = "Recipient Delivery Province")]
+        public virtual string RecipientDeliveryProvince { get; set; }
+        [Display(Name = "Recipient Delivery Postcode")]
+        public virtual string RecipientDeliveryPostcode { get; set; }
         [Required]
         [Display(Name = "Recipient Phone")]
         public virtual string RecipientPhoneNumber { get; set; }
@@ -121,6 +131,8 @@ namespace SinExWebApp20328800.Models
         public virtual ICollection<Package> Packages { get; set; }
         [InverseProperty("Shipment")]
         public virtual ICollection<Tracking> Trackings { get; set; }
+
+
 
     }
 }

@@ -16,8 +16,7 @@
         <dd>
             @Html.DisplayFor(model => model.SenderShippingAccount.UserName)
         </dd>
-        @if (Model.ShipmentPayer == SinExWebApp20328800.Models.ShipmentPayer.Recipient ||
-                            Model.TaxPayer == SinExWebApp20328800.Models.TaxPayer.Recipient)
+        @if (Model.ShipmentPayer == SinExWebApp20328800.Models.ShipmentPayer.Recipient || Model.TaxPayer == SinExWebApp20328800.Models.TaxPayer.Recipient)
         {
             <dt>
                 Recipient User Name
@@ -164,13 +163,35 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RecipientDeliveryAddress)
+            @Html.DisplayNameFor(model => model.RecipientDeliveryBuilding)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.RecipientDeliveryAddress)
+            @Html.DisplayFor(model => model.RecipientDeliveryBuilding)
         </dd>
-
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipientDeliveryStreet)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RecipientDeliveryStreet)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipientDeliveryCity)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RecipientDeliveryCity)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipientDeliveryProvince)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RecipientDeliveryProvince)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipientDeliveryPostcode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RecipientDeliveryPostcode)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.RecipientPhoneNumber)
         </dt>
