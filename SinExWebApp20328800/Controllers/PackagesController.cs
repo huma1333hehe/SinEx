@@ -22,7 +22,7 @@ namespace SinExWebApp20328800.Controllers
         {
             ViewBag.Waybillid = WaybillId;
             Shipment shipment = db.Shipments.Single(s => s.WaybillId == WaybillId);
-            if(shipment == null)
+            if (shipment == null)
             {
                 return HttpNotFound();
             }
@@ -67,7 +67,7 @@ namespace SinExWebApp20328800.Controllers
             int WaybillId
             )
         {
-            Shipment shipment = db.Shipments.Single(s => s.WaybillId == WaybillId && s.CancelledOrNot == false && s.ConfirmOrNot ==false);
+            Shipment shipment = db.Shipments.Single(s => s.WaybillId == WaybillId && s.CancelledOrNot == false && s.ConfirmOrNot == false);
             if (shipment == null)
             {
                 return HttpNotFound();
@@ -94,11 +94,19 @@ namespace SinExWebApp20328800.Controllers
         {
             package.ActualWeight = null;
             if (ModelState.IsValid)
-            {
+            {   
+                package.Currency = db.Currencies.Single(s => s.CurrencyCode == package.CurrencyCode);
+                package.PackageType = db.PackageTypes.Single(s => s.PackageTypeID == package.PackageTypeID);
+                package.PackageTypeSize = db.PackageTypeSizes.Single(s => s.PackageTypeSizeID == package.PackageTypeSizeID);
+                package.Shipment = db.Shipments.Single(s => s.WaybillId == package.WaybillId);
                 db.Packages.Add(package);
+                db.SaveChanges();
+                
                 Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == package.WaybillId && s.CancelledOrNot == false);
-                //shipment.Packages.Add(package);
+                
+                shipment.Packages.Add(package);
                 shipment.NumberOfPackages += 1;
+
                 db.Entry(shipment).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", new { WaybillId = package.WaybillId });
@@ -124,7 +132,7 @@ namespace SinExWebApp20328800.Controllers
             {
                 return HttpNotFound();
             }
-            if (package.Shipment.CancelledOrNot == true || package.Shipment.ConfirmOrNot ==true)
+            if (package.Shipment.CancelledOrNot == true || package.Shipment.ConfirmOrNot == true)
             {
                 return HttpNotFound();
             }
