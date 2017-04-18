@@ -478,12 +478,6 @@
     <Content Include="Views\PickupLocations\Details.cshtml" />
     <Content Include="Views\PickupLocations\Edit.cshtml" />
     <Content Include="Views\PickupLocations\Index.cshtml" />
-    <Content Include="Views\Recipients\Create.cshtml" />
-    <Content Include="Views\Recipients\Delete.cshtml" />
-    <Content Include="Views\Recipients\Details.cshtml" />
-    <Content Include="Views\Recipients\Edit.cshtml" />
-    <Content Include="Views\Recipients\Index.cshtml" />
-    <Content Include="Views\Recipients\CreateFail.cshtml" />
     <Content Include="Views\Packages\Index.cshtml" />
     <Content Include="Views\Packages\Details.cshtml" />
     <Content Include="Views\Packages\Create.cshtml">
@@ -503,6 +497,14 @@
     <Content Include="Views\Shipments\Cancel.cshtml" />
     <Content Include="Views\Shipments\Pickup.cshtml" />
     <Content Include="Views\Shipments\MultipleConfirm.cshtml" />
+    <Content Include="Views\Recipients\Create.cshtml" />
+    <Content Include="Views\Recipients\Delete.cshtml" />
+    <Content Include="Views\Recipients\Details.cshtml" />
+    <Content Include="Views\Recipients\Edit.cshtml" />
+    <Content Include="Views\Recipients\Index.cshtml" />
+    <Content Include="Views\Recipients\CreateFail.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -27,13 +27,20 @@ namespace SinExWebApp20328800.Controllers
 
 
         // GET: PickupLocations
+        [Authorize(Roles = "Customer,Employee")]
         public ActionResult Index()
         {
             var pickupLocations = db.PickupLocations.Include(p => p.ShippingAccount);
+            if (User.IsInRole("Customer"))
+            {
+                ShippingAccount shippingAccount = GetCurrentAccount();
+                pickupLocations = pickupLocations.Where(s => s.ShippingAccountId == shippingAccount.ShippingAccountId);
+            }
             return View(pickupLocations.ToList());
         }
 
         // GET: PickupLocations/Details/5
+        [Authorize(Roles = "Customer,Employee")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -49,6 +56,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: PickupLocations/Create
+        [Authorize(Roles = "Customer")]
         public ActionResult Create()
         {
             ViewBag.ShippingAccountId = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName");
@@ -60,6 +68,7 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
         public ActionResult Create([Bind(Include = "PickupLocationID,ShippingAccountId,Nickname,Location")] PickupLocation pickupLocation)
         {
             if (ModelState.IsValid)
@@ -142,6 +151,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: PickupLocations/Edit/5
+        [Authorize(Roles = "Customer")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -162,6 +172,7 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
         public ActionResult Edit([Bind(Include = "PickupLocationID,ShippingAccountId,Nickname,Location")] PickupLocation pickupLocation)
         {
             if (ModelState.IsValid)
@@ -175,6 +186,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: PickupLocations/Delete/5
+        [Authorize(Roles = "Customer")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -192,6 +204,7 @@ namespace SinExWebApp20328800.Controllers
         // POST: PickupLocations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
         public ActionResult DeleteConfirmed(int id)
         {
             PickupLocation pickupLocation = db.PickupLocations.Find(id);
