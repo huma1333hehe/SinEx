@@ -645,8 +645,8 @@ namespace SinExWebApp20328800.Controllers
             {
                 return Json(new List<string>(), JsonRequestBehavior.AllowGet);
             }
-
-            var query = db.PickupLocations.Single(hehe => hehe.Nickname == PickupLocationNickname);
+            ShippingAccount current_account = GetCurrentAccount();
+            var query = db.PickupLocations.Single(hehe => hehe.Nickname == PickupLocationNickname && hehe.ShippingAccountId == current_account.ShippingAccountId);
             PickupLocation data = query;
             data.ShippingAccount = null;
             return Json(data, JsonRequestBehavior.AllowGet);

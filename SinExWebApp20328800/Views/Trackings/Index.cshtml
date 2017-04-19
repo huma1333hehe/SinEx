@@ -6,10 +6,13 @@
 }
 
 <h2>Index</h2>
+@if (User.IsInRole("Employee"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 
 @using (Html.BeginForm("Index", "Trackings", FormMethod.Get))
 {
@@ -30,13 +33,66 @@
     </div>
 }
 
+@if (ViewBag.ShowResult)
+{
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Shipment.SenderShippingAccount.UserName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.First().Shipment.SenderShippingAccount.UserName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WaybillId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.First().WaybillId)
+        </dd>
+        <dt>
+            Delivered to:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.First().Shipment.RecipientFullName)
+        </dd>
+        <dt>
+            Delivered at:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.First().Shipment.PickupLocation)
+        </dd>
+        <dt>
+            Service type:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.First().Shipment.ServiceType.Type)
+        </dd>
+        <dt>
+            Package type:
+        </dt>
+        <dd>
+            @foreach (var hehe in Model.First().Shipment.Packages)
+            {
+                @hehe.PackageType.Type@:    
+            }
+        </dd>
+        <dt>
+             Weight:
+        </dt>
+        <dd>
+            @foreach (var hehe in Model.First().Shipment.Packages)
+            {
+                @hehe.DeclaredWeight@: kg 
+            }
+        </dd>
+    </dl>
+}
+
+
 <table class="table">
     <tr>
+
         <th>
-            @Html.DisplayNameFor(model => model.Shipment.SenderShippingAccount.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WaybillId)
+            @Html.DisplayNameFor(model => model.Time.Date)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Time)
@@ -53,33 +109,47 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @if (ViewBag.ShowResult)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Shipment.SenderShippingAccount.UserName)
-            </td>
-            <td>
-                @item.WaybillId.ToString("0000000000000000")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Time)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Remark)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.TrackingID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.TrackingID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.TrackingID })
-            </td>
-        </tr>
+        foreach (var item in Model)
+        {
+            string shortdatestring = item.Time.ToShortDateString();
+            string shorttimestring = item.Time.ToShortTimeString();
+            <tr>
+
+                <td>
+                    @shortdatestring
+                </td>
+                <td>
+                    @shorttimestring
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remark)
+                </td>
+                @if (User.IsInRole("Employee"))
+                    {
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.TrackingID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.TrackingID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.TrackingID })
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = item.TrackingID })
+                    </td>
+                }
+
+            </tr>
+        }
     }
+
 
 </table>
