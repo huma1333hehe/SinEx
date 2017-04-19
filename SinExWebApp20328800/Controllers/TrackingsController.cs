@@ -31,10 +31,15 @@ namespace SinExWebApp20328800.Controllers
         {
             ViewBag.shipments = db.Shipments.Where(s => s.CancelledOrNot == false && s.PickupOrNot == true).ToList();
             ViewBag.shipment = WaybillId;
-            var trackings = db.Trackings.Include(t => t.Shipment);
-            if (WaybillId != null)
+            var trackings = db.Trackings.Include(t => t.Shipment).OrderBy(s => s.WaybillId);
+            if (WaybillId != null && WaybillId != 0)
             {
-                trackings = trackings.Where(t => t.Shipment.WaybillId == WaybillId);
+                trackings = trackings.Where(s => s.WaybillId == WaybillId).OrderBy(s => s.WaybillId).OrderBy(s => s.Time);
+                ViewBag.ShowResult = true;
+            }
+            else
+            {
+                ViewBag.ShowResult = false;
             }
             return View(trackings.ToList());
         }
@@ -54,6 +59,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Trackings/Create
+        [Authorize(Roles = "Employee")]
         public ActionResult Create(int? WaybillId)
         {
             if (WaybillId == null)
@@ -77,6 +83,7 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]
         public ActionResult Create([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark")] Tracking tracking)
         {
             Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId && s.CancelledOrNot == false);
@@ -103,6 +110,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Trackings/Edit/5
+        [Authorize(Roles = "Employee")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -124,6 +132,7 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]
         public ActionResult Edit([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark")] Tracking tracking)
         {
             if (ModelState.IsValid)
@@ -138,6 +147,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Trackings/Delete/5
+        [Authorize(Roles = "Employee")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -155,12 +165,13 @@ namespace SinExWebApp20328800.Controllers
         // POST: Trackings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]
         public ActionResult DeleteConfirmed(int id)
         {
 
             Tracking tracking = db.Trackings.Find(id);
             Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId && s.CancelledOrNot == false);
-            //shipment.Trackings.Remove(tracking);
+            shipment.Trackings.Remove(tracking);
             db.Trackings.Remove(tracking);
             db.SaveChanges();
             return RedirectToAction("Index");
