@@ -21,6 +21,9 @@
             @Html.DisplayNameFor(model => model.PickupOrNot)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.DeliveredOrNot)
+        </th>
+        <th>
             @if (User.IsInRole("Employee"))
             {
                 <text>Sender User Name</text>
@@ -60,6 +63,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PickupOrNot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveredOrNot)
             </td>
             <td>
                 @if (User.IsInRole("Employee"))

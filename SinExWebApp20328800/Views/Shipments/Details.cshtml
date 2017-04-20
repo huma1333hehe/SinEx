@@ -102,6 +102,14 @@
         </dt>
 
         <dd>
+            @Html.DisplayFor(model => model.DeliveredOrNot)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveredOrNot)
+        </dt>
+
+        <dd>
             @Html.DisplayFor(model => model.PickupOrNot)
         </dd>
         @if (Model.ConfirmOrNot == true)
@@ -119,7 +127,7 @@
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.PickupDate.Year)/@Html.DisplayFor(model => model.PickupDate.Month)/@Html.DisplayFor(model => model.PickupDate.Day) @Html.DisplayFor(model => model.PickupDate.Hour):@Html.DisplayFor(model => model.PickupDate.Minute)
+                @Html.DisplayFor(model => model.PickupDate)
             </dd>
         }
         <dt>

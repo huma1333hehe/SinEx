@@ -9,8 +9,8 @@ namespace SinExWebApp20328800.ViewModels
     {
         public virtual int WaybillId { get; set; }
         public virtual string ServiceType { get; set; }
-        public virtual DateTime ShippedDate { get; set; }
-        public virtual DateTime DeliveredDate { get; set; }
+        public virtual DateTime? ShippedDate { get; set; }
+        public virtual DateTime? DeliveredDate { get; set; }
         public virtual string RecipientName { get; set; }
         public virtual int NumberOfPackages { get; set; }
         public virtual string Origin { get; set; }
