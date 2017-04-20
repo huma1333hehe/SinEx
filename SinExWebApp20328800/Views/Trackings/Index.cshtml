@@ -46,7 +46,7 @@
             @Html.DisplayNameFor(model => model.WaybillId)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.First().WaybillId)
+            @Model.First().WaybillId.ToString("0000000000000000")
         </dd>
         <dt>
             Delivered to:

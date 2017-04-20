@@ -1,4 +1,5 @@
-﻿@model SinExWebApp20328800.ViewModels.ShipmentsSearchViewModel
+﻿
+@model SinExWebApp20328800.ViewModels.ShipmentsSearchViewModel
 
 @using (Html.BeginForm("GenerateHistoryReport", "Shipments", FormMethod.Get))
 {
@@ -11,16 +12,19 @@
             </div>
         }
         <div class="col-md-12">
+            @Html.LabelFor(a => a.DateType, "Date Type ")
+            @Html.EnumDropDownListFor(model => model.DateType,  new { @class = "form-control", @Value = ViewBag.CurrentDateType})
+            @Html.ValidationMessageFor(model => model.DateType, "", new { @class = "text-danger" })
+
             @Html.LabelFor(a => a.StartingDate, "Date from ")
-            @Html.TextBoxFor(a => a.StartingDate, new { @Value = ViewBag.CurrentStartingDate != null ? ViewBag.CurrentStartingDate : DateTime.Now })
+            @Html.EditorFor(a => a.StartingDate, new { htmlAttributes = new { @class = "form-control date-time-picker", @Value = ViewBag.CurrentStartingDate != null ? ViewBag.CurrentStartingDate.ToString("yyyy/MM/dd HH:mm") : DateTime.Now.ToString("yyyy/MM/dd HH:mm") } })
             @Html.ValidationMessageFor(model => model.StartingDate, "", new { @class = "text-danger" })
 
             @Html.LabelFor(a => a.EndingDate, "To ")
-            @Html.TextBoxFor(a => a.EndingDate, new { @Value = ViewBag.CurrentEndingDate != null ? ViewBag.CurrentEndingDate : DateTime.Now })
+            @Html.EditorFor(a => a.EndingDate, new { htmlAttributes = new { @class = "form-control date-time-picker", @Value = ViewBag.CurrentEndingDate != null ? ViewBag.CurrentEndingDate.ToString("yyyy/MM/dd HH:mm") : DateTime.Now.ToString("yyyy/MM/dd HH:mm") } })
             @Html.ValidationMessageFor(model => model.EndingDate, "", new { @class = "text-danger" })
 
             <input type="submit" value="Search" />
         </div>
     </div>
 }
-

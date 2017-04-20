@@ -15,7 +15,8 @@
                sortOrder = ViewBag.ServiceTypeSortParm,
                currentShippingAccountId = ViewBag.CurrentShippingAccountId,
                currentStartingDate = ViewBag.CurrentStartingDate,
-               currentEndingDate = ViewBag.CurrentEndingDate
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               currentDateType = ViewBag.CurrentDateType
            })
             </th>
             <th>
@@ -24,7 +25,8 @@
                sortOrder = ViewBag.ShippedDateSortParm,
                currentShippingAccountId = ViewBag.CurrentShippingAccountId,
                currentStartingDate = ViewBag.CurrentStartingDate,
-               currentEndingDate = ViewBag.CurrentEndingDate
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               currentDateType = ViewBag.CurrentDateType
            })
             </th>
             <th>
@@ -33,7 +35,8 @@
                sortOrder = ViewBag.DeliveredDateSortParm,
                currentShippingAccountId = ViewBag.CurrentShippingAccountId,
                currentStartingDate = ViewBag.CurrentStartingDate,
-               currentEndingDate = ViewBag.CurrentEndingDate
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               currentDateType = ViewBag.CurrentDateType
 
            })
             </th>
@@ -43,7 +46,8 @@
                sortOrder = ViewBag.RecipientNameSortParm,
                currentShippingAccountId = ViewBag.CurrentShippingAccountId,
                currentStartingDate = ViewBag.CurrentStartingDate,
-               currentEndingDate = ViewBag.CurrentEndingDate
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               currentDateType = ViewBag.CurrentDateType
            })
             </th>
             <th>
@@ -55,7 +59,8 @@
                sortOrder = ViewBag.OriginSortParm,
                currentShippingAccountId = ViewBag.CurrentShippingAccountId,
                currentStartingDate = ViewBag.CurrentStartingDate,
-               currentEndingDate = ViewBag.CurrentEndingDate
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               currentDateType = ViewBag.CurrentDateType
            })
             </th>
             <th>
@@ -64,7 +69,8 @@
                sortOrder = ViewBag.DestinationSortParm,
                currentShippingAccountId = ViewBag.CurrentShippingAccountId,
                currentStartingDate = ViewBag.CurrentStartingDate,
-               currentEndingDate = ViewBag.CurrentEndingDate
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               currentDateType = ViewBag.CurrentDateType
            })
             </th>
             <th></th>
@@ -104,6 +110,6 @@
 }
 else
 {
-    <p>No shipments for this account.</p>
+    <p>No shipments for the specified date time range.</p>
 }
 

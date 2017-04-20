@@ -34,10 +34,12 @@ namespace SinExWebApp20328800.Controllers
         [Authorize(Roles = "Customer,Employee")]
         public ActionResult GenerateHistoryReport(
             int? ShippingAccountId,
+            DateType? DateType,
             DateTime? StartingDate,
             DateTime? EndingDate,
             string sortOrder,
             int? currentShippingAccountId,
+            DateType? currentDateType,
             DateTime? currentStartingDate,
             DateTime? currentEndingDate,
             int? page
@@ -53,7 +55,10 @@ namespace SinExWebApp20328800.Controllers
             int pageNumber = (page ?? 1);
 
             // Retain search conditions for sorting.
-
+            if (DateType == null)
+            {
+                DateType = currentDateType;
+            }
             if (StartingDate == null)
             {
                 StartingDate = currentStartingDate;
@@ -74,7 +79,7 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.currentShippingAccountId = ShippingAccountId;
             ViewBag.CurrentStartingDate = StartingDate;
             ViewBag.CurrentEndingDate = EndingDate;
-
+            ViewBag.CurrentDateType = DateType;
 
 
             // Populate the ShippingAccountId dropdown list.
@@ -92,9 +97,8 @@ namespace SinExWebApp20328800.Controllers
                                 {
                                     WaybillId = s.WaybillId,
                                     ServiceType = s.ServiceType.Type,
-                                    //TODO
-                                    ShippedDate = new DateTime(2016, 12, 31),
-                                    DeliveredDate = new DateTime(2017, 2, 11),
+                                    ShippedDate = s.PickupDate,
+                                    DeliveredDate = s.DeliveredDate,
                                     RecipientName = s.RecipientFullName,
                                     NumberOfPackages = s.NumberOfPackages,
                                     Origin = s.Origin,
@@ -116,9 +120,16 @@ namespace SinExWebApp20328800.Controllers
                 shipmentQuery = shipmentQuery.Where(s => s.ShippingAccountId == ShippingAccountId);
 
             }
-            if ((StartingDate != null) && (EndingDate != null))
+            if ((StartingDate != null) && (EndingDate != null) && DateType!=null)
             {
-                shipmentQuery = shipmentQuery.Where(s => (s.ShippedDate > StartingDate && s.DeliveredDate < EndingDate));
+                if (DateType == ViewModels.DateType.ShippedDate)
+                {
+                    shipmentQuery = shipmentQuery.Where(s => (s.ShippedDate > StartingDate && s.ShippedDate < EndingDate));
+                }
+                if (DateType == ViewModels.DateType.DeliveredDate)
+                {
+                    shipmentQuery = shipmentQuery.Where(s => (s.DeliveredDate > StartingDate && s.DeliveredDate < EndingDate));
+                }
             }
             else
             {
@@ -212,7 +223,7 @@ namespace SinExWebApp20328800.Controllers
                 s = Request.Form["Shipments"].Split(',').ToList();
             }
 
-            if (s.Count>0)
+            if (s.Count > 0)
             {
                 foreach (string WaybillId in s)
                 {
@@ -313,8 +324,8 @@ namespace SinExWebApp20328800.Controllers
             shipment.CancelledOrNot = false;
             shipment.Duty = null;
             shipment.Tax = null;
-            shipment.PickupType = PickupType.Immediate;
-            shipment.PickupDate = DateTime.Now;
+            shipment.PickupType = null;
+            shipment.PickupDate = null;
             shipment.NumberOfPackages = 0;
 
             bool is_recipient_valid = false;
@@ -573,13 +584,13 @@ namespace SinExWebApp20328800.Controllers
             Tracking tracking = new Tracking();
             tracking.WaybillId = shipment.WaybillId;
             bool validate = true;
-            if(Request.Form["Duty"] == "" || Request.Form["Tax"] == "" || Request.Form["TrackingPickupLocation"] == "" || Request.Form["PickupRemark"] == "")
+            if (Request.Form["Duty"] == "" || Request.Form["Tax"] == "" || Request.Form["TrackingPickupLocation"] == "" || Request.Form["PickupRemark"] == "")
             {
                 ViewBag.Incomplete = "Input Incomplete";
                 validate = false;
             }
 
-                foreach (Package package in shipment.Packages)
+            foreach (Package package in shipment.Packages)
             {
                 string key = "package_" + package.PackageID.ToString();
                 if (Request.Form[key] != "")
@@ -611,7 +622,7 @@ namespace SinExWebApp20328800.Controllers
                 {
                     db.Entry(package).State = EntityState.Modified;
                 }
-               
+
                 tracking.Description = "Picked up";
                 tracking.Location = Request.Form["TrackingPickupLocation"];
                 tracking.Remark = Request.Form["PickupRemark"];

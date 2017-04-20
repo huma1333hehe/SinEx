@@ -65,13 +65,17 @@ namespace SinExWebApp20328800.Models
         [Required]
         [Display(Name = "Cancelled")]
         public virtual bool CancelledOrNot { get; set; }
+        [Required]
+        [Display(Name = "Delivered")]
+        public virtual bool DeliveredOrNot { get; set; }
 
-        [Required]
         [Display(Name = "Pickup Type")]
-        public virtual PickupType PickupType { get; set; }
-        [Required]
+        public virtual PickupType? PickupType { get; set; }
         [Display(Name = "pickup Date")]
-        public virtual DateTime PickupDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}",  ApplyFormatInEditMode = true)]
+        public virtual DateTime? PickupDate { get; set; }
+        [Display(Name = "delivered Date")]
+        public virtual DateTime? DeliveredDate { get; set; }
 
 
         // public virtual int RecipientID { get; set; }
