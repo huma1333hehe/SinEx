@@ -95,6 +95,54 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.RecipientCreditCardNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecipientCreditCardNumber, new { htmlAttributes = new { @class = "form-control", onchange = "OnGeneralRecipientChange()" } })
+                @Html.ValidationMessageFor(model => model.RecipientCreditCardNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipientCreditCardSecurityNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecipientCreditCardSecurityNumber, new { htmlAttributes = new { @class = "form-control", onchange = "OnGeneralRecipientChange()" } })
+                @Html.ValidationMessageFor(model => model.RecipientCreditCardSecurityNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipientCreditCardType, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.RecipientCreditCardType, new SelectList(new List<string> { "American Express", "Diners Club", "Discover", "masterCard", "UnionPay", "Visa" }).ToList(), "Please select", new { @class = "form-control dropdwn", onchange = "OnGeneralRecipientChange()" })
+                @Html.ValidationMessageFor(model => model.RecipientCreditCardType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipientCreditCardHolderName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecipientCreditCardHolderName, new { htmlAttributes = new { @class = "form-control", onchange = "OnGeneralRecipientChange()" } })
+                @Html.ValidationMessageFor(model => model.RecipientCreditCardHolderName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipientCreditCardExpiryMonth, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.RecipientCreditCardExpiryMonth, new SelectList(new List<string> { "1", "2", "3", "4", "5", "6", "8", "9", "10", "11", "12" }).ToList(), "Please select", new { @class = "form-control dropdwn", onchange = "OnGeneralRecipientChange()" })
+                @Html.ValidationMessageFor(model => model.RecipientCreditCardExpiryMonth, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipientCreditCardExpiryYear, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.RecipientCreditCardExpiryYear, new SelectList(new List<string> { "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030" }).ToList(), "Please select", new { @class = "form-control dropdwn", onchange = "OnGeneralRecipientChange()" })
+                @Html.ValidationMessageFor(model => model.RecipientCreditCardExpiryYear, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.Nickname, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Nickname, new { htmlAttributes = new { @class = "form-control", onchange = "OnNicknameChange()" } })

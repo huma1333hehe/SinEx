@@ -60,7 +60,7 @@ namespace SinExWebApp20328800.Controllers
 
         // GET: Trackings/Create
         [Authorize(Roles = "Employee")]
-        public ActionResult Create(int? WaybillId)
+        public ActionResult Create(int? WaybillId, bool? delivered)
         {
             if (WaybillId == null)
             {
@@ -74,7 +74,10 @@ namespace SinExWebApp20328800.Controllers
                 ViewBag.AlreadyEnterWaybillId = true;
                 ViewBag.WaybillId = WaybillId;
             }
-
+            if (delivered != null)
+            {
+                ViewBag.delivered = true;
+            }
             return View();
         }
 
@@ -98,6 +101,12 @@ namespace SinExWebApp20328800.Controllers
                 ViewBag.WaybillId = new SelectList(db.Shipments, "WaybillId", "WaybillId", tracking.WaybillId);
                 ViewBag.AlreadyEnterWaybillId = false;
             }
+
+            if (tracking.Description == "Delivered")
+            {
+                db.Shipments.Single(s => s.WaybillId == tracking.WaybillId).DeliveredOrNot = true;
+                db.SaveChanges();
+            }
             if (ModelState.IsValid)
             {
                 shipment.Trackings.Add(tracking);
@@ -105,6 +114,7 @@ namespace SinExWebApp20328800.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
             return View(tracking);
 
         }
