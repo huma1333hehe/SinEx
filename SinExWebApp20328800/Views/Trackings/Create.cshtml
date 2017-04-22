@@ -40,7 +40,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control date-time-picker" , onchange = "OnTimeChange()" } })
+                @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control date-time-picker", onchange = "OnTimeChange()" } })
                 @Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -48,7 +48,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @if (ViewBag.delivered != null)
+                {
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @Value = "Delivered", @readonly = "readonly" } })
+                }
+                else
+                {
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                }
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>

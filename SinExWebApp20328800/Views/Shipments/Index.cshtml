@@ -101,7 +101,7 @@
                 }
                 @if (User.IsInRole("Customer"))
                 {
-                   @Html.DisplayFor(modelItem => item.ServiceType.Type)
+                    @Html.DisplayFor(modelItem => item.ServiceType.Type)
                 }
             </td>
             <td>
@@ -124,6 +124,10 @@
                     {
                         @Html.ActionLink("Pickup", "Pickup", new { id = item.WaybillId }) <text>|</text>
 
+                    }
+                    if (item.CancelledOrNot == false && item.ConfirmOrNot == true && item.PickupOrNot == true && item.DeliveredOrNot == false)
+                    {
+                        @Html.ActionLink("Delivered", "../Trackings/Create", new { id = item.WaybillId, delivered = true })<text>|</text>
                     }
                     @Html.ActionLink("Details", "Details", new { id = item.WaybillId })
                 }

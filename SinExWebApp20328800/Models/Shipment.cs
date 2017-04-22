@@ -55,6 +55,7 @@ namespace SinExWebApp20328800.Models
 
         public virtual decimal? Duty { get; set; }
         public virtual decimal? Tax { get; set; }
+        public virtual decimal ShipmentTotalAmount { get; set; }
 
         [Required]
         [Display(Name = "Confirm")]
@@ -104,10 +105,40 @@ namespace SinExWebApp20328800.Models
         public virtual string RecipientDeliveryPostcode { get; set; }
         [Required]
         [Display(Name = "Recipient Phone")]
+        [StringLength(14, MinimumLength = 8)]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Phone number must be numeric")]
         public virtual string RecipientPhoneNumber { get; set; }
         [Required]
+        [StringLength(30)]
+        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "Incorrect email address")]
         [Display(Name = "Recipient Email")]
         public virtual string RecipientEmail { get; set; }
+        [Required]
+        [Display(Name ="Recipient Credit Card Number")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Credit card number must be numeric")]
+        public virtual string RecipientCreditCardNumber { get; set; }
+        [Required]
+        [Display(Name = "Recipient Credit Card Type")]
+        public virtual string RecipientCreditCardType { get; set; }
+        [Required]
+        [Display(Name = "Recipient Credit Card Security Number")]
+        [StringLength(4, MinimumLength = 3)]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Security number must be numeric")]
+        public virtual string RecipientCreditCardSecurityNumber { get; set; }
+        [Required]
+        [StringLength(75)]
+        [Display(Name = "Recipient Credit Card Holder Name")]
+        public virtual string RecipientCreditCardHolderName { get; set; }
+        [Required]
+        [StringLength(2, ErrorMessage = "Please enter valid month number (1-12)")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Expiry month must be numeric")]
+        [Display(Name = "Recipient Credit Card Expiry Month")]
+        public virtual string RecipientCreditCardExpiryMonth { get; set; }
+        [Required]
+        [StringLength(4)]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Expiry year not valid")]
+        [Display(Name = "Recipient Credit Card Expiry year")]
+        public virtual string RecipientCreditCardExpiryYear { get; set; }
         [Required]
         [Display(Name = "Service Type")]
         public virtual int ServiceTypeID { get; set; }
@@ -135,7 +166,8 @@ namespace SinExWebApp20328800.Models
         public virtual ICollection<Package> Packages { get; set; }
         [InverseProperty("Shipment")]
         public virtual ICollection<Tracking> Trackings { get; set; }
-
+        [InverseProperty("Shipment")]
+        public virtual ICollection<Payment> Payments { get; set; }
 
 
     }
