@@ -198,7 +198,7 @@ namespace SinExWebApp20328800.Controllers
                         var body = "<p>Welcome to SinEx Website. Hope you enjoy your day!</p><p>Your username: {0}</p><p>Your password: {1}</p><p>Your email: {2}</p>";
                         var message = new MailMessage();
                         message.To.Add(new MailAddress(model.LoginInformation.Email));
-                        message.Subject = "register confirmation email";
+                        message.Subject = "Register Confirmation Email";
                         message.Body = String.Format(body, model.LoginInformation.UserName,model.LoginInformation.Password,model.LoginInformation.Email);
                         message.IsBodyHtml = true;
                         using (var smtp = new SmtpClient())

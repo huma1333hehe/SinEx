@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using SinExWebApp20328800.Models;
 using SinExWebApp20328800.ViewModels;
 using X.PagedList;
+using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace SinExWebApp20328800.Controllers
 {
@@ -120,7 +122,7 @@ namespace SinExWebApp20328800.Controllers
                 shipmentQuery = shipmentQuery.Where(s => s.ShippingAccountId == ShippingAccountId);
 
             }
-            if ((StartingDate != null) && (EndingDate != null) && DateType!=null)
+            if ((StartingDate != null) && (EndingDate != null) && DateType != null)
             {
                 if (DateType == ViewModels.DateType.ShippedDate)
                 {
@@ -314,11 +316,13 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,RecipientCreditCardNumber,RecipientCreditCardType,RecipientCreditCardSecurityNumber,RecipientCreditCardHolderName,RecipientCreditCardExpiryMonth,RecipientCreditCardExpiryYear")] Shipment shipment)
+        public ActionResult Create([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount")] Shipment shipment)
         {
             ShippingAccount current_account = GetCurrentAccount();
 
             shipment.SenderShippingAccountID = current_account.ShippingAccountId;
+            shipment.SenderShippingAccount = current_account;
+            shipment.ServiceType = db.ServiceTypes.Single(a => a.ServiceTypeID == shipment.ServiceTypeID);
             shipment.ConfirmOrNot = false;
             shipment.PickupOrNot = false;
             shipment.CancelledOrNot = false;
@@ -332,7 +336,7 @@ namespace SinExWebApp20328800.Controllers
             if (!(shipment.TaxPayer == TaxPayer.Recipient || shipment.ShipmentPayer == ShipmentPayer.Recipient))
             {
                 shipment.RecipientShippingAccountID = current_account.ShippingAccountId;
-
+                shipment.RecipientShippingAccount = current_account;
                 is_recipient_valid = true;
             }
             else
@@ -341,6 +345,7 @@ namespace SinExWebApp20328800.Controllers
                 if (recipient_account != null && recipient_account != current_account)
                 {
                     shipment.RecipientShippingAccountID = recipient_account.ShippingAccountId;
+                    shipment.RecipientShippingAccount = recipient_account;
                     is_recipient_valid = true;
                 }
                 else if (recipient_account == null)
@@ -414,7 +419,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,RecipientCreditCardNumber,RecipientCreditCardType,RecipientCreditCardSecurityNumber,RecipientCreditCardHolderName,RecipientCreditCardExpiryMonth,RecipientCreditCardExpiryYear")] Shipment shipment)
+        public ActionResult Edit([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount")] Shipment shipment)
         {
             shipment.ServiceType = db.ServiceTypes.SingleOrDefault(s => s.ServiceTypeID == shipment.ServiceTypeID);
 
@@ -531,7 +536,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost, ActionName("Confirm")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Confirm([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,RecipientCreditCardNumber,RecipientCreditCardType,RecipientCreditCardSecurityNumber,RecipientCreditCardHolderName,RecipientCreditCardExpiryMonth,RecipientCreditCardExpiryYear")] Shipment shipment)
+        public ActionResult Confirm([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount")] Shipment shipment)
         {
             shipment.ConfirmOrNot = true;
             shipment.PickupOrNot = false;
@@ -575,14 +580,11 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost, ActionName("Pickup")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Employee")]
-        public ActionResult Pickup([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,RecipientCreditCardNumber,RecipientCreditCardType,RecipientCreditCardSecurityNumber,RecipientCreditCardHolderName,RecipientCreditCardExpiryMonth,RecipientCreditCardExpiryYear")] Shipment shipment)
+        public async Task<ActionResult> Pickup([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount")] Shipment shipment)
         {
 
             db.Shipments.Attach(shipment);
             db.Entry(shipment).Collection(p => p.Packages).Load();
-
-            Tracking tracking = new Tracking();
-            tracking.WaybillId = shipment.WaybillId;
             bool validate = true;
             if (Request.Form["Duty"] == "" || Request.Form["Tax"] == "" || Request.Form["TrackingPickupLocation"] == "" || Request.Form["PickupRemark"] == "")
             {
@@ -617,26 +619,189 @@ namespace SinExWebApp20328800.Controllers
             {
                 shipment.ConfirmOrNot = true;
                 shipment.PickupOrNot = true;
-                db.Entry(shipment).State = EntityState.Modified;
-                foreach (Package package in shipment.Packages)
+                shipment.ShipmentTotalAmount = 0;
+                foreach (Package Package in shipment.Packages)
                 {
-                    db.Entry(package).State = EntityState.Modified;
+                    shipment.ShipmentTotalAmount += CalculatePackageFee(Package);
                 }
 
+                Tracking tracking = new Tracking();
+                tracking.WaybillId = shipment.WaybillId;
                 tracking.Description = "Picked up";
                 tracking.Location = Request.Form["TrackingPickupLocation"];
                 tracking.Remark = Request.Form["PickupRemark"];
                 tracking.Time = DateTime.Now;
                 db.Trackings.Add(tracking);
 
+                Payment ShipmentPayment = new Payment();
+                Payment DutyAndTaxPayment = new Payment();
+                ShipmentPayment.AuthorizationCode = GenerateRandomNo().First();
+                ShipmentPayment.WaybillID = shipment.WaybillId;
+                ShipmentPayment.Shipment = shipment;
+                ShipmentPayment.PaymentAmount = shipment.ShipmentTotalAmount;
+                ShipmentPayment.PaymentDescription = "Shipment payment";
 
+                DutyAndTaxPayment.AuthorizationCode = GenerateRandomNo().ElementAt(1);
+                DutyAndTaxPayment.WaybillID = shipment.WaybillId;
+                DutyAndTaxPayment.Shipment = shipment;
+                DutyAndTaxPayment.PaymentAmount = (decimal)shipment.Tax + (decimal)shipment.Duty;
+                DutyAndTaxPayment.PaymentDescription = "Duty and tax payment";
+
+
+                shipment.SenderShippingAccount = db.ShippingAccounts.SingleOrDefault(a => a.ShippingAccountId == shipment.SenderShippingAccountID);
+                shipment.RecipientShippingAccount = db.ShippingAccounts.SingleOrDefault(a => a.ShippingAccountId == shipment.RecipientShippingAccountID);
+                if (shipment.ShipmentPayer == ShipmentPayer.Sender)
+                {
+                    Destination hehe = db.Destinations.Single(a => a.City == shipment.SenderShippingAccount.City);
+                    ShipmentPayment.PayerCharacter = "Sender";
+                    ShipmentPayment.PaymentAmount *= hehe.Currency.ExchangeRate;
+                    ShipmentPayment.CurrencyCode = hehe.CurrencyCode;
+                    ShipmentPayment.UserName = shipment.SenderShippingAccount.UserName;
+                }
+                else
+                {
+                    Destination hehe = db.Destinations.Single(a => a.City == shipment.RecipientShippingAccount.City);
+                    ShipmentPayment.PaymentAmount *= hehe.Currency.ExchangeRate;
+                    ShipmentPayment.PayerCharacter = "Recipient";
+                    ShipmentPayment.CurrencyCode = hehe.CurrencyCode;
+                    ShipmentPayment.UserName = shipment.RecipientShippingAccount.UserName;
+                }
+
+                if (shipment.TaxPayer == TaxPayer.Sender)
+                {
+                    Destination hehe = db.Destinations.Single(a => a.City == shipment.SenderShippingAccount.City);
+                    DutyAndTaxPayment.PaymentAmount *= hehe.Currency.ExchangeRate;
+                    DutyAndTaxPayment.PayerCharacter = "Sender";
+                    DutyAndTaxPayment.CurrencyCode = hehe.CurrencyCode;
+                    DutyAndTaxPayment.UserName = shipment.SenderShippingAccount.UserName;
+                }
+                else
+                {
+                    Destination hehe = db.Destinations.Single(a => a.City == shipment.RecipientShippingAccount.City);
+                    DutyAndTaxPayment.PaymentAmount *= hehe.Currency.ExchangeRate;
+                    DutyAndTaxPayment.PayerCharacter = "Recipient";
+                    DutyAndTaxPayment.CurrencyCode = hehe.CurrencyCode;
+                    DutyAndTaxPayment.UserName = shipment.RecipientShippingAccount.UserName;
+                }
+                db.Payments.Add(ShipmentPayment);
+                db.Payments.Add(DutyAndTaxPayment);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                shipment.Payments.Add(ShipmentPayment);
+                shipment.Payments.Add(DutyAndTaxPayment);
+                shipment.Trackings.Add(tracking);
+
+                db.Entry(shipment).State = EntityState.Modified;
+                foreach (Package package in shipment.Packages)
+                {
+                    db.Entry(package).State = EntityState.Modified;
+                }
+
+
+
+                foreach (Payment lala in shipment.Payments)
+                {
+                    var body = "<p>Dear user {0}: </p><p>You have just paid for a shipment. Here are the details.</p><p>Shipping account number: {1}</p><p>Shipment waybill Id: {2}</p><p>Ship(pickup) date: {3}</p><p>Service type: {4}</p><p>Sender's reference number: {5}</p><p>Sender full name: {6}</p><p>Sender mailing address: {7}</p><p>Recipient full name: {8}</p><p>Recipient delivery address: {9}</p><p>Credit card type: {10}</p><p>Credit card number(last four digits only): {11}</p><p>Authorization code: {12}</p><p>Total amount payable: {13}</p><p>Currency you are using: {14}</p>";
+                    var message = new MailMessage();
+                    ShippingAccount lala_account = db.ShippingAccounts.Single(a => a.UserName == lala.UserName);
+                    Shipment lala_shipment = db.Shipments.Single(a => a.WaybillId == lala.WaybillID);
+                    string ShippingAccountUsername = lala_account.UserName;
+                    string ShippingAccountNumber = lala_account.ShippingAccountId.ToString("0000000000000");
+                    string ShipmentWaybillID = lala.WaybillID.ToString("000000000000");
+                    string ShipDate = lala_shipment.PickupDate.ToString();
+                    string ServiceType = db.ServiceTypes.Single(a => a.ServiceTypeID == lala_shipment.ServiceTypeID).Type;
+                    string SenderReferenceNumber = lala_shipment.ReferenceNumber;
+                    string SenderFullName = "";
+                    if (lala_shipment.SenderShippingAccount is PersonalShippingAccount)
+                    {
+                        PersonalShippingAccount temp = (PersonalShippingAccount)db.ShippingAccounts.Single(a => a.ShippingAccountId == lala_shipment.SenderShippingAccountID);
+                        SenderFullName = temp.FirstName + temp.LastName;
+                    }
+                    else
+                    {
+                        BusinessShippingAccount temp = (BusinessShippingAccount)db.ShippingAccounts.Single(a => a.ShippingAccountId == lala_shipment.SenderShippingAccountID);
+                        SenderFullName = temp.ContactPersonName;
+                    }
+                    string SenderMailingAddress = lala_shipment.SenderShippingAccount.ProvinceCode + ", " + lala_shipment.SenderShippingAccount.City + ", " + lala_shipment.SenderShippingAccount.StreetInformation + ", " + lala_shipment.SenderShippingAccount.BuildingInformation;
+                    string RecipientFullName = lala_shipment.RecipientFullName;
+                    string RecipientDeliveryAddress = lala_shipment.RecipientDeliveryProvince + ", " + lala_shipment.RecipientDeliveryCity + ", " + lala_shipment.RecipientDeliveryStreet + ", " + lala_shipment.RecipientDeliveryBuilding;
+                    string CreditCardType = lala_account.Type;
+                    string CreditCardNumber = lala_account.Number.Substring(lala_account.Number.Length - 4);
+                    string AuthorizationCode = lala.AuthorizationCode;
+                    string TotalAmountPayable = lala.PaymentAmount.ToString("0.00");
+                    string CurrencyCode = lala.CurrencyCode;
+
+                    var body_package = "";
+                    int index = 1;
+                    foreach (Package haha in lala_shipment.Packages)
+                    {
+                        string PackageType = haha.PackageType.Type;
+                        string ActualWeight = haha.ActualWeight.ToString();
+                        string Cost = ((decimal)(CalculatePackageFee(haha) * db.Currencies.Single(a => a.CurrencyCode == lala.CurrencyCode).ExchangeRate)).ToString("0.00");
+                        body_package += ("<p> Package No. " + index.ToString() + "</p>" + "<p>Package type: " + PackageType + "</p>" + "<p>Actual weight: " + ActualWeight + " kg</p>" + "<p>Cost: " + Cost + "</p>");
+                        index++;
+                    }
+                    message.To.Add(new MailAddress(db.ShippingAccounts.Single(a => a.UserName == lala.UserName).EmailAddress));
+                    message.Subject = "Payment Notification and Invoice";
+                    message.Body = String.Format(body, ShippingAccountUsername, ShippingAccountNumber, ShipmentWaybillID, ShipDate, ServiceType, SenderReferenceNumber, SenderFullName, SenderMailingAddress, RecipientFullName, RecipientDeliveryAddress, CreditCardType, CreditCardNumber, AuthorizationCode, TotalAmountPayable, CurrencyCode) + body_package;
+                    message.IsBodyHtml = true;
+                    using (var smtp = new SmtpClient())
+                    {
+                        await smtp.SendMailAsync(message);
+                    }
+                }
+                db.SaveChanges();
+                return View("PickupSuccess");
             }
             return View(shipment);
         }
 
+        //Generate RandomNo
+        private List<string> GenerateRandomNo()
+        {
+            int _min = 0000;
+            int _max = 9999;
+            Random _rdm = new Random();
+            string a = _rdm.Next(_min, _max).ToString("0000");
+            string b = _rdm.Next(_min, _max).ToString("0000");
+            List<string> c = new List<string>(2);
+            c.Add(a);
+            c.Add(b);
+            return c;
+        }
 
+        //Calculate package fee from actual weight in RMB
+        private decimal CalculatePackageFee(Package Package)
+        {
+            ServicePackageFee hehe = db.ServicePackageFees.SingleOrDefault(a => a.PackageTypeID == Package.PackageTypeID && a.ServiceTypeID == Package.Shipment.ServiceTypeID);
+            decimal price = 0;
+            switch (Package.PackageTypeID)
+            {
+                //Envelop
+                case 1:
+                    price = hehe.Fee;
+                    break;
+                //Pak or Box
+                case 2:
+                case 4:
+                    price = Package.ActualWeight * hehe.Fee > hehe.MinimumFee ? (decimal)Package.ActualWeight * hehe.Fee : hehe.MinimumFee;
+                    int limit = 0;
+                    string limitString = Package.PackageTypeSize.WeightLimit;
+                    bool convertResult = Int32.TryParse(limitString.Substring(0, limitString.Length - 2), out limit);
+                    if (limit != 0 && convertResult && Package.ActualWeight > (decimal)limit)
+                    {
+                        price += 500;
+                    }
+
+                    break;
+                //Tube or Custmoer
+                case 3:
+                case 5:
+                    price = Package.ActualWeight * hehe.Fee > hehe.MinimumFee ? (decimal)Package.ActualWeight * hehe.Fee : hehe.MinimumFee;
+                    break;
+            }
+            return price;
+        }
 
         public ActionResult GetRecipient(string RecipientAddressNickname)
         {
@@ -644,8 +809,8 @@ namespace SinExWebApp20328800.Controllers
             {
                 return Json(new List<string>(), JsonRequestBehavior.AllowGet);
             }
-
-            var query = db.Recipients.Single(hehe => hehe.Nickname == RecipientAddressNickname);
+            ShippingAccount account = GetCurrentAccount();
+            var query = db.Recipients.Single(hehe => hehe.Nickname == RecipientAddressNickname && hehe.ShippingAccountId == account.ShippingAccountId);
             Recipient data = query;
             data.ShippingAccount = null;
             return Json(data, JsonRequestBehavior.AllowGet);
