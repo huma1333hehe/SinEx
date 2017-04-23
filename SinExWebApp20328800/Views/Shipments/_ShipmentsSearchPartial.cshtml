@@ -8,12 +8,12 @@
         {
             <div class="col-md-12">
                 @Html.LabelFor(a => a.ShippingAccountId, "Shipping Account: ")
-                @Html.DropDownListFor(a => a.ShippingAccountId, Model.ShippingAccounts, new { @Value = ViewBag.currentShippingAccountId })
+                @Html.DropDownListFor(a => a.ShippingAccountId, Model.ShippingAccounts, htmlAttributes: new { @class = "form-control", @Value = ViewBag.currentShippingAccountId })
             </div>
         }
         <div class="col-md-12">
             @Html.LabelFor(a => a.DateType, "Date Type ")
-            @Html.EnumDropDownListFor(model => model.DateType,  new { @class = "form-control", @Value = ViewBag.CurrentDateType})
+            @Html.EnumDropDownListFor(model => model.DateType, new { @class = "form-control", @Value = ViewBag.CurrentDateType })
             @Html.ValidationMessageFor(model => model.DateType, "", new { @class = "text-danger" })
 
             @Html.LabelFor(a => a.StartingDate, "Date from ")

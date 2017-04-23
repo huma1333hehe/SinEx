@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "CreateFail";
+}
+
+<h2>CreateFail</h2>
+
+<p>
+    Sorry, the shipment with @ViewBag.WaybillId has already been delivered to the destination. No more tracking records can be added. 
+</p>
+
+<div>
+    @Html.ActionLink("Create again", "Create")
+</div>

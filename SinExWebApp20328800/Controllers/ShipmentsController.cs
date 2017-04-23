@@ -89,7 +89,7 @@ namespace SinExWebApp20328800.Controllers
             shipmentSearch.Shipment.ShippingAccounts.Insert(0, new SelectListItem
             {
                 Text = "All",
-                Value = null,
+                Value = "0",
                 Selected = false
             });
 
@@ -113,15 +113,19 @@ namespace SinExWebApp20328800.Controllers
             {
                 ShippingAccount CShippingAccount = db.ShippingAccounts.SingleOrDefault(s => s.UserName == User.Identity.Name);
                 shipmentQuery = shipmentQuery.Where(s => s.ShippingAccountId == CShippingAccount.ShippingAccountId);
-            }
-
-            // Add the condition to select a spefic shipping account if shipping account id is not null.
-            if (ShippingAccountId != null)
+            }else
             {
-                // TODO: Construct the LINQ query to retrive only the shipments for the specified shipping account id.
-                shipmentQuery = shipmentQuery.Where(s => s.ShippingAccountId == ShippingAccountId);
+                // Add the condition to select a spefic shipping account if shipping account id is not null.
+                if (ShippingAccountId != 0 && ShippingAccountId != null)
+                {
+                    // TODO: Construct the LINQ query to retrive only the shipments for the specified shipping account id.
+                    shipmentQuery = shipmentQuery.Where(s => s.ShippingAccountId == ShippingAccountId);
 
+                }
             }
+
+
+
             if ((StartingDate != null) && (EndingDate != null) && DateType != null)
             {
                 if (DateType == ViewModels.DateType.ShippedDate)
@@ -699,6 +703,37 @@ namespace SinExWebApp20328800.Controllers
 
 
 
+
+                var body_pickup = "<p>Dear user {0}: </p><p>The shipment with the following details has been picked up.</p><p>Shipment waybill Id: {1}</p><p>Pick up remark: {2}</p><p>Sender name: {3}</p><p>Sender address: {4}</p><p>Pick up date: {5}</p>";
+                var message_pickup = new MailMessage();
+                string Username = shipment.RecipientShippingAccount.UserName;
+                string WaybillId = shipment.WaybillId.ToString("000000000000");
+                string Notification = tracking.Description + tracking.Remark;
+                string SenderName = "";
+                if (shipment.SenderShippingAccount is PersonalShippingAccount)
+                {
+                    PersonalShippingAccount b = (PersonalShippingAccount)db.ShippingAccounts.Single(a => a.ShippingAccountId == shipment.SenderShippingAccountID);
+                    SenderName = b.FirstName + b.LastName;
+                }
+                else
+                {
+                    BusinessShippingAccount b = (BusinessShippingAccount)db.ShippingAccounts.Single(a => a.ShippingAccountId == shipment.SenderShippingAccountID);
+                    SenderName = b.ContactPersonName;
+                }
+                string SenderAddress = shipment.SenderShippingAccount.ProvinceCode + ", " + shipment.SenderShippingAccount.City + ", " + shipment.SenderShippingAccount.StreetInformation + ", " + shipment.SenderShippingAccount.BuildingInformation;
+                string PickupDate = ((DateTime)(shipment.PickupDate)).ToString("yyyy/MM/dd HH:mm");
+                message_pickup.To.Add(new MailAddress(shipment.RecipientShippingAccount.EmailAddress));
+                message_pickup.Subject = "Pick up Notification Email";
+                message_pickup.Body = String.Format(body_pickup, Username, WaybillId, Notification, SenderName, SenderAddress, PickupDate);
+                message_pickup.IsBodyHtml = true;
+                using (var smtp = new SmtpClient())
+                {
+                    await smtp.SendMailAsync(message_pickup);
+                }
+
+
+
+
                 foreach (Payment lala in shipment.Payments)
                 {
                     var body = "<p>Dear user {0}: </p><p>You have just paid for a shipment. Here are the details.</p><p>Shipping account number: {1}</p><p>Shipment waybill Id: {2}</p><p>Ship(pickup) date: {3}</p><p>Service type: {4}</p><p>Sender's reference number: {5}</p><p>Sender full name: {6}</p><p>Sender mailing address: {7}</p><p>Recipient full name: {8}</p><p>Recipient delivery address: {9}</p><p>Credit card type: {10}</p><p>Credit card number(last four digits only): {11}</p><p>Authorization code: {12}</p><p>Total amount payable: {13}</p><p>Currency you are using: {14}</p>";
@@ -708,7 +743,7 @@ namespace SinExWebApp20328800.Controllers
                     string ShippingAccountUsername = lala_account.UserName;
                     string ShippingAccountNumber = lala_account.ShippingAccountId.ToString("0000000000000");
                     string ShipmentWaybillID = lala.WaybillID.ToString("000000000000");
-                    string ShipDate = lala_shipment.PickupDate.ToString();
+                    string ShipDate = ((DateTime)(lala_shipment.PickupDate)).ToString("yyyy/MM/dd HH:mm");
                     string ServiceType = db.ServiceTypes.Single(a => a.ServiceTypeID == lala_shipment.ServiceTypeID).Type;
                     string SenderReferenceNumber = lala_shipment.ReferenceNumber;
                     string SenderFullName = "";
