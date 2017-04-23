@@ -507,6 +507,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Shipments\PickupSuccess.cshtml" />
+    <Content Include="Views\Trackings\CreateFail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

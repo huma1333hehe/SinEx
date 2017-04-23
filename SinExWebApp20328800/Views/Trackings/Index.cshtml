@@ -6,13 +6,6 @@
 }
 
 <h2>Index</h2>
-@if (User.IsInRole("Employee"))
-{
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-}
-
 
 @using (Html.BeginForm("Index", "Trackings", FormMethod.Get))
 {
@@ -59,6 +52,12 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.First().Shipment.PickupLocation)
+        </dd>
+        <dt>
+            Status:
+        </dt>
+        <dd>
+            @ViewBag.Status
         </dd>
         <dt>
             Service type:
@@ -113,15 +112,15 @@
     {
         foreach (var item in Model)
         {
-            string shortdatestring = item.Time.ToShortDateString();
-            string shorttimestring = item.Time.ToShortTimeString();
+            string datestring = item.Time.ToString("yyyy/MM/dd");
+            string timestring = item.Time.ToString("HH:mm");
             <tr>
 
                 <td>
-                    @shortdatestring
+                    @datestring
                 </td>
                 <td>
-                    @shorttimestring
+                    @timestring
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
