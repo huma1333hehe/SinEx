@@ -53,38 +53,6 @@ namespace SinExWebApp20328800.Models
         public virtual string Email { get; set; }
 
         [Required]
-        [Display(Name = "Recipient Credit Card Number")]
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Credit card number must be numeric")]
-        public virtual string RecipientCreditCardNumber { get; set; }
-
-        [Required]
-        [Display(Name = "Recipient Credit Card Type")]
-        public virtual string RecipientCreditCardType { get; set; }
-
-        [Required]
-        [Display(Name = "Recipient Credit Card Security Number")]
-        [StringLength(4, MinimumLength = 3)]
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Security number must be numeric")]
-        public virtual string RecipientCreditCardSecurityNumber { get; set; }
-
-        [Required]
-        [StringLength(75)]
-        [Display(Name = "Recipient Credit Card Holder Name")]
-        public virtual string RecipientCreditCardHolderName { get; set; }
-
-        [Required]
-        [StringLength(2, ErrorMessage = "Please enter valid month number (1-12)")]
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Expiry month must be numeric")]
-        [Display(Name = "Recipient Credit Card Expiry Month")]
-        public virtual string RecipientCreditCardExpiryMonth { get; set; }
-
-        [Required]
-        [StringLength(4)]
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Expiry year not valid")]
-        [Display(Name = "Recipient Credit Card Expiry year")]
-        public virtual string RecipientCreditCardExpiryYear { get; set; }
-
-        [Required]
         [StringLength(maximumLength: 30, MinimumLength = 1, ErrorMessage = "Length requirements: (0,10]")]
         [Display(Name = "Nick Name")]
         public virtual string Nickname { get; set; }

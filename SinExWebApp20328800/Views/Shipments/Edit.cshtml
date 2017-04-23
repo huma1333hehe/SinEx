@@ -179,54 +179,6 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.RecipientCreditCardNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientCreditCardNumber, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientCreditCardNumber" })
-                @Html.ValidationMessageFor(model => model.RecipientCreditCardNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RecipientCreditCardType, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientCreditCardType, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientCreditCardType" })
-                @Html.ValidationMessageFor(model => model.RecipientCreditCardType, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RecipientCreditCardSecurityNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientCreditCardSecurityNumber, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientCreditCardSecurityNumber" })
-                @Html.ValidationMessageFor(model => model.RecipientCreditCardSecurityNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RecipientCreditCardHolderName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientCreditCardHolderName, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientCreditCardHolderName" })
-                @Html.ValidationMessageFor(model => model.RecipientCreditCardHolderName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RecipientCreditCardExpiryYear, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientCreditCardExpiryYear, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientCreditCardExpiryYear" })
-                @Html.ValidationMessageFor(model => model.RecipientCreditCardExpiryYear, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RecipientCreditCardExpiryMonth, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RecipientCreditCardExpiryMonth, new { htmlAttributes = new { @class = "form-control" }, id = "RecipientCreditCardExpiryMonth" })
-                @Html.ValidationMessageFor(model => model.RecipientCreditCardExpiryMonth, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
         <hr />
         <h4>Pickup Info</h4>
 
@@ -296,12 +248,6 @@ function OnRecipientAddressNicknamesChange(ddl) {
                 document.getElementById("RecipientEmail").value = result.Email;
                 document.getElementById("RecipientPhoneNumber").value = result.PhoneNumber;
 
-                document.getElementById("RecipientCreditCardNumber").value = result.RecipientCreditCardNumber;
-                document.getElementById("RecipientCreditCardType").value = result.RecipientCreditCardType;
-                document.getElementById("RecipientCreditCardSecurityNumber").value = result.RecipientCreditCardSecurityNumber;
-                document.getElementById("RecipientCreditCardHolderName").value = result.RecipientCreditCardHolderName;
-                document.getElementById("RecipientCreditCardExpiryYear").value = result.RecipientCreditCardExpiryYear;
-                document.getElementById("RecipientCreditCardExpiryMonth").value = result.RecipientCreditCardExpiryMonth;
             } else {
                 document.getElementById("RecipientFullName").value = "";
                 document.getElementById("RecipientCompanyName").value = "";
@@ -314,12 +260,6 @@ function OnRecipientAddressNicknamesChange(ddl) {
                 document.getElementById("RecipientEmail").value = "";
                 document.getElementById("RecipientPhoneNumber").value = "";
 
-                document.getElementById("RecipientCreditCardNumber").value = "";
-                document.getElementById("RecipientCreditCardType").value = "";
-                document.getElementById("RecipientCreditCardSecurityNumber").value = "";
-                document.getElementById("RecipientCreditCardHolderName").value = "";
-                document.getElementById("RecipientCreditCardExpiryYear").value = "";
-                document.getElementById("RecipientCreditCardExpiryMonth").value = "";
             }
 
 

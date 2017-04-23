@@ -71,7 +71,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Create([Bind(Include = "RecipientID,FullName,CompanyName,DepartmentName,DeliveryBuilding,DeliveryStreet,DeliveryCity,DeliveryProvince,DeliveryPostcode,PhoneNumber,Email,RecipientCreditCardNumber,RecipientCreditCardType,RecipientCreditCardSecurityNumber,RecipientCreditCardHolderName,RecipientCreditCardExpiryMonth,RecipientCreditCardExpiryYear,Nickname")] Recipient recipient)
+        public ActionResult Create([Bind(Include = "RecipientID,FullName,CompanyName,DepartmentName,DeliveryBuilding,DeliveryStreet,DeliveryCity,DeliveryProvince,DeliveryPostcode,PhoneNumber,Email,Nickname")] Recipient recipient)
         {
 
 
@@ -157,7 +157,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Edit([Bind(Include = "RecipientID,FullName,CompanyName,DepartmentName,DeliveryBuilding,DeliveryStreet,DeliveryCity,DeliveryProvince,DeliveryPostcode,PhoneNumber,Email,RecipientCreditCardNumber,RecipientCreditCardType,RecipientCreditCardSecurityNumber,RecipientCreditCardHolderName,RecipientCreditCardExpiryMonth,RecipientCreditCardExpiryYear,Nickname")] Recipient recipient)
+        public ActionResult Edit([Bind(Include = "RecipientID,FullName,CompanyName,DepartmentName,DeliveryBuilding,DeliveryStreet,DeliveryCity,DeliveryProvince,DeliveryPostcode,PhoneNumber,Email,Nickname")] Recipient recipient)
         {
             if (ModelState.IsValid)
             {
