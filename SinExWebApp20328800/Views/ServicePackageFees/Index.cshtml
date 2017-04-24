@@ -5,6 +5,7 @@
 }
 
 <h2>Service/Package Fees</h2>
+<hr />
 
 @using (Html.BeginForm("index", "ServicePackageFees", FormMethod.Get))
 {
@@ -16,7 +17,6 @@
     </div>
 }
 
-<hr />
 <h3>Currency: @Model.CurrencyCode &nbsp; &nbsp; &nbsp; Rate: @Model.Rate</h3>
 <table class="table">
     <tr>
