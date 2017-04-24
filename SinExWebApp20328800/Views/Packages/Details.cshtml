@@ -75,11 +75,11 @@
         </dd>
 
         <dt>
-            Estimated Fee 
+            Estimated Fee
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DeclaredFee)
+            ¥ @Html.DisplayFor(model => model.DeclaredFee)
         </dd>
 
         <dt>
@@ -87,15 +87,19 @@
         </dt>
 
         <dd>
+            @if (Model.ActualFee != null)
+            {
+                <text>¥</text>
+            }
             @Html.DisplayFor(model => model.ActualFee)
         </dd>
 
     </dl>
 </div>
 <p>
-    @if(Model.Shipment.CancelledOrNot == false && Model.Shipment.ConfirmOrNot == false)
+    @if (Model.Shipment.CancelledOrNot == false && Model.Shipment.ConfirmOrNot == false)
     {
-       @Html.ActionLink("Edit", "Edit", new { id = Model.PackageID })  <text>|</text>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.PackageID })  <text>|</text>
     }
     @Html.ActionLink("Back to List", "Index", new { WaybillId = Model.WaybillId })
 </p>

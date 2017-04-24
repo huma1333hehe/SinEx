@@ -10,7 +10,9 @@ namespace SinExWebApp20328800.Models
     [Table("PackageType")]
     public class PackageType
     {  
+        
         public virtual int PackageTypeID { get; set; }
+        [Display(Name = "Package Type")]
         public virtual string Type { get; set; }
         public virtual string Description { get; set; }
         //

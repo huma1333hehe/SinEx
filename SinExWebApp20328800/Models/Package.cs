@@ -10,17 +10,34 @@ namespace SinExWebApp20328800.Models
     [Table("Package")]
     public class Package
     {
+        [Display(Name = "Package ID")]
         public virtual int PackageID { get; set; }
+        [Display(Name = "Waybill ID")]
         public virtual int WaybillId { get; set; }
+        [Display(Name = "Package Type")]
         public virtual int PackageTypeID { get; set; }
+        [Display(Name = "Package Type Size")]
         public virtual int PackageTypeSizeID { get; set; }
+        [Display(Name = "Description")]
         public virtual string Description { get; set; }
+        [Display(Name = "Value")]
+        [Range(typeof(decimal), "0.01", "99999999", ErrorMessage = "Invalid range")]
+        [RegularExpression(@"^[0-9]*([.][0-9]{1,2})?$", ErrorMessage = "Please input no more than decimal places only")]
         public virtual decimal Value { get; set; }
+        [Display(Name = "Currency")]
         public virtual string CurrencyCode { get; set; }
         [Required]
+        [Range(typeof(decimal), "0.1", "99999999", ErrorMessage = "Invalid range")]
+        [RegularExpression(@"^[0-9]*([.][0-9]{1,1})?$", ErrorMessage = "Please input one decimal place only")]
+        [Display(Name = "Declared Weight")]
         public virtual decimal DeclaredWeight { get; set; }
+        [Range(typeof(decimal), "0.1", "99999999", ErrorMessage = "Invalid range")]
+        [RegularExpression(@"^[0-9]*([.][0-9]{1,1})?$", ErrorMessage = "Please input one decimal place only")]
+        [Display(Name = "Actual Weight")]
         public virtual decimal? ActualWeight { get; set; }
+        [Display(Name = "Declared Fee")]
         public virtual decimal DeclaredFee { get; set; }
+        [Display(Name = "Actual Fee")]
         public virtual decimal? ActualFee { get; set; }
         [ForeignKey("PackageTypeID")]
         public virtual PackageType PackageType { get; set; }

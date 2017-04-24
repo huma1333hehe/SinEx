@@ -333,6 +333,10 @@
                         @Html.DisplayNameFor(model => model.EstimatedShipmentTotalAmount)
                     </td>
                     <td>
+                        @if (Model.EstimatedShipmentTotalAmount != 0)
+                        {
+                            <text>¥</text>
+                        }
                         @Html.DisplayFor(model => model.EstimatedShipmentTotalAmount)
                     </td>
                 </tr>
@@ -340,7 +344,11 @@
             </table>
 
         </div>
-        <div class="col-md-10 col-md-offset-2">
+        <div class="col-md-12">
+            @if (Model.CancelledOrNot == false && Model.ConfirmOrNot == false && Model.NumberOfPackages < 10)
+            {
+                <a href="/Packages/Create?WaybillId=@Model.WaybillId">Add one more package for this shipment</a>
+            }
             <table class="table">
                 <tr>
 
@@ -394,9 +402,13 @@
                             @Html.DisplayFor(modelItem => item.ActualWeight)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.DeclaredFee)
+                            ¥ @Html.DisplayFor(modelItem => item.DeclaredFee)
                         </td>
                         <td>
+                            @if (item.ActualFee != null)
+                            {
+                                <text>¥</text>
+                            }
                             @Html.DisplayFor(modelItem => item.ActualFee)
                         </td>
                         <td>
@@ -417,6 +429,37 @@
                     </tr>
                 }
 
+                <tr>
+                    <td>
+                        <strong>
+                            Total
+                        </strong>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <strong>
+                            @Model.Packages.Sum(m => m.DeclaredWeight)
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            @Model.Packages.Sum(m => m.ActualWeight)
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            @Model.Packages.Sum(m => m.DeclaredFee)
+                        </strong>
+                    </td>
+                    <td>
+                        <strong>
+                            @Model.Packages.Sum(m => m.ActualFee)
+                        </strong>
+                    </td>
+                    <td></td>
+                </tr>
             </table>
         </div>
     </div>
