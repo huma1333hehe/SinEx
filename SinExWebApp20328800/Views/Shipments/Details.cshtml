@@ -233,6 +233,14 @@
             @Html.DisplayFor(model => model.NumberOfPackages)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.EstimatedShipmentTotalAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstimatedShipmentTotalAmount)
+        </dd>
+
     </dl>
 
 </div>
@@ -261,6 +269,12 @@
         <th>
             @Html.DisplayNameFor(model => model.Packages.Single().ActualWeight)
         </th>
+        <th>
+            Estimated Fee
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Packages.Single().ActualFee)
+        </th>
         <th></th>
     </tr>
 
@@ -288,6 +302,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ActualWeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeclaredFee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActualFee)
             </td>
             <td>
                 @if (item.Shipment.CancelledOrNot == false && item.Shipment.ConfirmOrNot == false)

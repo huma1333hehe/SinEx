@@ -335,6 +335,8 @@ namespace SinExWebApp20328800.Controllers
             shipment.PickupType = null;
             shipment.PickupDate = null;
             shipment.NumberOfPackages = 0;
+            shipment.ShipmentTotalAmount = 0;
+            shipment.EstimatedShipmentTotalAmount = 0;
 
             bool is_recipient_valid = false;
             if (!(shipment.TaxPayer == TaxPayer.Recipient || shipment.ShipmentPayer == ShipmentPayer.Recipient))
@@ -605,6 +607,7 @@ namespace SinExWebApp20328800.Controllers
                     if (Decimal.TryParse(Request.Form[key], out value))
                     {
                         package.ActualWeight = value;
+                        package.ActualFee = CalculatePackageFee(package);
                     }
                     else
                     {
