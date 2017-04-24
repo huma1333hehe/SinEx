@@ -2,19 +2,20 @@
 
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Tracking Shipment Records";
 }
 
-<h2>Index</h2>
+<h2>Tracking Shipment Records</h2>
+<hr />
 
 @using (Html.BeginForm("Index", "Trackings", FormMethod.Get))
 {
     <div class="form-group">
 
         <div class="col-md-12">
-            <label class="control-label col-md-2" for="WaybillId">Select A Shipment</label>
+            <label class="control-label col-md-2" for="WaybillId">Select a Shipment</label>
             <select class="form-control valid col-md-6" id="WaybillId" name="WaybillId" onchange="OnPickupLocationNicknamesChange(this)">
-                <option value="">Select A Shipment</option>
+                <option value="">Select a Shipment</option>
                 @foreach (var shipment in ViewBag.shipments)
                 {
                     <option value="@shipment.WaybillId" @(shipment.WaybillId == ViewBag.shipment ? "selected" : "")>@shipment.WaybillId.ToString("0000000000000000")</option>
