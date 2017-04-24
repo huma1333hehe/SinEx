@@ -28,11 +28,9 @@ namespace SinExWebApp20328800.Models
         public virtual string CurrencyCode { get; set; }
         [Required]
         [Range(typeof(decimal), "0.1", "99999999", ErrorMessage = "Invalid range")]
-        [RegularExpression(@"^[0-9]*([.][0-9]{1,1})?$", ErrorMessage = "Please input one decimal place only")]
         [Display(Name = "Declared Weight")]
         public virtual decimal DeclaredWeight { get; set; }
         [Range(typeof(decimal), "0.1", "99999999", ErrorMessage = "Invalid range")]
-        [RegularExpression(@"^[0-9]*([.][0-9]{1,1})?$", ErrorMessage = "Please input one decimal place only")]
         [Display(Name = "Actual Weight")]
         public virtual decimal? ActualWeight { get; set; }
         [Display(Name = "Declared Fee")]

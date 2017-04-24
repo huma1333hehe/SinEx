@@ -600,13 +600,14 @@ namespace SinExWebApp20328800.Controllers
 
             foreach (Package package in shipment.Packages)
             {
+                package.DeclaredWeight = Math.Round(package.DeclaredWeight, 1);
                 string key = "package_" + package.PackageID.ToString();
                 if (Request.Form[key] != "")
                 {
                     decimal value;
                     if (Decimal.TryParse(Request.Form[key], out value))
                     {
-                        package.ActualWeight = value;
+                        package.ActualWeight = Math.Round(value, 1);
                         package.ActualFee = CalculatePackageFee(package);
                     }
                     else
@@ -692,7 +693,11 @@ namespace SinExWebApp20328800.Controllers
                 }
                 db.Payments.Add(ShipmentPayment);
                 db.Payments.Add(DutyAndTaxPayment);
+
+
                 db.SaveChanges();
+
+                
 
                 shipment.Payments.Add(ShipmentPayment);
                 shipment.Payments.Add(DutyAndTaxPayment);

@@ -92,6 +92,7 @@ namespace SinExWebApp20328800.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "PackageID,WaybillId,PackageTypeID,Description,Value,CurrencyCode,DeclaredWeight,ActualWeight,PackageTypeSizeID")] Package package)
         {
+            package.DeclaredWeight = Math.Round(package.DeclaredWeight, 1);
             package.ActualWeight = null;
             bool isPackageTypeSizeEmpty = false;
             if (package.PackageTypeSizeID == 0)
@@ -162,6 +163,7 @@ namespace SinExWebApp20328800.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "PackageID,WaybillId,PackageTypeID,Description,Value,CurrencyCode,DeclaredWeight,ActualWeight,PackageTypeSizeID")] Package package)
         {
+            package.DeclaredWeight = Math.Round(package.DeclaredWeight, 1);
             if (ModelState.IsValid)
             {
                 Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == package.WaybillId && s.CancelledOrNot == false);
