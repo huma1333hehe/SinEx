@@ -269,7 +269,7 @@
                         @Html.DisplayFor(model => model.RecipientDeliveryProvince)<text>,</text>
                         @Html.DisplayFor(model => model.RecipientDeliveryPostcode)
                     </td>
-                </tr>           
+                </tr>
                 <tr>
                     <td>
                         @Html.DisplayNameFor(model => model.RecipientPhoneNumber)
@@ -328,6 +328,14 @@
                         @Html.DisplayFor(model => model.NumberOfPackages)
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.EstimatedShipmentTotalAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.EstimatedShipmentTotalAmount)
+                    </td>
+                </tr>
                 <tr></tr>
             </table>
 
@@ -354,6 +362,12 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Packages.Single().ActualWeight)
                     </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Packages.Single().DeclaredFee)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Packages.Single().ActualFee)
+                    </th>
                     <th></th>
                 </tr>
 
@@ -378,6 +392,12 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ActualWeight)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeclaredFee)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ActualFee)
                         </td>
                         <td>
                             @if (User.IsInRole("Customer") && item.Shipment.CancelledOrNot == false && item.Shipment.ConfirmOrNot == false)

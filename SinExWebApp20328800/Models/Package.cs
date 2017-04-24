@@ -20,7 +20,8 @@ namespace SinExWebApp20328800.Models
         [Required]
         public virtual decimal DeclaredWeight { get; set; }
         public virtual decimal? ActualWeight { get; set; }
-
+        public virtual decimal DeclaredFee { get; set; }
+        public virtual decimal? ActualFee { get; set; }
         [ForeignKey("PackageTypeID")]
         public virtual PackageType PackageType { get; set; }
         [ForeignKey("PackageTypeSizeID")]

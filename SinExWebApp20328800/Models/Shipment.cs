@@ -55,6 +55,9 @@ namespace SinExWebApp20328800.Models
 
         public virtual decimal? Duty { get; set; }
         public virtual decimal? Tax { get; set; }
+        [Display(Name ="Estimated total shipment cost")]
+        public virtual decimal EstimatedShipmentTotalAmount { get; set; }
+        [Display(Name = "Actual total shipment cost")]
         public virtual decimal ShipmentTotalAmount { get; set; }
 
         [Required]

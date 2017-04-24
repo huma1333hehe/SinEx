@@ -99,6 +99,8 @@ namespace SinExWebApp20328800.Controllers
                 package.PackageType = db.PackageTypes.Single(s => s.PackageTypeID == package.PackageTypeID);
                 package.PackageTypeSize = db.PackageTypeSizes.Single(s => s.PackageTypeSizeID == package.PackageTypeSizeID);
                 package.Shipment = db.Shipments.Single(s => s.WaybillId == package.WaybillId);
+                package.DeclaredFee = CalculatePackageFee(package);
+                package.ActualFee = null;
                 db.Packages.Add(package);
                 db.SaveChanges();
                 
@@ -106,7 +108,7 @@ namespace SinExWebApp20328800.Controllers
                 
                 shipment.Packages.Add(package);
                 shipment.NumberOfPackages += 1;
-
+                shipment.EstimatedShipmentTotalAmount += package.DeclaredFee;
                 db.Entry(shipment).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", new { WaybillId = package.WaybillId });
@@ -153,7 +155,20 @@ namespace SinExWebApp20328800.Controllers
         {
             if (ModelState.IsValid)
             {
+                Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == package.WaybillId && s.CancelledOrNot == false);
+                package.Shipment = shipment;
+                package.DeclaredFee = CalculatePackageFee(package);
+                package.ActualFee = null;
                 db.Entry(package).State = EntityState.Modified;
+                db.SaveChanges();
+
+
+                shipment.EstimatedShipmentTotalAmount = 0;
+                foreach(Package p in shipment.Packages)
+                {
+                    shipment.EstimatedShipmentTotalAmount += CalculatePackageFee(p);
+                }
+                db.Entry(shipment).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", new { WaybillId = package.WaybillId });
             }
@@ -195,6 +210,7 @@ namespace SinExWebApp20328800.Controllers
             Shipment shipment = db.Shipments.Single(s => s.WaybillId == package.WaybillId && s.CancelledOrNot == false);
             db.Packages.Remove(package);
             shipment.NumberOfPackages -= 1;
+            shipment.EstimatedShipmentTotalAmount -= package.DeclaredFee;
             db.Entry(shipment).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index", new { WaybillId = package.WaybillId });
@@ -207,6 +223,40 @@ namespace SinExWebApp20328800.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        //Calculate package fee from declared weight in RMB
+        private decimal CalculatePackageFee(Package Package)
+        {
+            ServicePackageFee hehe = db.ServicePackageFees.SingleOrDefault(a => a.PackageTypeID == Package.PackageTypeID && a.ServiceTypeID == Package.Shipment.ServiceTypeID);
+            PackageTypeSize haha = db.PackageTypeSizes.Single(a => a.PackageTypeSizeID == Package.PackageTypeSizeID);
+            decimal price = 0;
+            switch (Package.PackageTypeID)
+            {
+                //Envelop
+                case 1:
+                    price = hehe.Fee;
+                    break;
+                //Pak or Box
+                case 2:
+                case 4:
+                    price = Package.DeclaredWeight * hehe.Fee > hehe.MinimumFee ? (decimal)Package.DeclaredWeight * hehe.Fee : hehe.MinimumFee;
+                    int limit = 0;
+                    string limitString = haha.WeightLimit;
+                    bool convertResult = Int32.TryParse(limitString.Substring(0, limitString.Length - 2), out limit);
+                    if (limit != 0 && convertResult && Package.DeclaredWeight > (decimal)limit)
+                    {
+                        price += 500;
+                    }
+
+                    break;
+                //Tube or Custmoer
+                case 3:
+                case 5:
+                    price = Package.DeclaredWeight * hehe.Fee > hehe.MinimumFee ? (decimal)Package.DeclaredWeight * hehe.Fee : hehe.MinimumFee;
+                    break;
+            }
+            return price;
         }
     }
 }
