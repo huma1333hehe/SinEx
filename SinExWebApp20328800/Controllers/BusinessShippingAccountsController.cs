@@ -45,7 +45,7 @@ namespace SinExWebApp20328800.Controllers
         public ActionResult Edit()
         {
             BusinessShippingAccount businessShippingAccount = (BusinessShippingAccount)db.ShippingAccounts.SingleOrDefault(s => s.UserName == User.Identity.Name);
-
+            ViewBag.Cities = new SelectList(db.Destinations, "City", "City", businessShippingAccount.City);
             if (businessShippingAccount == null)
             {
                 return HttpNotFound();
