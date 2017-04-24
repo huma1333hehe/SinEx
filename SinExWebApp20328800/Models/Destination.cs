@@ -13,9 +13,9 @@ namespace SinExWebApp20328800.Models
         public virtual int DestinationID { get; set; }
 
         public string City { get; set; }
-        [Display(Name = "Province Code")]
+        [Display(Name = "Province")]
         public string ProvinceCode { get; set; }
-        [Display(Name = "Currency Code")]
+        [Display(Name = "Currency")]
         public virtual string CurrencyCode { get; set; }
         //
         public virtual Currency Currency { get; set; }

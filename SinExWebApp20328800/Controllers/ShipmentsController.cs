@@ -375,7 +375,6 @@ namespace SinExWebApp20328800.Controllers
             }
 
 
-            ViewBag.RecipientShippingAccountID = GetCurrentAccount().ShippingAccountId;
             ViewBag.SenderShippingAccountID = new SelectList(db.ShippingAccounts, "ShippingAccountId", "UserName", shipment.SenderShippingAccountID);
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", shipment.ServiceTypeID);
             ViewBag.Origin = new SelectList(db.Destinations, "City", "City");
@@ -405,6 +404,7 @@ namespace SinExWebApp20328800.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.RecipientShippingAccountID = shipment.RecipientShippingAccountID;
             ViewBag.SenderShippingAccountID = shipment.RecipientShippingAccountID;
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type");
             ViewBag.Origin = new SelectList(db.Destinations, "City", "City");

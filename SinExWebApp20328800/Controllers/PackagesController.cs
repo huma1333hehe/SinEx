@@ -93,7 +93,12 @@ namespace SinExWebApp20328800.Controllers
         public ActionResult Create([Bind(Include = "PackageID,WaybillId,PackageTypeID,Description,Value,CurrencyCode,DeclaredWeight,ActualWeight,PackageTypeSizeID")] Package package)
         {
             package.ActualWeight = null;
-            if (ModelState.IsValid)
+            bool isPackageTypeSizeEmpty = false;
+            if (package.PackageTypeSizeID == 0)
+            {
+                isPackageTypeSizeEmpty = true;
+            }
+            if (ModelState.IsValid && isPackageTypeSizeEmpty==false)
             {   
                 package.Currency = db.Currencies.Single(s => s.CurrencyCode == package.CurrencyCode);
                 package.PackageType = db.PackageTypes.Single(s => s.PackageTypeID == package.PackageTypeID);
@@ -112,6 +117,10 @@ namespace SinExWebApp20328800.Controllers
                 db.Entry(shipment).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", new { WaybillId = package.WaybillId });
+            }
+            if(isPackageTypeSizeEmpty == true)
+            {
+                ViewBag.PackageTypeSizeIDEmpty = "The Package Type Size field is required.";
             }
 
             ViewBag.CurrencyCode = new SelectList(db.Currencies, "CurrencyCode", "CurrencyCode", package.CurrencyCode);

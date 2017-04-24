@@ -13,18 +13,28 @@ namespace SinExWebApp20328800.Models
         public virtual int TrackingID { get; set; }
 
         [Required]
+        [Display(Name = "Waybill ID")]
+
         public virtual int WaybillId { get; set; }
 
         [Required]
+        [Display(Name = "Time")]
+
         public virtual DateTime Time { get; set; }
 
         [Required]
+        [Display(Name = "Description")]
+
         public virtual string Description { get; set; }
 
         [Required]
+        [Display(Name = "Location")]
+
         public virtual string Location { get; set; }
 
         [Required]
+        [Display(Name = "Remark")]
+
         public virtual string Remark { get; set; }
 
         [ForeignKey("WaybillId")]
