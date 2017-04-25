@@ -31,7 +31,7 @@
                             <li>@Html.ActionLink("Currencies", "Index", "Currencies")</li>
                             <li>@Html.ActionLink("Package Types", "Index", "PackageTypes")</li>
                             <li>@Html.ActionLink("Service Types", "Index", "ServiceTypes")</li>
-                            <li>@Html.ActionLink("Fees", "Index", "ServicePackageFees")</li>
+                            <li>@Html.ActionLink("Service/Package Fees", "Index", "ServicePackageFees")</li>
                             <li>@Html.ActionLink("Fee Calculator", "Index", "Calculate")</li>
                         </ul>
                     </li>
@@ -40,7 +40,7 @@
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Shipments<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Shipping History", "GenerateHistoryReport", "Shipments")</li>
+                                <li>@Html.ActionLink("Shipment History", "GenerateHistoryReport", "Shipments")</li>
                                 <li class="divider"></li>
                                 @if (User.IsInRole("Customer"))
                                 {
