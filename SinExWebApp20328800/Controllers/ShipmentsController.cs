@@ -542,7 +542,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost, ActionName("Confirm")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Customer")]
-        public ActionResult Confirm([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount")] Shipment shipment)
+        public ActionResult Confirm([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount,EstimatedShipmentTotalAmount")] Shipment shipment)
         {
             shipment.ConfirmOrNot = true;
             shipment.PickupOrNot = false;
@@ -586,7 +586,7 @@ namespace SinExWebApp20328800.Controllers
         [HttpPost, ActionName("Pickup")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Employee")]
-        public async Task<ActionResult> Pickup([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount")] Shipment shipment)
+        public async Task<ActionResult> Pickup([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount,EstimatedShipmentTotalAmount")] Shipment shipment)
         {
 
             db.Shipments.Attach(shipment);
