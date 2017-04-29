@@ -215,6 +215,7 @@
     <Compile Include="Controllers\PackagesController.cs" />
     <Compile Include="Controllers\PackageTypesController.cs" />
     <Compile Include="Controllers\PackageTypeSizesController.cs" />
+    <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\PersonalShippingAccountsController.cs" />
     <Compile Include="Controllers\PickupLocationsController.cs" />
     <Compile Include="Controllers\RecipientsController.cs" />
@@ -255,6 +256,9 @@
     <Compile Include="Validators\ItemInList.cs" />
     <Compile Include="ViewModels\FeeCalculateSearchViewModel.cs" />
     <Compile Include="ViewModels\FeeCalculateViewModel.cs" />
+    <Compile Include="ViewModels\PaymentsListViewModel.cs" />
+    <Compile Include="ViewModels\PaymentsReportViewModel.cs" />
+    <Compile Include="ViewModels\PaymentsSearchViewModel.cs" />
     <Compile Include="ViewModels\RegisterCustomerViewModel.cs" />
     <Compile Include="ViewModels\ServicePackageFeesViewModel.cs" />
     <Compile Include="ViewModels\ShipmentPackages.cs" />
@@ -508,6 +512,15 @@
     </Content>
     <Content Include="Views\Shipments\PickupSuccess.cshtml" />
     <Content Include="Views\Trackings\CreateFail.cshtml" />
+    <Content Include="Views\Payments\Create.cshtml" />
+    <Content Include="Views\Payments\Delete.cshtml" />
+    <Content Include="Views\Payments\Details.cshtml" />
+    <Content Include="Views\Payments\Edit.cshtml" />
+    <Content Include="Views\Payments\Index.cshtml" />
+    <Content Include="Views\Payments\GeneratePaymentHistoryReport.cshtml" />
+    <Content Include="Views\Payments\_PaymentsSearchPartial.cshtml" />
+    <Content Include="Views\Payments\_PaymentsListPartial.cshtml" />
+    <Content Include="Views\Payments\_PaymentsPagingPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,24 @@
+﻿@model SinExWebApp20328800.ViewModels.PaymentsSearchViewModel
+
+@using (Html.BeginForm("GeneratePaymentHistoryReport", "Payments", FormMethod.Get))
+{
+    <div class="form-group">
+        <div class="col-md-12">
+            @Html.LabelFor(a => a.ShippingAccountId, "Shipping Account: ")
+            @Html.DropDownListFor(a => a.ShippingAccountId, Model.ShippingAccounts, new { @class = "form-control", @Value = ViewBag.CurrentShippingAccountId })
+            @Html.ValidationMessageFor(a => a.ShippingAccountId, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-12">
+            @Html.LabelFor(a => a.StartingDate, "Date from ")
+            @Html.EditorFor(a => a.StartingDate, new { htmlAttributes = new { @class = "form-control date-time-picker", @Value = ViewBag.CurrentStartingDate != null ? ViewBag.CurrentStartingDate.ToString("yyyy/MM/dd HH:mm") : DateTime.Now.ToString("yyyy/MM/dd HH:mm") } })
+            @Html.ValidationMessageFor(model => model.StartingDate, "", new { @class = "text-danger" })
+
+            @Html.LabelFor(a => a.EndingDate, "To ")
+            @Html.EditorFor(a => a.EndingDate, new { htmlAttributes = new { @class = "form-control date-time-picker", @Value = ViewBag.CurrentEndingDate != null ? ViewBag.CurrentEndingDate.ToString("yyyy/MM/dd HH:mm") : DateTime.Now.ToString("yyyy/MM/dd HH:mm") } })
+            @Html.ValidationMessageFor(model => model.EndingDate, "", new { @class = "text-danger" })
+
+            <input type="submit" value="Search" />
+        </div>
+    </div>
+}

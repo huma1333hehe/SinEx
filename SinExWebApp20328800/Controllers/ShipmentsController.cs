@@ -92,7 +92,7 @@ namespace SinExWebApp20328800.Controllers
                 Value = "0",
                 Selected = false
             });
-
+            shipmentSearch.Shipment.ShippingAccountId = ShippingAccountId == null ? 0 : (int)ShippingAccountId;
             //Initialize the query to retrieve shipments using the ShipmentsListViewModel.
             var shipmentQuery = from s in db.Shipments
                                 select new ShipmentsListViewModel
@@ -113,7 +113,8 @@ namespace SinExWebApp20328800.Controllers
             {
                 ShippingAccount CShippingAccount = db.ShippingAccounts.SingleOrDefault(s => s.UserName == User.Identity.Name);
                 shipmentQuery = shipmentQuery.Where(s => s.ShippingAccountId == CShippingAccount.ShippingAccountId);
-            }else
+            }
+            else
             {
                 // Add the condition to select a spefic shipping account if shipping account id is not null.
                 if (ShippingAccountId != 0 && ShippingAccountId != null)
@@ -697,7 +698,7 @@ namespace SinExWebApp20328800.Controllers
 
                 db.SaveChanges();
 
-                
+
 
                 shipment.Payments.Add(ShipmentPayment);
                 shipment.Payments.Add(DutyAndTaxPayment);
@@ -744,7 +745,7 @@ namespace SinExWebApp20328800.Controllers
 
                 foreach (Payment lala in shipment.Payments)
                 {
-                    var body = "<p>Dear user {0}: </p><p>You have just paid for a shipment. Here are the details.</p><p>Shipping account number: {1}</p><p>Shipment waybill Id: {2}</p><p>Ship(pickup) date: {3}</p><p>Service type: {4}</p><p>Sender's reference number: {5}</p><p>Sender full name: {6}</p><p>Sender mailing address: {7}</p><p>Recipient full name: {8}</p><p>Recipient delivery address: {9}</p><p>Credit card type: {10}</p><p>Credit card number(last four digits only): {11}</p><p>Authorization code: {12}</p><p>Total amount payable: {13}</p><p>Currency you are using: {14}</p>";
+                    var body = "<p>Dear user {0}: </p><p>You have just paid for a shipment. Here are the details.</p><p>Shipping account number: {1}</p><p>Shipment waybill Id: {2}</p><p>Ship(pickup) date: {3}</p><p>Service type: {4}</p><p>Sender's reference number: {5}</p><p>Sender full name: {6}</p><p>Sender mailing address: {7}</p><p>Recipient full name: {8}</p><p>Recipient delivery address: {9}</p><p>Credit card type: {10}</p><p>Credit card number(last four digits only): {11}</p><p>Authorization code: {12}</p><p>Total amount payable: {13}</p><p>Currency you are using: {14}</p><p>Payment type: {15}</p>";
                     var message = new MailMessage();
                     ShippingAccount lala_account = db.ShippingAccounts.Single(a => a.UserName == lala.UserName);
                     Shipment lala_shipment = db.Shipments.Single(a => a.WaybillId == lala.WaybillID);
@@ -773,6 +774,7 @@ namespace SinExWebApp20328800.Controllers
                     string AuthorizationCode = lala.AuthorizationCode;
                     string TotalAmountPayable = lala.PaymentAmount.ToString("0.00");
                     string CurrencyCode = lala.CurrencyCode;
+                    string PaymentType = lala.PaymentDescription;
 
                     var body_package = "";
                     int index = 1;
@@ -786,7 +788,7 @@ namespace SinExWebApp20328800.Controllers
                     }
                     message.To.Add(new MailAddress(db.ShippingAccounts.Single(a => a.UserName == lala.UserName).EmailAddress));
                     message.Subject = "Payment Notification and Invoice";
-                    message.Body = String.Format(body, ShippingAccountUsername, ShippingAccountNumber, ShipmentWaybillID, ShipDate, ServiceType, SenderReferenceNumber, SenderFullName, SenderMailingAddress, RecipientFullName, RecipientDeliveryAddress, CreditCardType, CreditCardNumber, AuthorizationCode, TotalAmountPayable, CurrencyCode) + body_package;
+                    message.Body = String.Format(body, ShippingAccountUsername, ShippingAccountNumber, ShipmentWaybillID, ShipDate, ServiceType, SenderReferenceNumber, SenderFullName, SenderMailingAddress, RecipientFullName, RecipientDeliveryAddress, CreditCardType, CreditCardNumber, AuthorizationCode, TotalAmountPayable, CurrencyCode, PaymentType) + body_package;
                     message.IsBodyHtml = true;
                     using (var smtp = new SmtpClient())
                     {
