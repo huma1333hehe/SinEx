@@ -1,0 +1,69 @@
+﻿@model IEnumerable<SinExWebApp20328800.Models.Payment>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Shipment.ReferenceNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AuthorizationCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrencyCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PayerCharacter)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentDescription)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Shipment.ReferenceNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AuthorizationCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CurrencyCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PayerCharacter)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentDescription)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PaymentID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PaymentID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PaymentID })
+        </td>
+    </tr>
+}
+
+</table>

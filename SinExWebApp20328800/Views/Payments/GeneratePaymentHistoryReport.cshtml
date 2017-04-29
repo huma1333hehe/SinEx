@@ -1,0 +1,43 @@
+﻿<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet" />
+@model SinExWebApp20328800.ViewModels.PaymentsReportViewModel
+
+@{
+    ViewBag.Title = "Invoice History";
+}
+
+<h2>Invoice History</h2>
+<hr />
+@Html.Partial("_PaymentsSearchPartial", Model.PaymentSearch)
+@Html.Partial("_PaymentsListPartial", Model.PaymentList)
+@Html.Partial("_PaymentsPagingPartial", Model.PaymentList)
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                $(".date-time-picker").datetimepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-100:+0",
+                    dateFormat: 'yy/mm/dd',
+                    controlType: 'select',
+                    timeFormat: 'HH:mm'
+                });
+            });
+
+            jQuery.validator.methods.date = function (value, element) {
+                var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+                if (isChrome) {
+                    var d = new Date();
+                    return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
+                } else {
+                    return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
+                }
+            };
+        });
+    </script>
+}
