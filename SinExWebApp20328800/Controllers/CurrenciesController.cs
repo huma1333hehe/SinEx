@@ -36,12 +36,6 @@ namespace SinExWebApp20328800.Controllers
             return View(currency);
         }
         [Authorize(Roles = "Employee")]
-        // GET: Currencies/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-        [Authorize(Roles = "Employee")]
         // POST: Currencies/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
