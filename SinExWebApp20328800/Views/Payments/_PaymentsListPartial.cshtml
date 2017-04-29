@@ -1,0 +1,101 @@
+﻿@model IEnumerable<SinExWebApp20328800.ViewModels.PaymentsListViewModel>
+
+
+@if (Model.Any())
+{
+    <p>The following are the invoices for the specified account.</p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.WaybillId)
+            </th>
+            <th>
+                @Html.ActionLink("Ship Date", "GeneratePaymentHistoryReport", new
+           {
+               currentShippingAccountId = ViewBag.CurrentShippingAccountId,
+               currentStartingDate = ViewBag.CurrentStartingDate,
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               sortOrder = ViewBag.ServiceTypeSortParm
+           })
+            </th>
+            <th>
+                @Html.ActionLink("Recipient Name", "GeneratePaymentHistoryReport", new
+           {
+               currentShippingAccountId = ViewBag.CurrentShippingAccountId,
+               currentStartingDate = ViewBag.CurrentStartingDate,
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               sortOrder = ViewBag.RecipientNameSortParm
+           })
+            </th>
+            <th>
+                @Html.ActionLink("Origin City", "GeneratePaymentHistoryReport", new
+           {
+               currentShippingAccountId = ViewBag.CurrentShippingAccountId,
+               currentStartingDate = ViewBag.CurrentStartingDate,
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               sortOrder = ViewBag.OriginSortParm
+           })
+            </th>
+            <th>
+                @Html.ActionLink("Destination City", "GeneratePaymentHistoryReport", new
+           {
+               currentShippingAccountId = ViewBag.CurrentShippingAccountId,
+               currentStartingDate = ViewBag.CurrentStartingDate,
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               sortOrder = ViewBag.DestinationSortParm
+           })
+            </th>
+            <th>
+                @Html.ActionLink("Service Type", "GeneratePaymentHistoryReport", new
+           {
+               currentShippingAccountId = ViewBag.CurrentShippingAccountId,
+               currentStartingDate = ViewBag.CurrentStartingDate,
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               sortOrder = ViewBag.ServiceTypeSortParm
+           })
+            </th>
+            <th>
+                @Html.ActionLink("Total invoice amount ", "GeneratePaymentHistoryReport", new
+           {
+               currentShippingAccountId = ViewBag.CurrentShippingAccountId,
+               currentStartingDate = ViewBag.CurrentStartingDate,
+               currentEndingDate = ViewBag.CurrentEndingDate,
+               sortOrder = ViewBag.InvoiceAmountSortParm
+           })
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WaybillId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShipDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecipientName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OriginCity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DestinationCity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ServiceType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalPaymentAmount)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <p>No invoice record according to your searching condition</p>
+}

@@ -1,0 +1,74 @@
+﻿@model SinExWebApp20328800.Models.Payment
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Payment</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Shipment.ReferenceNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Shipment.ReferenceNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AuthorizationCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AuthorizationCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaymentAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CurrencyCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CurrencyCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PayerCharacter)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PayerCharacter)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaymentDescription)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PaymentID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
