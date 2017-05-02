@@ -254,6 +254,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Validators\ItemInList.cs" />
+    <Compile Include="ViewModels\FeeCalculatePackageViewModel.cs" />
     <Compile Include="ViewModels\FeeCalculateSearchViewModel.cs" />
     <Compile Include="ViewModels\FeeCalculateViewModel.cs" />
     <Compile Include="ViewModels\PaymentsListViewModel.cs" />
@@ -521,6 +522,7 @@
     <Content Include="Views\Payments\_PaymentsSearchPartial.cshtml" />
     <Content Include="Views\Payments\_PaymentsListPartial.cshtml" />
     <Content Include="Views\Payments\_PaymentsPagingPartial.cshtml" />
+    <Content Include="Views\Calculate\Result.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
