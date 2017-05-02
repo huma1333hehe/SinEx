@@ -73,6 +73,7 @@ namespace SinExWebApp20328800.Models
         [Display(Name = "Delivered")]
         public virtual bool DeliveredOrNot { get; set; }
 
+
         [Display(Name = "Pickup Type")]
         public virtual PickupType? PickupType { get; set; }
         [Display(Name = "pickup Date")]

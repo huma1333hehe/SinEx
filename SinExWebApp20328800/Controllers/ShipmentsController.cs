@@ -230,30 +230,43 @@ namespace SinExWebApp20328800.Controllers
                 s = Request.Form["Shipments"].Split(',').ToList();
             }
 
-            if (s.Count > 0)
+            if (Request.Form["PickupType"] != null && Request.Form["PickupDate"] != null && ModelState.IsValid)
             {
-                foreach (string WaybillId in s)
+                if (s.Count > 0)
                 {
-                    Shipment shipment = db.Shipments.Find(Int32.Parse(WaybillId));
-                    shipment.PickupType = Request.Form["PickupType"].Equals("0") ? PickupType.Immediate : PickupType.Prearranged;
-                    shipment.PickupLocation = Request.Form["PickupLocation"];
-                    DateTime dt = Convert.ToDateTime(Request.Form["PickupDate"]);
-                    shipment.PickupDate = dt;
-                    shipment.PickupLocation = Request.Form["PickupLocation"];
-                    shipment.ConfirmOrNot = true;
-                    shipment.PickupOrNot = false;
-                    db.Entry(shipment).State = EntityState.Modified;
-                    db.SaveChanges();
+                    foreach (string WaybillId in s)
+                    {
+                        Shipment shipment = db.Shipments.Find(Int32.Parse(WaybillId));
+                        shipment.PickupType = Request.Form["PickupType"].Equals("0") ? PickupType.Immediate : PickupType.Prearranged;
+                        shipment.PickupLocation = Request.Form["PickupLocation"];
+                        DateTime dt = Convert.ToDateTime(Request.Form["PickupDate"]);
+                        shipment.PickupDate = dt;
+                        shipment.PickupLocation = Request.Form["PickupLocation"];
+                        shipment.ConfirmOrNot = true;
+                        shipment.PickupOrNot = false;
+                        db.Entry(shipment).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+
+                ShippingAccount current_account = GetCurrentAccount();
+                IEnumerable<PickupLocation> lala = db.PickupLocations.Where(x => x.ShippingAccountId == current_account.ShippingAccountId);
+                ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
+                var allShipments = db.Shipments.Include(a => a.RecipientShippingAccount).Include(a => a.SenderShippingAccount).Include(a => a.ServiceType).
+                         Where(a => a.CancelledOrNot == false && a.ConfirmOrNot == false && a.PickupOrNot == false && a.NumberOfPackages > 0);
+                return View(allShipments.ToList());
+            }else
+            {
+                ShippingAccount current_account = GetCurrentAccount();
+                IEnumerable<PickupLocation> lala = db.PickupLocations.Select(g => g).Where(g => g.ShippingAccountId == current_account.ShippingAccountId);
+                ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
+                ViewBag.PickupTypeEmpty = Request.Form["PickupType"] == null ? true : false;
+                ViewBag.PickupDateEmpty = Request.Form["PickupDate"] == null ? true : false;
+                return View(shipments);
             }
 
-            ShippingAccount current_account = GetCurrentAccount();
-            IEnumerable<PickupLocation> lala = db.PickupLocations.Where(x => x.ShippingAccountId == current_account.ShippingAccountId);
-            ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
-            var allShipments = db.Shipments.Include(a => a.RecipientShippingAccount).Include(a => a.SenderShippingAccount).Include(a => a.ServiceType).
-                     Where(a => a.CancelledOrNot == false && a.ConfirmOrNot == false && a.PickupOrNot == false && a.NumberOfPackages > 0);
-            return View(allShipments.ToList());
+            
             /*
             foreach(string shipmentWaybillId in shipmentWaybillIds)
             {
@@ -545,11 +558,24 @@ namespace SinExWebApp20328800.Controllers
         [Authorize(Roles = "Customer")]
         public ActionResult Confirm([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount,EstimatedShipmentTotalAmount")] Shipment shipment)
         {
-            shipment.ConfirmOrNot = true;
-            shipment.PickupOrNot = false;
-            db.Entry(shipment).State = EntityState.Modified;
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid && shipment.PickupType != null && shipment.PickupDate != null)
+            {
+                shipment.ConfirmOrNot = true;
+                shipment.PickupOrNot = false;
+                db.Entry(shipment).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ShippingAccount current_account = GetCurrentAccount();
+                IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
+                ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
+                ViewBag.PickupTypeEmpty = shipment.PickupType == null ? true : false;
+                ViewBag.PickupDateEmpty = shipment.PickupDate == null ? true : false;
+                return View(shipment);
+            }
+
         }
 
 
@@ -899,6 +925,21 @@ namespace SinExWebApp20328800.Controllers
             }
 
             return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetCurrentDateTime(string PickupType)
+        {
+            if (string.IsNullOrEmpty(PickupType))
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+            DateTime date = DateTime.Now;
+            if (PickupType == "1")
+            {
+                date = DateTime.Now.AddDays(5.0);
+            }
+            return Json(date, JsonRequestBehavior.AllowGet);
+
         }
 
         private ShippingAccount GetCurrentAccount()
