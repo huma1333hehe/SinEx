@@ -13,15 +13,7 @@ namespace SinExWebApp20328800.Controllers
 
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
         // GET: Calculate
-        public ActionResult Index(
-            string origin,
-            string destination,
-            string packageType,
-            string serviceType,
-            string size,
-            decimal? weight,
-            string currencyCode
-        )
+        public ActionResult Index()
         {
             FeeCalculateViewModel Calculator = new FeeCalculateViewModel();
             Calculator.param = new FeeCalculateSearchViewModel();
@@ -30,23 +22,18 @@ namespace SinExWebApp20328800.Controllers
             Calculator.param.destinations = PopulateCitiesDropdownlist().ToList();
             Calculator.param.packageTypes = PopulatePackageTypesDropdownlist().ToList();
             Calculator.param.serviceTypes = PopulateServiceTypesDropdownlist().ToList();
-            Calculator.param.currencies  =   PopulateCurrenciesDropdownlist().ToList();
+            Calculator.param.currencies = PopulateCurrenciesDropdownlist().ToList();
+            Calculator.param.sizes = new List<SelectListItem>();
+            Calculator.packages = new List<FeeCalculatePackageViewModel>();
+            Calculator.packages.Add(new FeeCalculatePackageViewModel());
             //populate size dropdownlist
-            if (!String.IsNullOrEmpty(packageType))
-            {
-                Calculator.param.sizes = PopulatePackageTypeSizesDropdownlist(packageType).ToList();
-            }
-            else
-            {
-                Calculator.param.sizes = new List<SelectListItem>();
-            }
+
+            Calculator.param.sizes = new List<SelectListItem>();
+            /*
             //set viewbag
             ViewBag.currentOrigin = origin;
             ViewBag.currentDestination = destination;
-            ViewBag.currentPackageType = packageType;
             ViewBag.currentServiceType = serviceType;
-            ViewBag.currentSize = size;
-            ViewBag.currentWeight = weight;
             ViewBag.currentCurrencyCode = currencyCode;
             //calculate result
             if (packageType != null && serviceType != null && weight != null && currencyCode != null)
@@ -89,7 +76,71 @@ namespace SinExWebApp20328800.Controllers
                 ViewBag.currency = currencyCode;
                 ViewBag.weight = weight;
             }
+            */
             return View(Calculator);
+        }
+
+        // POST: Currencies/Index
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index([Bind(Include = "packages,origin,destination,serviceType,currencyCode,param")] FeeCalculateViewModel Calculator)
+        {
+            if (ModelState.IsValid)
+            {
+                decimal rate = db.Currencies.Where(a => a.CurrencyCode == Calculator.currencyCode).Select(a => a.ExchangeRate).First();
+                foreach (FeeCalculatePackageViewModel package in Calculator.packages)
+                {
+                    string limitString = db.PackageTypeSizes.Where(a => a.TypeSize == package.size).Select(a => a).First().WeightLimit;
+                    package.limit = limitString;
+                    package.weight = Math.Round((decimal)package.weight, 1);
+                    package.result = db.ServicePackageFees.SingleOrDefault(a => a.PackageType.Type == package.packageType && a.ServiceType.Type == Calculator.serviceType);
+                    decimal price = 0;
+                    package.penalty = false;
+                    switch (package.result.PackageTypeID)
+                    {
+                        //Envelope
+                        case 1:
+                            price = package.result.Fee;
+                            break;
+                        //Pak or Box
+                        case 2:
+                        case 4:
+                            price = package.weight * package.result.Fee > package.result.MinimumFee ? (decimal)package.weight * package.result.Fee : package.result.MinimumFee;
+                            // weight limit
+                            int limit = 0;
+                            bool convertResult = Int32.TryParse(limitString.Substring(0, limitString.Length - 2), out limit);
+                            if (limit != 0 && convertResult == true && package.weight > (decimal)limit)
+                            {
+                                price += 500;
+                                package.penalty = true;
+                            }
+                            break;
+                        //Tube
+                        case 3:
+                            price = package.weight * package.result.Fee > package.result.MinimumFee ? (decimal)package.weight * package.result.Fee : package.result.MinimumFee;
+                            break;
+                        //Customer
+                        case 5:
+                            price = package.weight * package.result.Fee > package.result.MinimumFee ? (decimal)package.weight * package.result.Fee : package.result.MinimumFee;
+                            break;
+                    }
+                    package.fee = price * rate;
+                }
+                return View("Result", Calculator);
+            }
+
+            Calculator.param = new FeeCalculateSearchViewModel();
+            //populate dropdownlists
+            Calculator.param.origins = PopulateCitiesDropdownlist().ToList();
+            Calculator.param.destinations = PopulateCitiesDropdownlist().ToList();
+            Calculator.param.packageTypes = PopulatePackageTypesDropdownlist().ToList();
+            Calculator.param.serviceTypes = PopulateServiceTypesDropdownlist().ToList();
+            Calculator.param.currencies = PopulateCurrenciesDropdownlist().ToList();
+            Calculator.param.sizes = new List<SelectListItem>();
+
+            return View("Index", Calculator);
         }
 
         private SelectList PopulateCitiesDropdownlist()
@@ -112,10 +163,10 @@ namespace SinExWebApp20328800.Controllers
 
         private SelectList PopulatePackageTypeSizesDropdownlist(string packageType)
         {
-            var Query = db.PackageTypeSizes.Where(a => a.PackageType.Type == packageType).Select(a=>a.TypeSize);
+            var Query = db.PackageTypeSizes.Where(a => a.PackageType.Type == packageType).Select(a => a.TypeSize);
             return new SelectList(Query);
         }
-        
+
         private SelectList PopulateCurrenciesDropdownlist()
         {
             var Query = db.Currencies.Select(a => a.CurrencyCode).Distinct().OrderBy(a => a);
