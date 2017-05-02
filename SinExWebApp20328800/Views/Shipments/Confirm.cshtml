@@ -67,7 +67,11 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.PickupType, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EnumDropDownListFor(model => model.PickupType, htmlAttributes: new { @class = "form-control" })
+                    @Html.EnumDropDownListFor(model => model.PickupType, "Please select...", htmlAttributes: new { @class = "form-control", onchange = "OnPickupTypeChange()" })
+                    @if (ViewBag.PickupTypeEmpty == true)
+                {
+                        <p style="color:red">Pickup type can not be empty</p>
+                    }
                     @Html.ValidationMessageFor(model => model.PickupType, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -75,13 +79,17 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.PickupDate, "Pickup Date", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.PickupDate, new { htmlAttributes = new { @class = "form-control date-time-picker" } })
+                    @Html.EditorFor(model => model.PickupDate, new { htmlAttributes = new { @class = "form-control date-time-picker", id = "PickupDate", onchange = "OnPickupDateChange()" } })
+                    @if (ViewBag.PickupDateEmpty == true)
+                {
+                        <p style="color:red">Pickup type can not be empty</p>
+                    }
                     @Html.ValidationMessageFor(model => model.PickupDate, "", new { @class = "text-danger" })
                 </div>
             </div>
 
 
-            @if (Model.Packages != null && Model.NumberOfPackages != 0)
+            @if (Model.NumberOfPackages != 0)
             {
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
@@ -93,8 +101,6 @@
             {
                 <h2>Can not confirm because there are no packages for this shipment</h2>
             }
-
-
         </div>
     }
 
@@ -371,6 +377,54 @@
 
             });
         };
+
+        function OnPickupTypeChange() {
+            var PickupType = $('#PickupType').val();
+            $.ajax({
+                url: '/Shipments/GetCurrentDateTime',
+                type: "GET",
+                dataType: "JSON",
+                data: { PickupType: PickupType },
+                success: function (result) {
+                    if (result != null) {
+                        var date = new Date(parseInt(result.substr(6)));
+                        var dtstring = $.datepicker.formatDate('yy/mm/dd ', date) + (date.getHours() < 10 ? ("0" + date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? ("0" + date.getMinutes()) : date.getMinutes());
+                        $("#PickupDate").val(dtstring);
+                        if (PickupType == '0') {
+                            document.getElementById('PickupDate').style.display = 'none';
+                        } else {
+                            document.getElementById('PickupDate').style.display = 'block';
+                        }
+                    }
+                }
+            });
+        }
+
+        function OnPickupDateChange() {
+            var PickupType = $('#PickupType').val();
+            var PickupDate = $('#PickupDate').val().toString();
+            $.ajax({
+                url: '/Shipments/GetCurrentDateTime',
+                type: "GET",
+                dataType: "JSON",
+                data: { PickupType: PickupType },
+                success: function (result) {
+                    var datenow = new Date();
+                    var date = new Date(parseInt(result.substr(6)));
+                    var dtstring = $.datepicker.formatDate('yy/mm/dd ', date) + (date.getHours() < 10 ? ("0" + date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? ("0" + date.getMinutes()) : date.getMinutes());
+                    var dtnowstring = $.datepicker.formatDate('yy/mm/dd ', datenow) + (datenow.getHours() < 10 ? ("0" + datenow.getHours()) : datenow.getHours()) + ":" + (datenow.getMinutes() < 10 ? ("0" + datenow.getMinutes()) : datenow.getMinutes());
+                    if (result != null && PickupType == "1" && (PickupDate > dtstring || PickupDate < dtnowstring)) {
+                        $('#PickupDate').val("");
+                        alert("Error! The pre-arranged pickup DateTime must be with in 5 days from now on");
+                    }
+                    if (result != null && PickupType == "0") {
+                        $("#PickupDate").val(dtstring);
+                        alert("Error! The pickup type is immediate so no more changes on pickup date");
+                    }
+                }
+            });
+        }
+
 
     </script>
 }
