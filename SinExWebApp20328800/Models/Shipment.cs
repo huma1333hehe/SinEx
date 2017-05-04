@@ -29,7 +29,6 @@ namespace SinExWebApp20328800.Models
         [Display(Name = "Waybill ID")]
         public virtual int WaybillId { get; set; }
 
-        [Required]
         [StringLength(5, MinimumLength = 1)]
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Reference number must be numeric")]
         [Display(Name = "Ref No.")]
@@ -72,7 +71,12 @@ namespace SinExWebApp20328800.Models
         [Required]
         [Display(Name = "Delivered")]
         public virtual bool DeliveredOrNot { get; set; }
-
+        [Required]
+        [Display(Name ="Notify sender")]
+        public virtual bool NotifySenderOrNot { get; set; }
+        [Required]
+        [Display(Name = "Notify recipient")]
+        public virtual bool NotifyRecipientOrNot { get; set; }
 
         [Display(Name = "Pickup Type")]
         public virtual PickupType? PickupType { get; set; }
@@ -89,7 +93,6 @@ namespace SinExWebApp20328800.Models
         [Required]
         [Display(Name = "Recipient Name")]
         public virtual string RecipientFullName { get; set; }
-        [Required]
         [Display(Name = "Recipient Company Name")]
         public virtual string RecipientCompanyName { get; set; }
         [Display(Name = "Recipient Department Name")]

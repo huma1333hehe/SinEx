@@ -137,13 +137,13 @@ namespace SinExWebApp20328800.Controllers
                 db.SaveChanges();
 
                 //delivered notification email
-                if (tracking.Description == "Delivered")
+                if (tracking.Description == "Delivered" && shipment.NotifySenderOrNot)
                 {
                     var body_delivered = "<p>Dear user {0}: </p><p>The shipment with the following details has been delivered to the destination.</p><p>Shipment waybill Id: {1}</p><p>Delivered remark: {2}</p><p>Recipient name: {3}</p><p>Recipient address: {4}</p><p>Delivered date: {5}</p>";
                     var message_delivered = new MailMessage();
                     string Username = shipment.SenderShippingAccount.UserName;
                     string WaybillId = shipment.WaybillId.ToString("000000000000");
-                    string Notification = tracking.Description + tracking.Remark;
+                    string Notification = tracking.Remark;
                     string RecipientName = "";
                     if (shipment.RecipientShippingAccount is PersonalShippingAccount)
                     {
