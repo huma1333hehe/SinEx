@@ -142,6 +142,22 @@
                         @Html.DisplayFor(model => model.DeliveredOrNot)
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.NotifySenderOrNot)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.NotifySenderOrNot)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.NotifyRecipientOrNot)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.NotifyRecipientOrNot)
+                    </td>
+                </tr>
                 @if (Model.ConfirmOrNot == true)
                 {
                     <tr>

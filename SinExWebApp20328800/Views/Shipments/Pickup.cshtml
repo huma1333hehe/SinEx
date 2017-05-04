@@ -44,6 +44,8 @@
             @Html.HiddenFor(model => model.Packages)
             @Html.HiddenFor(model => model.EstimatedShipmentTotalAmount)
             @Html.HiddenFor(model => model.ShipmentTotalAmount)
+            @Html.HiddenFor(model => model.NotifySenderOrNot)
+            @Html.HiddenFor(model => model.NotifyRecipientOrNot)
             <span class="field-validation-valid text-danger" data-valmsg-for="packages" data-valmsg-replace="true">@ViewBag.Incomplete</span>
 
             <hr />
