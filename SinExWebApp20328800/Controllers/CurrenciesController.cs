@@ -42,11 +42,13 @@ namespace SinExWebApp20328800.Controllers
             return View(currency);
         }
 
+
         // GET: Currencies/Create
         public ActionResult Create()
         {
             return View();
         }
+
 
         // POST: Currencies/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
