@@ -477,7 +477,6 @@
     <Content Include="Views\Shared\_Partial.cshtml" />
     <Content Include="Views\Calculate\Index.cshtml" />
     <Content Include="Views\Shipments\Create.cshtml" />
-    <Content Include="Views\Shipments\Delete.cshtml" />
     <Content Include="Views\Shipments\Details.cshtml" />
     <Content Include="Views\Shipments\Edit.cshtml" />
     <Content Include="Views\Shipments\Index.cshtml" />

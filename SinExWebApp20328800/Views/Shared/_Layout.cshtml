@@ -56,13 +56,15 @@
                                 {
                                     <li>@Html.ActionLink("My Shipments", "Index", "Shipments")</li>
                                     <li>@Html.ActionLink("New Shipment", "Create", "Shipments")</li>
-
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Recipient Addresses", "Index", "Recipients")</li>
+                                    <li>@Html.ActionLink("Pickup Locations", "Index", "PickupLocations")</li>
                                 }
                                 @if (User.IsInRole("Employee"))
                                 {
                                     <li>@Html.ActionLink("All Shipments", "Index", "Shipments")</li>
-
                                 }
+
                             </ul>
                         </li>
                     }
