@@ -698,14 +698,12 @@ namespace SinExWebApp20328800.Controllers
                 {
                     Destination hehe = db.Destinations.Single(a => a.City == shipment.SenderShippingAccount.City);
                     ShipmentPayment.PayerCharacter = "Sender";
-                    ShipmentPayment.PaymentAmount *= hehe.Currency.ExchangeRate;
                     ShipmentPayment.CurrencyCode = hehe.CurrencyCode;
                     ShipmentPayment.UserName = shipment.SenderShippingAccount.UserName;
                 }
                 else
                 {
                     Destination hehe = db.Destinations.Single(a => a.City == shipment.RecipientShippingAccount.City);
-                    ShipmentPayment.PaymentAmount *= hehe.Currency.ExchangeRate;
                     ShipmentPayment.PayerCharacter = "Recipient";
                     ShipmentPayment.CurrencyCode = hehe.CurrencyCode;
                     ShipmentPayment.UserName = shipment.RecipientShippingAccount.UserName;
@@ -714,7 +712,6 @@ namespace SinExWebApp20328800.Controllers
                 if (shipment.TaxPayer == TaxPayer.Sender)
                 {
                     Destination hehe = db.Destinations.Single(a => a.City == shipment.SenderShippingAccount.City);
-                    DutyAndTaxPayment.PaymentAmount *= hehe.Currency.ExchangeRate;
                     DutyAndTaxPayment.PayerCharacter = "Sender";
                     DutyAndTaxPayment.CurrencyCode = hehe.CurrencyCode;
                     DutyAndTaxPayment.UserName = shipment.SenderShippingAccount.UserName;
@@ -722,7 +719,6 @@ namespace SinExWebApp20328800.Controllers
                 else
                 {
                     Destination hehe = db.Destinations.Single(a => a.City == shipment.RecipientShippingAccount.City);
-                    DutyAndTaxPayment.PaymentAmount *= hehe.Currency.ExchangeRate;
                     DutyAndTaxPayment.PayerCharacter = "Recipient";
                     DutyAndTaxPayment.CurrencyCode = hehe.CurrencyCode;
                     DutyAndTaxPayment.UserName = shipment.RecipientShippingAccount.UserName;
