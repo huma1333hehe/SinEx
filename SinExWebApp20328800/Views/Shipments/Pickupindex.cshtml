@@ -1,0 +1,32 @@
+﻿@model IEnumerable<SinExWebApp20328800.Models.Shipment>
+
+@{
+    ViewBag.Title = "Pickupindex";
+}
+
+<h2>Other Requirement - Pickup</h2>
+
+<p>Only shipments which have been confirmed by customers and not been picked up can be picked up here!</p>
+
+@using (Html.BeginForm("Pickup", "Shipments", FormMethod.Get))
+{
+    <div class="form-group">
+
+        <div class="col-md-12">
+            <label class="control-label col-md-2" for="WaybillId">Select a Shipment</label>
+            <select class="form-control valid col-md-6" id="id" name="id">
+                <option value="">Select a Shipment</option>
+
+                @foreach (var shipment in Model)
+                {
+                    <option value="@shipment.WaybillId" @(shipment.WaybillId == ViewBag.shipment ? "selected" : "")>@shipment.WaybillId.ToString("0000000000000000")</option>
+                }
+
+            </select>
+            <input class="col-md-2 col-md-offset-1" type="submit" value="Pickup" />
+        </div>
+    </div>
+}
+
+
+
