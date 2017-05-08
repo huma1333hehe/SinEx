@@ -102,6 +102,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AccountControllerTests.cs" />
+    <Compile Include="Controllers\CurrenciesControllerTests.cs" />
+    <Compile Include="Controllers\PackageTypesControllerTests.cs" />
+    <Compile Include="Controllers\ServiceTypesControllerTests.cs" />
+    <Compile Include="Controllers\ShipmentsControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>
