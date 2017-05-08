@@ -21,7 +21,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.WaybillId, "WaybillId", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.WaybillId, new { disabled = "disabled", @readonly = "readonly", @Value = ViewBag.WaybillId })
+                @Html.TextBoxFor(model => model.WaybillId, new { @readonly = "readonly", @Value = ViewBag.WaybillId })
             </div>
         </div>
 
@@ -29,14 +29,27 @@
             @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
 
-                @Html.TextBoxFor(model => model.Time, new { disabled = "disabled", @readonly = "readonly", @Value = ViewBag.Time })
+                @Html.TextBoxFor(model => model.Time, new {  @readonly = "readonly", @Value = ViewBag.Time })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @if (ViewBag.delivered)
+                {
+                    @Html.DropDownListFor(model => model.Description, new SelectList(
+    new List<SelectListItem>
+    {
+        new SelectListItem { Selected = false, Text = "Delivered", Value = "Delivered"},
+        new SelectListItem { Selected = false, Text = "Returned", Value = "Returned"},
+        new SelectListItem { Selected = false, Text = "Lost", Value = "Lost"},
+    }, "Value", "Text"), new { htmlAttributes = new { @class = "form-control" } })
+                }
+                else
+                {
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                }
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -56,6 +69,33 @@
                 @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        @if (ViewBag.delivered)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.DeliveredTo, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DeliveredTo, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DeliveredTo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DeliveredAt, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DeliveredAt, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DeliveredAt, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.StatusInformation, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.StatusInformation, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.StatusInformation, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

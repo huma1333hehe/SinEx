@@ -50,6 +50,32 @@
             @Html.DisplayFor(model => model.Remark)
         </dd>
 
+        @if (ViewBag.delivered)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.DeliveredTo)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DeliveredTo)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DeliveredAt)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DeliveredAt)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.StatusInformation)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.StatusInformation)
+            </dd>
+        }
     </dl>
 </div>
 <p>
