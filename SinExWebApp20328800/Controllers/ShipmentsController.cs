@@ -297,6 +297,7 @@ namespace SinExWebApp20328800.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Shipment shipment = db.Shipments.Find(id);
+            ViewBag.taxCurrency = shipment.TaxPayer == TaxPayer.Recipient ? db.Destinations.SingleOrDefault(d => d.City == shipment.RecipientShippingAccount.City).CurrencyCode : db.Destinations.SingleOrDefault(d => d.City == shipment.SenderShippingAccount.City).CurrencyCode;
             if (shipment == null)
             {
                 return HttpNotFound();
@@ -305,6 +306,7 @@ namespace SinExWebApp20328800.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(shipment);
         }
 
@@ -524,6 +526,7 @@ namespace SinExWebApp20328800.Controllers
         public ActionResult Cancel(int id)
         {
             Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
+            ViewBag.taxCurrency = shipment.TaxPayer == TaxPayer.Recipient ? db.Destinations.SingleOrDefault(d => d.City == shipment.RecipientShippingAccount.City).CurrencyCode : db.Destinations.SingleOrDefault(d => d.City == shipment.SenderShippingAccount.City).CurrencyCode;
             shipment.CancelledOrNot = true;
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -542,6 +545,7 @@ namespace SinExWebApp20328800.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
+            ViewBag.taxCurrency = shipment.TaxPayer == TaxPayer.Recipient ? db.Destinations.SingleOrDefault(d => d.City == shipment.RecipientShippingAccount.City).CurrencyCode : db.Destinations.SingleOrDefault(d => d.City == shipment.SenderShippingAccount.City).CurrencyCode;
             if (shipment == null)
             {
                 return HttpNotFound();
@@ -595,7 +599,7 @@ namespace SinExWebApp20328800.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Shipment shipment = db.Shipments.Include(s => s.Packages).SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
-
+            ViewBag.taxCurrency = shipment.TaxPayer == TaxPayer.Recipient ? db.Destinations.SingleOrDefault(d => d.City == shipment.RecipientShippingAccount.City).CurrencyCode : db.Destinations.SingleOrDefault(d => d.City == shipment.SenderShippingAccount.City).CurrencyCode;
             if (shipment == null)
             {
                 return HttpNotFound();

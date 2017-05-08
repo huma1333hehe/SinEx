@@ -98,7 +98,7 @@
                         @Html.DisplayNameFor(model => model.Duty)
                     </td>
                     <td>
-                        @Html.DisplayFor(model => model.Duty)
+                        @ViewBag.taxCurrency @Html.DisplayFor(model => model.Duty)
                     </td>
                 </tr>
                 <tr>
@@ -106,7 +106,7 @@
                         @Html.DisplayNameFor(model => model.Tax)
                     </td>
                     <td>
-                        @Html.DisplayFor(model => model.Tax)
+                        @ViewBag.taxCurrency @Html.DisplayFor(model => model.Tax)
                     </td>
                 </tr>
                 <tr>
