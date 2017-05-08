@@ -16,6 +16,17 @@ namespace SinExWebApp20328800.Controllers
     {
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
 
+        private ShippingAccount GetCurrentAccount()
+        {
+            string username = System.Web.HttpContext.Current.User.Identity.Name;
+            if (username == null)
+            {
+                return null;
+            }
+            ShippingAccount current_account = db.ShippingAccounts.SingleOrDefault(s => s.UserName == username);
+            return current_account;
+        }
+
         private SelectList PopulateShippingAccountsDropdownList()
         {
             // TODO: Construct the LINQ query to retrieve the unique list of shipping account ids.
@@ -27,10 +38,12 @@ namespace SinExWebApp20328800.Controllers
 
         public ActionResult GeneratePaymentHistoryReport(
             int? ShippingAccountId,
+            int? WaybillId,
             DateTime? StartingDate,
             DateTime? EndingDate,
             string sortOrder,
             int? currentShippingAccountId,
+            int? currentWaybillId,
             DateTime? currentStartingDate,
             DateTime? currentEndingDate,
             int? page)
@@ -57,45 +70,71 @@ namespace SinExWebApp20328800.Controllers
             {
                 ShippingAccountId = currentShippingAccountId;
             }
+            if (WaybillId == null)
+            {
+                WaybillId = currentWaybillId;
+            }
             else
             {
                 page = 1;
             }
             ViewBag.CurrentShippingAccountId = ShippingAccountId;
+            ViewBag.CurrentWaybillId = WaybillId;
             ViewBag.CurrentStartingDate = StartingDate;
             ViewBag.CurrentEndingDate = EndingDate;
 
-
+            PaymentReport.PaymentSearch.ShippingAccountId = ShippingAccountId == null ? 0 : (int)ShippingAccountId;
+            PaymentReport.PaymentSearch.WaybillId = WaybillId == null ? 0 : (int)WaybillId;
             // Populate the ShippingAccountId dropdown list.
 
-            var n = PopulateShippingAccountsDropdownList().ToList();
-            foreach (SelectListItem k in n)
+            if (User.IsInRole("Employee"))
             {
-                k.Value = k.Text;
-            }
-            n.Insert(0, new SelectListItem
-            {
-                Text = "All",
-                Value = "0"
-            });
-            int haha = 0;
-            for (int i = 0; i < n.Count(); i++)
-            {
-                if (n.ElementAt(i).Value == ShippingAccountId.ToString())
+                var n = PopulateShippingAccountsDropdownList().ToList();
+                foreach (SelectListItem k in n)
                 {
-                    haha = i;
-                    break;
+                    k.Value = k.Text;
+                }
+                n.Insert(0, new SelectListItem
+                {
+                    Text = "All",
+                    Value = "0"
+                });
+                int haha = 0;
+                for (int i = 0; i < n.Count(); i++)
+                {
+                    if (n.ElementAt(i).Value == ShippingAccountId.ToString())
+                    {
+                        haha = i;
+                        break;
+                    }
+                }
+                foreach (var item in n)
+                {
+                    if (item.Value == ShippingAccountId.ToString())
+                    {
+                        item.Selected = true;
+                    }
+                }
+                PaymentReport.PaymentSearch.ShippingAccounts = n;
+                if(!(ShippingAccountId == 0 || ShippingAccountId == null))
+                {
+                    string accountusername = db.ShippingAccounts.Single(i => i.ShippingAccountId == ShippingAccountId).UserName;
+                    PaymentReport.PaymentSearch.WaybillIds = new SelectList(db.Payments.Where(o => o.UserName == accountusername).Select(o => o.WaybillID).Distinct()).ToList();
+                }
+                else
+                {
+                    IQueryable<int> foo = Enumerable.Empty<int>().AsQueryable();
+                    foo = foo.Concat(new int[] { 0 });
+                    PaymentReport.PaymentSearch.WaybillIds = new SelectList(foo).ToList();
                 }
             }
-            foreach (var item in n)
+            else
             {
-                if (item.Value == ShippingAccountId.ToString())
-                {
-                    item.Selected = true;
-                }
+                PaymentReport.PaymentSearch.ShippingAccounts = null;
+                string accountusername = GetCurrentAccount().UserName;
+                PaymentReport.PaymentSearch.WaybillIds = new SelectList(db.Payments.Where(o => o.UserName == accountusername).Select(o => o.WaybillID).Distinct()).ToList();
             }
-            PaymentReport.PaymentSearch.ShippingAccounts = n;
-            PaymentReport.PaymentSearch.ShippingAccountId = ShippingAccountId == null ? 0 : (int)ShippingAccountId;
+
             //Initialize the query to retrieve payments using the PaymentsListViewModel.
             var list = new List<PaymentsListViewModel>();
             foreach (Payment v in db.Payments)
@@ -115,12 +154,29 @@ namespace SinExWebApp20328800.Controllers
             }
             var paymentQuery = list.AsQueryable();
             // Add the condition to select a spefic shipping account if shipping account id is not null.
-            if (ShippingAccountId != 0 && ShippingAccountId != null)
-            {
-                // TODO: Construct the LINQ query to retrive only the shipments for the specified shipping account id.
-                paymentQuery = paymentQuery.Where(s => s.ShippingAccountId == ShippingAccountId);
 
+            if (User.IsInRole("Employee"))
+            {
+                if (ShippingAccountId != 0 && ShippingAccountId != null)
+                {
+                    paymentQuery = paymentQuery.Where(s => s.ShippingAccountId == ShippingAccountId);
+                    if (WaybillId != 0 && WaybillId != null)
+                    {
+                        paymentQuery = paymentQuery.Where(s => s.WaybillId == WaybillId);
+                    }
+                }
             }
+            else
+            {
+                int accountid = GetCurrentAccount().ShippingAccountId;
+                ViewBag.lala = accountid;
+                paymentQuery = paymentQuery.Where(p => p.ShippingAccountId == accountid);
+                if (WaybillId != 0 && WaybillId != null)
+                {
+                    paymentQuery = paymentQuery.Where(s => s.WaybillId == WaybillId);
+                }
+            }
+
 
             if ((StartingDate != null) && (EndingDate != null))
             {
@@ -298,6 +354,20 @@ namespace SinExWebApp20328800.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult GetWaybillIds(int shippingaccountid)
+        {
+            if (shippingaccountid == 0)
+            {
+                var ppp = db.Payments.Select(r => r.WaybillID).Distinct();
+                List<SelectListItem> ooo = new SelectList(ppp).ToList();
+                return Json(ooo, JsonRequestBehavior.AllowGet);
+            }
+            string accountusername = db.ShippingAccounts.Single(p => p.ShippingAccountId == shippingaccountid).UserName;
+            var query = db.Payments.Where(a => a.UserName == accountusername).Select(a => a.WaybillID).Distinct();
+            List<SelectListItem> data = new SelectList(query).ToList();
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }

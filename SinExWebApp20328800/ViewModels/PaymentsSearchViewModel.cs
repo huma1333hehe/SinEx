@@ -10,7 +10,8 @@ namespace SinExWebApp20328800.ViewModels
     {
         public virtual int ShippingAccountId { get; set; }
         public virtual List<SelectListItem> ShippingAccounts { get; set; }
-
+        public virtual int WaybillId { get; set; }
+        public virtual List<SelectListItem> WaybillIds { get; set; }
         public virtual DateTime StartingDate { get; set; }
         public virtual DateTime EndingDate { get; set; }
     }

@@ -131,7 +131,7 @@
                     }
                     if (item.CancelledOrNot == false && item.ConfirmOrNot == true && item.PickupOrNot == true && item.DeliveredOrNot == false)
                     {
-                        @Html.ActionLink("Delivered", "../Trackings/Create", new { WaybillId = item.WaybillId, delivered = true })<text>|</text>
+                        @Html.ActionLink("Terminated", "../Trackings/Create", new { WaybillId = item.WaybillId, terminated = true })<text>|</text>
                         @Html.ActionLink("Add tracking", "../Trackings/Create", new { WaybillId = item.WaybillId })<text>|</text>
     }
                     @Html.ActionLink("Details", "Details", new { id = item.WaybillId })

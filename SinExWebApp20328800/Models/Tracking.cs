@@ -32,12 +32,16 @@ namespace SinExWebApp20328800.Models
 
         public virtual string Location { get; set; }
 
-        [Required]
+        
         [Display(Name = "Remark")]
 
         public virtual string Remark { get; set; }
 
         [ForeignKey("WaybillId")]
         public virtual Shipment Shipment { get; set; }
+
+        public virtual string DeliveredTo { get; set; }
+        public virtual string DeliveredAt { get; set; }
+        public virtual string StatusInformation { get; set; }
     }
 }

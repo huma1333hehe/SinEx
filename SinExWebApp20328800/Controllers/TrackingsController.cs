@@ -42,16 +42,21 @@ namespace SinExWebApp20328800.Controllers
                 ViewBag.ShowResult = true;
                 if (shipment.DeliveredOrNot)
                 {
-                    ViewBag.Status = "Delivered";
+                    ViewBag.delivered = true;
+                    Tracking tracking = trackings.Single(j => j.Description == "Delivered" || j.Description == "Returned" || j.Description == "Lost");
+                    ViewBag.DeliveredTo = tracking.DeliveredTo;
+                    ViewBag.DeliveredAt = tracking.DeliveredAt;
+                    ViewBag.StatusInformation = tracking.StatusInformation;
                 }
                 else
                 {
-                    ViewBag.Status = "Already picked up but still on the way";
+                    ViewBag.delivered = false;
                 }
             }
             else
             {
                 ViewBag.ShowResult = false;
+                ViewBag.delivered = false;
             }
 
             return View(trackings.ToList());
@@ -68,12 +73,20 @@ namespace SinExWebApp20328800.Controllers
             {
                 return HttpNotFound();
             }
+            if (tracking.Description == "Delivered" || tracking.Description == "Returned" || tracking.Description == "Lost")
+            {
+                ViewBag.delivered = true;
+            }
+            else
+            {
+                ViewBag.delivered = false;
+            }
             return View(tracking);
         }
 
         // GET: Trackings/Create
         [Authorize(Roles = "Employee")]
-        public ActionResult Create(int? WaybillId, bool? delivered)
+        public ActionResult Create(int? WaybillId, bool? terminated)
         {
 
             if (WaybillId == null)
@@ -93,9 +106,9 @@ namespace SinExWebApp20328800.Controllers
                 a = true;
                 ViewBag.AlreadyEnterWaybillId = true;
             }
-            if (delivered != null)
+            if (terminated != null)
             {
-                ViewBag.delivered = true;
+                ViewBag.terminated = true;
             }
             return View();
         }
@@ -105,8 +118,7 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Employee")]
-        public async Task<ActionResult> Create([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark")] Tracking tracking)
+        public async Task<ActionResult> Create([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark,DeliveredTo,DeliveredAt,StatusInformation")] Tracking tracking)
         {
             Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId && s.CancelledOrNot == false);
             tracking.Shipment = shipment;
@@ -121,7 +133,7 @@ namespace SinExWebApp20328800.Controllers
                 ViewBag.AlreadyEnterWaybillId = false;
             }
 
-            if (tracking.Description == "Delivered")
+            if (tracking.Description == "Delivered" || tracking.Description == "Returned" || tracking.Description == "Lost")
             {
                 shipment.DeliveredOrNot = true;
                 shipment.DeliveredDate = tracking.Time;
@@ -174,7 +186,6 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Trackings/Edit/5
-        [Authorize(Roles = "Employee")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -188,6 +199,14 @@ namespace SinExWebApp20328800.Controllers
             }
             ViewBag.WaybillId = tracking.WaybillId;
             ViewBag.Time = tracking.Time;
+            if (tracking.Description == "Delivered" || tracking.Description == "Returned" || tracking.Description == "Lost")
+            {
+                ViewBag.delivered = true;
+            }
+            else
+            {
+                ViewBag.delivered = false;
+            }
             return View(tracking);
         }
 
@@ -196,8 +215,7 @@ namespace SinExWebApp20328800.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Employee")]
-        public ActionResult Edit([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark")] Tracking tracking)
+        public ActionResult Edit([Bind(Include = "TrackingID,WaybillId,Time,Description,Location,Remark,DeliveredTo,DeliveredAt,StatusInformation")] Tracking tracking)
         {
             if (ModelState.IsValid)
             {
@@ -207,11 +225,18 @@ namespace SinExWebApp20328800.Controllers
             }
             ViewBag.WaybillId = tracking.WaybillId;
             ViewBag.Time = tracking.Time;
+            if (tracking.Description == "Delivered" || tracking.Description == "Returned" || tracking.Description == "Lost")
+            {
+                ViewBag.delivered = true;
+            }
+            else
+            {
+                ViewBag.delivered = false;
+            }
             return View(tracking);
         }
 
         // GET: Trackings/Delete/5
-        [Authorize(Roles = "Employee")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -223,16 +248,22 @@ namespace SinExWebApp20328800.Controllers
             {
                 return HttpNotFound();
             }
+            if (tracking.Description == "Delivered" || tracking.Description == "Returned" || tracking.Description == "Lost")
+            {
+                ViewBag.delivered = true;
+            }
+            else
+            {
+                ViewBag.delivered = false;
+            }
             return View(tracking);
         }
 
         // POST: Trackings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Employee")]
         public ActionResult DeleteConfirmed(int id)
         {
-
             Tracking tracking = db.Trackings.Find(id);
             Shipment shipment = db.Shipments.Single(s => s.WaybillId == tracking.WaybillId && s.CancelledOrNot == false);
             shipment.DeliveredOrNot = false;
