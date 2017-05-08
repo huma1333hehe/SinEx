@@ -76,7 +76,15 @@
                     Limit: @package.limit
                 </td>
                 <td>
-                    @package.weight.ToString("F1")
+                    @if (package.packageType == "Envelope")
+                    {
+                        <text>N/A</text>
+                    }
+                    else
+                    {
+                        @package.weight.ToString("F1")
+                    }
+                    
                 </td>
                 <td>
                     @Model.currencyCode &nbsp;@package.fee.ToString("F2") @if (package.penalty == true)
