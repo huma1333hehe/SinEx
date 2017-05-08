@@ -119,222 +119,499 @@
     }
 
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Sender User Name
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.SenderShippingAccount.UserName)
-        </dd>
-        @if (Model.ShipmentPayer == SinExWebApp20328800.Models.ShipmentPayer.Recipient || Model.TaxPayer == SinExWebApp20328800.Models.TaxPayer.Recipient)
-        {
-            <dt>
-                Recipient User Name
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.RecipientShippingAccount.UserName)
-            </dd>
-        }
-        <dt>
-            @Html.DisplayNameFor(model => model.ServiceType.Type)
-        </dt>
+    <div>
+        <h4>Shipment Waybill ID: @Model.WaybillId.ToString("0000000000000000")</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <table class="table ">
+                    <tr>
+                        <td>
+                            <strong>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                General Information
+                            </strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                    @if (User.IsInRole("Customer"))
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayNameFor(model => model.ReferenceNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.ReferenceNumber)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.ServiceType.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.ServiceType.Type)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sender User Name
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SenderShippingAccount.UserName)
+                        </td>
+                    </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.ServiceType.Type)
-        </dd>
+                    @if (Model.ShipmentPayer == SinExWebApp20328800.Models.ShipmentPayer.Recipient || Model.TaxPayer == SinExWebApp20328800.Models.TaxPayer.Recipient)
+                    {
+                        <tr>
+                            <td>
+                                Recipient User Name
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.RecipientShippingAccount.UserName)
+                            </td>
+                        </tr>
+                    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ReferenceNumber)
-        </dt>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.Origin)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Origin)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.Destination)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Destination)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.ShipmentPayer)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.ShipmentPayer)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.TaxPayer)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.TaxPayer)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.Duty)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Duty)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.Tax)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Tax)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.NotifySenderOrNot)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.NotifySenderOrNot)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.NotifyRecipientOrNot)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.NotifyRecipientOrNot)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Status Information
+                            </strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.ConfirmOrNot)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.ConfirmOrNot)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.PickupOrNot)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.PickupOrNot)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.DeliveredOrNot)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.DeliveredOrNot)
+                        </td>
+                    </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.ReferenceNumber)
-        </dd>
+                    @if (Model.ConfirmOrNot == true)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayNameFor(model => model.PickupType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.PickupType)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayNameFor(model => model.PickupDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.PickupDate)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+                            <strong>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Sender Information
+                            </strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sender Name
+                        </td>
+                        <td>
+                            @if (Model.SenderShippingAccount is SinExWebApp20328800.Models.PersonalShippingAccount)
+                            {
+                                @Html.DisplayFor(model => ((SinExWebApp20328800.Models.PersonalShippingAccount)model.SenderShippingAccount).FirstName)<text>&nbsp;</text>
+                                @Html.DisplayFor(model => ((SinExWebApp20328800.Models.PersonalShippingAccount)model.SenderShippingAccount).LastName)
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(model => ((SinExWebApp20328800.Models.BusinessShippingAccount)model.SenderShippingAccount).ContactPersonName)<text>,</text>
+                                @Html.DisplayFor(model => ((SinExWebApp20328800.Models.BusinessShippingAccount)model.SenderShippingAccount).DepartmentName)<text>&nbsp;</text>
+                                @Html.DisplayFor(model => ((SinExWebApp20328800.Models.BusinessShippingAccount)model.SenderShippingAccount).CompanyName)<text>&nbsp;</text>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sender Address
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SenderShippingAccount.BuildingInformation)<text>,</text>
+                            @Html.DisplayFor(model => model.SenderShippingAccount.StreetInformation)<text>,</text>
+                            @Html.DisplayFor(model => model.SenderShippingAccount.City)<text>,</text>
+                            @Html.DisplayFor(model => model.SenderShippingAccount.ProvinceCode)<text>,</text>
+                            @Html.DisplayFor(model => model.SenderShippingAccount.PostalCode)
+                        </td>
+                    </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Origin)
-        </dt>
+                    <tr>
+                        <td>
+                            Sender Phone
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SenderShippingAccount.PhoneNumber)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sender Email
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SenderShippingAccount.EmailAddress)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Recipient Information
+                            </strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.RecipientAddressNickname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.RecipientAddressNickname)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.RecipientFullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.RecipientFullName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.RecipientCompanyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.RecipientCompanyName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.RecipientDepartmentName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.RecipientDepartmentName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Recipient Address
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.RecipientDeliveryBuilding)<text>,</text>
+                            @Html.DisplayFor(model => model.RecipientDeliveryStreet)<text>,</text>
+                            @Html.DisplayFor(model => model.RecipientDeliveryCity)<text>,</text>
+                            @Html.DisplayFor(model => model.RecipientDeliveryProvince)<text>,</text>
+                            @Html.DisplayFor(model => model.RecipientDeliveryPostcode)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.RecipientPhoneNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.RecipientPhoneNumber)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.RecipientEmail)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.RecipientEmail)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Pickup Information
+                            </strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.PickupLocationNickname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.PickupLocationNickname)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.PickupLocation)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.PickupLocation)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Package Information
+                            </strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.NumberOfPackages)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.NumberOfPackages)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(model => model.EstimatedShipmentTotalAmount)
+                        </td>
+                        <td>
+                            @if (Model.EstimatedShipmentTotalAmount != 0)
+                            {
+                                <text>¥</text>
+                            }
+                            @Html.DisplayFor(model => model.EstimatedShipmentTotalAmount)
+                        </td>
+                    </tr>
+                    <tr></tr>
+                </table>
 
-        <dd>
-            @Html.DisplayFor(model => model.Origin)
-        </dd>
+            </div>
+            <div class="col-md-12">
+                @if (User.IsInRole("Customer") && Model.CancelledOrNot == false && Model.ConfirmOrNot == false && Model.NumberOfPackages < 10)
+            {
+                    <a href="/Packages/Create?WaybillId=@Model.WaybillId">Add one more package for this shipment</a>
+                }
+                <table class="table">
+                    <tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Destination)
-        </dt>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Packages.Single().PackageType.Type)
+                        </th>
+                        <th>
+                            Size
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Packages.Single().Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Packages.Single().Value)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Packages.Single().DeclaredWeight)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Packages.Single().ActualWeight)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Packages.Single().DeclaredFee)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Packages.Single().ActualFee)
+                        </th>
+                        <th></th>
+                    </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Destination)
-        </dd>
+                    @foreach (var item in Model.Packages)
+                    {
+                        <tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NumberOfPackages)
-        </dt>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PackageType.Type)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PackageTypeSize.TypeSize)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Currency.CurrencyCode)&nbsp;@Html.DisplayFor(modelItem => item.Value)
+                            </td>
+                            <td>
+                                @if (item.PackageType.Type == "Envelope")
+                                {
+                                    <text>N/A</text>
+                                }
+                                else
+                                {
+                                    @item.DeclaredWeight.ToString("F1")
+                                }
 
-        <dd>
-            @Html.DisplayFor(model => model.NumberOfPackages)
-        </dd>
+                            </td>
+                            <td>
+                                @if (item.ActualWeight != null)
+                                {
+                                    if (item.PackageType.Type == "Envelope")
+                                    {
+                                        <text>N/A</text>
+                                    }
+                                    else
+                                    {
+                                        @item.ActualWeight.Value.ToString("F1")
+                                    }
+                                }
+                            </td>
+                            <td>
+                                ¥ @Html.DisplayFor(modelItem => item.DeclaredFee)
+                            </td>
+                            <td>
+                                @if (item.ActualFee != null)
+                                {
+                                    <text>¥</text>
+                                }
+                                @Html.DisplayFor(modelItem => item.ActualFee)
+                            </td>
+                            <td>
+                                @if (User.IsInRole("Customer") && item.Shipment.CancelledOrNot == false && item.Shipment.ConfirmOrNot == false)
+                                {
+                                    @Html.ActionLink("Edit", "../Packages/Edit", new { id = item.PackageID }) <text>|</text>
+                                    @Html.ActionLink("Details", "../Packages/Details", new { id = item.PackageID }) <text>|</text>
+                                    @Html.ActionLink("Delete", "../Packages/Delete", new { id = item.PackageID })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Details", "../Packages/Details", new { id = item.PackageID })
+                                }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ShipmentPayer)
-        </dt>
+                            </td>
+                            <td></td>
 
-        <dd>
-            @Html.DisplayFor(model => model.ShipmentPayer)
-        </dd>
+                        </tr>
+                    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TaxPayer)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TaxPayer)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Duty)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Duty)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Tax)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Tax)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ConfirmOrNot)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ConfirmOrNot)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PickupOrNot)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PickupOrNot)
-        </dd>
-        @if (Model.ConfirmOrNot == true)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.PickupType)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PickupType)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PickupDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PickupDate)
-            </dd>
-        }
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientAddressNickname)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RecipientAddressNickname)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientFullName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RecipientFullName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientCompanyName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RecipientCompanyName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientDepartmentName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RecipientDepartmentName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientDeliveryBuilding)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.RecipientDeliveryBuilding)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientDeliveryStreet)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.RecipientDeliveryStreet)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientDeliveryCity)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.RecipientDeliveryCity)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientDeliveryProvince)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.RecipientDeliveryProvince)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientDeliveryPostcode)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.RecipientDeliveryPostcode)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientPhoneNumber)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RecipientPhoneNumber)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RecipientEmail)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RecipientEmail)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PickupLocationNickname)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PickupLocationNickname)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PickupLocation)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PickupLocation)
-        </dd>
-
-    </dl>
+                    <tr>
+                        <td>
+                            <strong>
+                                Total
+                            </strong>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <strong>
+                                @Model.Packages.Sum(m => m.DeclaredWeight).ToString("F1")
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>
+                                @Model.Packages.Sum(m => m.ActualWeight).Value.ToString("F1")
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>
+                                @Model.Packages.Sum(m => m.DeclaredFee)
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>
+                                @Model.Packages.Sum(m => m.ActualFee)
+                            </strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <p>
         @Html.ActionLink("Back to List", "Index")

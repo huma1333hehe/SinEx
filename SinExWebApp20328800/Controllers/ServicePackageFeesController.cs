@@ -18,6 +18,7 @@ namespace SinExWebApp20328800.Controllers
         // GET: ServicePackageFees
         public ActionResult Index2()
         {
+            ViewBag.penalty = db.Penalties.FirstOrDefault().PenaltyCharge;
             var servicePackageFees = db.ServicePackageFees.Include(s => s.PackageType).Include(s => s.ServiceType);
             return View(servicePackageFees.ToList());
         }
@@ -62,7 +63,7 @@ namespace SinExWebApp20328800.Controllers
 
             return View(servicePackageFeesViewModel);
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: ServicePackageFees/Details/5
         public ActionResult Details(int? id)
         {
@@ -77,7 +78,7 @@ namespace SinExWebApp20328800.Controllers
             }
             return View(servicePackageFee);
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: ServicePackageFees/Create
         public ActionResult Create()
         {
@@ -85,7 +86,7 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type");
             return View();
         }
-        [Authorize(Roles = "Employee")]
+
         // POST: ServicePackageFees/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -104,7 +105,7 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", servicePackageFee.ServiceTypeID);
             return View(servicePackageFee);
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: ServicePackageFees/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -121,7 +122,7 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", servicePackageFee.ServiceTypeID);
             return View(servicePackageFee);
         }
-        [Authorize(Roles = "Employee")]
+
         // POST: ServicePackageFees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -133,13 +134,13 @@ namespace SinExWebApp20328800.Controllers
             {
                 db.Entry(servicePackageFee).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index2");
             }
             ViewBag.PackageTypeID = new SelectList(db.PackageTypes, "PackageTypeID", "Type", servicePackageFee.PackageTypeID);
             ViewBag.ServiceTypeID = new SelectList(db.ServiceTypes, "ServiceTypeID", "Type", servicePackageFee.ServiceTypeID);
             return View(servicePackageFee);
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: ServicePackageFees/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -154,7 +155,7 @@ namespace SinExWebApp20328800.Controllers
             }
             return View(servicePackageFee);
         }
-        [Authorize(Roles = "Employee")]
+
         // POST: ServicePackageFees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -165,7 +166,7 @@ namespace SinExWebApp20328800.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = "Employee")]
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
