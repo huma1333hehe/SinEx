@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" name="DeclaredWeightFormGroup">
             @Html.LabelFor(model => model.DeclaredWeight, "Declared Weight", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.DeclaredWeight, new { htmlAttributes = new { @class = "form-control" } })
@@ -92,6 +92,7 @@
     @Html.ActionLink("Back to List", "Index", new { WaybillId = ViewBag.WaybillId })
 </div>
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
     function AppendUrlParamTokens(url, params) {
 
@@ -105,6 +106,14 @@
     }
     function OnPackageTypesChange(ddl) {
         jQuery.getJSON(AppendUrlParamTokens('@Url.Action("GetSizesByID", "Calculate")', { packageTypeID: ddl.options[ddl.selectedIndex].value }), function (result) {
+            if (ddl.options[ddl.selectedIndex].text == "Envelope") {
+                var destination = $("[name='DeclaredWeightFormGroup']");
+                $("#DeclaredWeight").val('0.0');
+                destination.hide();
+            } else {
+                var destination = $("[name='DeclaredWeightFormGroup']");
+                destination.show();
+            }
             var target = jQuery('#sizes_ddl');
             target.empty();
             jQuery(result).each(function() {
