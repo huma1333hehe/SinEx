@@ -27,10 +27,10 @@ namespace SinExWebApp20328800.Models
         [Display(Name = "Currency")]
         public virtual string CurrencyCode { get; set; }
         [Required]
-        [Range(typeof(decimal), "0.1", "99999999", ErrorMessage = "Invalid range")]
+        [Range(typeof(decimal), "0.0", "99999999", ErrorMessage = "Invalid range")]
         [Display(Name = "Declared Weight")]
         public virtual decimal DeclaredWeight { get; set; }
-        [Range(typeof(decimal), "0.1", "99999999", ErrorMessage = "Invalid range")]
+        [Range(typeof(decimal), "0.0", "99999999", ErrorMessage = "Invalid range")]
         [Display(Name = "Actual Weight")]
         public virtual decimal? ActualWeight { get; set; }
         [Display(Name = "Declared Fee")]
