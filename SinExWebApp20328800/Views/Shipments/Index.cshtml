@@ -28,12 +28,6 @@
             @Html.DisplayNameFor(model => model.DeliveredOrNot)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.NotifySenderOrNot)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NotifyRecipientOrNot)
-        </th>
-        <th>
             @if (User.IsInRole("Employee"))
             {
                 <text>Sender User Name</text>
@@ -76,12 +70,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DeliveredOrNot)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NotifySenderOrNot)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NotifyRecipientOrNot)
             </td>
             <td>
                 @if (User.IsInRole("Employee"))

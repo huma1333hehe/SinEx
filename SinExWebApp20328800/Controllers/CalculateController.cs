@@ -113,7 +113,7 @@ namespace SinExWebApp20328800.Controllers
                             bool convertResult = Int32.TryParse(limitString.Substring(0, limitString.Length - 2), out limit);
                             if (limit != 0 && convertResult == true && package.weight > (decimal)limit)
                             {
-                                price += 500;
+                                price += db.Penalties.FirstOrDefault().PenaltyCharge;
                                 package.penalty = true;
                             }
                             break;

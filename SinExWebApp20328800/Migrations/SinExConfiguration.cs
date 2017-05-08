@@ -162,6 +162,12 @@ namespace SinExWebApp20328800.Migrations
 
                 );
 
+            // Add penalty.
+            context.Penalties.AddOrUpdate(
+                p => p.PenaltyID,
+                new Penalty { PenaltyID = 1, PenaltyCharge = 500M }
+                );
+
             // Add shipment data.
             /*
             context.Shipments.AddOrUpdate(
