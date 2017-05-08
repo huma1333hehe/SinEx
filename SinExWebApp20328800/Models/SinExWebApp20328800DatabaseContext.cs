@@ -44,5 +44,8 @@ namespace SinExWebApp20328800.Models
         public System.Data.Entity.DbSet<SinExWebApp20328800.Models.Tracking> Trackings { get; set; }
 
         public System.Data.Entity.DbSet<SinExWebApp20328800.Models.Payment> Payments { get; set; }
+
+        public System.Data.Entity.DbSet<SinExWebApp20328800.Models.Penalty> Penalties { get; set; }
+
     }
 }

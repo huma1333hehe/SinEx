@@ -1,10 +1,28 @@
 ﻿@model IEnumerable<SinExWebApp20328800.Models.ServicePackageFee>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Change Fee";
 }
+<h2>Change Penalty Fee</h2>
+<table class="table">
+    <tr>
+        <td>
+            CNY @ViewBag.penalty
+        </td>
+        <td>
+            @Html.ActionLink("Click here to modify penalty fee", "../Penalties/Edit/1")
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+    </tr>
+</table>
 
-<h2>Service Package Fees</h2>
+
+<h2>Change Service Package Fees</h2>
 
 <table class="table">
     <tr>
@@ -38,16 +56,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.MinimumFee)
             </td>
-            @if (User.IsInRole("Employee"))
-            {
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ServicePackageFeeID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.ServicePackageFeeID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ServicePackageFeeID })
-                </td>
-            }
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ServicePackageFeeID })
+            </td>
         </tr>
-        
+
     }
 
 </table>

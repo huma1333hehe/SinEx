@@ -69,12 +69,29 @@
                 @Html.DisplayFor(modelItem => item.Value)
             </td>
             <td>
-                @item.DeclaredWeight.ToString("F1")
+
+                @if (item.PackageType.Type == "Envelope")
+                {
+                    <text>N/A</text>
+                }
+                else
+                {
+                    @item.DeclaredWeight.ToString("F1")
+                }
+                
             </td>
             <td>
                 @if (item.ActualWeight != null)
                 {
-                    @item.ActualWeight.Value.ToString("F1")
+                    if (item.PackageType.Type == "Envelope")
+                    {
+                        <text>N/A</text>
+                    }
+                    else
+                    {
+                        @item.ActualWeight.Value.ToString("F1")
+                    }
+
                 }
             </td>
             <td>

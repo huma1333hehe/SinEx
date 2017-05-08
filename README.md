@@ -6,3 +6,6 @@ Please save your local branch as another copy before you try to merge, otherwise
 
 ## 2017/04/13 01:45 by ZHONG Zixuan Caton
 Please use the latest base project https://drive.google.com/file/d/0ByV_KJgsJcJdSVQyeDVVY284XzA/view?usp=sharing. Happy holidays guys!
+
+## 2017/05/08 23:36 by ZHONG Zixuan Caton
+https://drive.google.com/file/d/0ByV_KJgsJcJdSEthcm1HZk1nZFE/view?usp=sharing
