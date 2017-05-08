@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SinExWebApp20328800.Controllers
 {
-    [Authorize(Roles = "Customer,Employee")]
+
     public class ShipmentsController : Controller
     {
         private SinExWebApp20328800DatabaseContext db = new SinExWebApp20328800DatabaseContext();
@@ -579,10 +579,15 @@ namespace SinExWebApp20328800.Controllers
 
         }
 
-
+        // GET: Shipments/Pickup
+        public ActionResult Pickupindex()
+        {
+            var shipments = db.Shipments.Include(s => s.RecipientShippingAccount).Include(s => s.SenderShippingAccount).Include(s => s.ServiceType).Where(s => s.CancelledOrNot == false && s.ConfirmOrNot == true && s.DeliveredOrNot == false && s.PickupOrNot == false);
+            return View(shipments.ToList());
+        }
 
         // GET: Shipments/Pickup/5
-        [Authorize(Roles = "Employee")]
+
         public ActionResult Pickup(int? id)
         {
             if (id == null)

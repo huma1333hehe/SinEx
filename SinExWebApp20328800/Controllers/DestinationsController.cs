@@ -20,7 +20,7 @@ namespace SinExWebApp20328800.Controllers
             var destinations = db.Destinations.Include(d => d.Currency);
             return View(destinations.ToList());
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: Destinations/Details/5
         public ActionResult Details(int? id)
         {
@@ -35,14 +35,14 @@ namespace SinExWebApp20328800.Controllers
             }
             return View(destination);
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: Destinations/Create
         public ActionResult Create()
         {
             ViewBag.CurrencyCode = new SelectList(db.Currencies, "CurrencyCode", "CurrencyCode");
             return View();
         }
-        [Authorize(Roles = "Employee")]
+
         // POST: Destinations/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -60,7 +60,7 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.CurrencyCode = new SelectList(db.Currencies, "CurrencyCode", "CurrencyCode", destination.CurrencyCode);
             return View(destination);
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: Destinations/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -76,7 +76,7 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.CurrencyCode = new SelectList(db.Currencies, "CurrencyCode", "CurrencyCode", destination.CurrencyCode);
             return View(destination);
         }
-        [Authorize(Roles = "Employee")]
+
         // POST: Destinations/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -93,7 +93,7 @@ namespace SinExWebApp20328800.Controllers
             ViewBag.CurrencyCode = new SelectList(db.Currencies, "CurrencyCode", "CurrencyCode", destination.CurrencyCode);
             return View(destination);
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: Destinations/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -108,7 +108,7 @@ namespace SinExWebApp20328800.Controllers
             }
             return View(destination);
         }
-        [Authorize(Roles = "Employee")]
+
         // POST: Destinations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -119,7 +119,7 @@ namespace SinExWebApp20328800.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = "Employee")]
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

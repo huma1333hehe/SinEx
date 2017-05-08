@@ -523,6 +523,8 @@
     <Content Include="Views\Payments\_PaymentsListPartial.cshtml" />
     <Content Include="Views\Payments\_PaymentsPagingPartial.cshtml" />
     <Content Include="Views\Calculate\Result.cshtml" />
+    <Content Include="Views\Currencies\Index2.cshtml" />
+    <Content Include="Views\Shipments\Pickupindex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
