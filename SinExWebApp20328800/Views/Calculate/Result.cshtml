@@ -1,0 +1,113 @@
+﻿@model SinExWebApp20328800.ViewModels.FeeCalculateViewModel
+
+@{
+    ViewBag.Title = "Result";
+}
+
+<h2>Result</h2>
+<div class="row">
+    <div class="col-md-6 col-md-offset-2">
+        <table class="table">
+            <tr>
+            <tr>
+                <td>
+                    Origin
+                </td>
+                <td>
+                    @Model.origin
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Destination
+                </td>
+                <td>
+                    @Model.destination
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Service Type
+                </td>
+                <td>
+                    @Model.serviceType
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Currency
+                </td>
+                <td>
+                    @Model.currencyCode
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <table class="table col-md-12">
+        <tr>
+            <th>
+                Package Type
+            </th>
+            <th>
+                Size
+            </th>
+            <th>
+                Weight Limit
+            </th>
+            <th>
+                Weight
+            </th>
+            <th>
+                Package Fee
+            </th>
+        </tr>
+        @foreach (var package in Model.packages)
+        {
+            <tr>
+                <td>
+                    @package.packageType
+                </td>
+                <td>
+                    @package.size
+                </td>
+                <td>
+                    Limit: @package.limit
+                </td>
+                <td>
+                    @package.weight.ToString("F1")
+                </td>
+                <td>
+                    @Model.currencyCode &nbsp;@package.fee.ToString("F2") @if (package.penalty == true)
+                    {
+                        <div class="text-danger">(Including ¥500 penalty)</div>
+                    }
+                </td>
+
+            </tr>
+        }
+        <tr>
+            <td>
+                <strong>
+                    Total
+                </strong>
+            </td>
+            <td></td>
+            <td></td>
+            <td>
+                <strong>
+                    @Model.packages.Sum(m => m.weight).ToString("F1") kg
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    @Model.currencyCode &nbsp;@Model.packages.Sum(m => m.fee).ToString("F2")
+                </strong>
+            </td>
+        </tr>
+    </table>
+</div>
+<p>
+    @Html.ActionLink("Back", "Index")
+</p>

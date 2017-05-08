@@ -20,7 +20,13 @@ namespace SinExWebApp20328800.Controllers
         {
             return View(db.Currencies.ToList());
         }
-        [Authorize(Roles = "Employee")]
+
+        // GET: Currencies
+        public ActionResult Index2()
+        {
+            return View(db.Currencies.ToList());
+        }
+
         // GET: Currencies/Details/5
         public ActionResult Details(string id)
         {
@@ -35,7 +41,15 @@ namespace SinExWebApp20328800.Controllers
             }
             return View(currency);
         }
-        [Authorize(Roles = "Employee")]
+
+
+        // GET: Currencies/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+
         // POST: Currencies/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -52,7 +66,7 @@ namespace SinExWebApp20328800.Controllers
 
             return View(currency);
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: Currencies/Edit/5
         public ActionResult Edit(string id)
         {
@@ -67,7 +81,7 @@ namespace SinExWebApp20328800.Controllers
             }
             return View(currency);
         }
-        [Authorize(Roles = "Employee")]
+
         // POST: Currencies/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -79,11 +93,11 @@ namespace SinExWebApp20328800.Controllers
             {
                 db.Entry(currency).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index2");
             }
             return View(currency);
         }
-        [Authorize(Roles = "Employee")]
+
         // GET: Currencies/Delete/5
         public ActionResult Delete(string id)
         {
@@ -98,7 +112,7 @@ namespace SinExWebApp20328800.Controllers
             }
             return View(currency);
         }
-        [Authorize(Roles = "Employee")]
+
         // POST: Currencies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -109,7 +123,7 @@ namespace SinExWebApp20328800.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = "Employee")]
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

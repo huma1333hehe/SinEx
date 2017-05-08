@@ -7,10 +7,14 @@
 <h2>Fee Calculator</h2>
 <hr />
 
-@using (Html.BeginForm("Index", "Calculate", FormMethod.Get))
+@using (Html.BeginForm("Index", "Calculate", FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     <div class="form-group">
+
         <div class="col-md-12">
+            <h3>Shipment</h3>
+            <hr />
             @Html.LabelFor(a => a.origin, "Origin: ", new { @class = "control-label col-md-4" })
             <div class="col-md-8">
                 @Html.DropDownListFor(a => a.origin, Model.param.origins, "Please select...", new { @class = "form-control", Value = ViewBag.currentOrigin })
@@ -21,120 +25,100 @@
                 @Html.DropDownListFor(a => a.destination, Model.param.destinations, "Please select...", new { @class = "form-control", Value = ViewBag.currentDestination })
                 @Html.ValidationMessageFor(a => a.destination, "", new { @class = "text-danger" })
             </div>
-            @Html.LabelFor(a => a.packageType, "Package Type: ", new { @class = "control-label col-md-4" })
-            <div class="col-md-8">
-                @Html.DropDownListFor(a => a.packageType, Model.param.packageTypes, "Please select...", new { @class = "form-control", Value = ViewBag.currentPackageType, id = "packageTypes_ddl", onchange = "+OnPackageTypesChange(this)" })
-                @Html.ValidationMessageFor(a => a.packageType, "", new { @class = "text-danger" })
-            </div>
-            @Html.LabelFor(a => a.size, "Size: ", new { @class = "control-label col-md-4" })
-            <div class="col-md-8">
-                @Html.DropDownListFor(a => a.size, Model.param.sizes, new { @class = "form-control", Value = ViewBag.currentSize, id = "sizes_ddl" })
-                @Html.ValidationMessageFor(a => a.size, "", new { @class = "text-danger" })
-            </div>
             @Html.LabelFor(a => a.serviceType, "Service Type: ", new { @class = "control-label col-md-4" })
             <div class="col-md-8">
                 @Html.DropDownListFor(a => a.serviceType, Model.param.serviceTypes, "Please select...", new { @class = "form-control", Value = ViewBag.currentServiceType })
                 @Html.ValidationMessageFor(a => a.serviceType, "", new { @class = "text-danger" })
-            </div>
-            @Html.LabelFor(a => a.weight, "Weight(kg): ", new { @class = "control-label col-md-4" })
-            <div class="col-md-8">
-                @Html.EditorFor(a => a.weight, new { htmlAttributes = new { @class = "form-control", Value = ViewBag.currentWeight } })
-                @Html.ValidationMessageFor(a => a.weight, "", new { @class = "text-danger" })
             </div>
             @Html.LabelFor(a => a.currencyCode, "Currency: ", new { @class = "control-label col-md-4" })
             <div class="col-md-8">
                 @Html.DropDownListFor(a => a.currencyCode, Model.param.currencies, "Please select...", new { @class = "form-control", Value = ViewBag.currentCurrencyCode })
                 @Html.ValidationMessageFor(a => a.currencyCode, "", new { @class = "text-danger" })
             </div>
+
+            <div>
+
+            </div>
+            <h3>Packsges</h3>
+            <hr />
+            <div id="packageList">
+                @for (int i = 0; i < Model.packages.Count; i++)
+                {
+                    <div class="packageRow col-md-12">
+
+                        @Html.LabelFor(a => a.packages[i].packageType, "Package Type: ", new { @class = "control-label col-md-1" })
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(a => a.packages[i].packageType, Model.param.packageTypes, "Please select...", new { @class = "form-control", Value = ViewBag.currentPackageType, id = "packageTypes_ddl", onchange = "+OnPackageTypesChange(this)", about = i })
+                            @Html.ValidationMessageFor(a => a.packages[i].packageType, "", new { @class = "text-danger" })
+                        </div>
+
+                        @Html.LabelFor(a => a.packages[i].size, "Size: ", new { @class = "control-label col-md-1" })
+                        <div class="col-md-2">
+                            <select class="form-control" id="sizes_ddl_@i" name="packages[@i].size">
+                                @foreach (SelectListItem item in Model.param.sizes)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            @Html.ValidationMessageFor(a => a.packages[i].size, "", new { @class = "text-danger" })
+                        </div>
+
+                        @Html.LabelFor(a => a.packages[i].weight, "Weight(kg): ", new { @class = "control-label col-md-1" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(a => a.packages[i].weight, new { htmlAttributes = new { @class = "form-control", Value = ViewBag.currentWeight } })
+                            @Html.ValidationMessageFor(a => a.packages[i].weight, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-3">
+                            <i class="fa fa-2x fa-minus-circle remRow" style="color:red" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                }
+            </div>
+
+
+            <p>
+                <i class="fa fa-2x fa-plus-circle addRow" style="color:deepskyblue" aria-hidden="true">Add package</i>
+            </p>
+
         </div>
-        <input type="submit" value="Calculate" />
+        <input class="btn btn-primary" type="submit" value="Calculate" />
     </div>
 }
+<script src="https://use.fontawesome.com/6e23d44a77.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
 
-@if (ViewBag.price != null)
-{
-    <table class="table">
-        <tr>
-            <td>
-                Origin
-            </td>
-            <td>
-                @ViewBag.currentOrigin
-            </td>
-        </tr>
+        $(".addRow").click(function () {
+            var rowCount = $('.packageRow').length;
+            if (rowCount < 10) {
+                $("#packageList").append('<div class="packageRow col-md-12"><label class="control-label col-md-1">Package Type: </label><div class="col-md-2"><select class="form-control" id="packageTypes_ddl" name="packages[' + rowCount + '].packageType" about="' + rowCount + '" onchange="+OnPackageTypesChange(this)"><option value="">Please select...</option>@foreach (SelectListItem item in Model.param.packageTypes){<option value="@item.Value">@item.Text</option>}</select><span class="field-validation-valid text-danger" data-valmsg-for="packages[' + rowCount + '].packageType" data-valmsg-replace="true"></span></div><label class="control-label col-md-1">Size: </label><div class="col-md-2"><select class="form-control" id="sizes_ddl_' + rowCount + '" name="packages[' + rowCount + '].size">@foreach (SelectListItem item in Model.param.sizes){<option value="@item.Value">@item.Text</option>}</select><span class="field-validation-valid text-danger" data-valmsg-for="packages[' + rowCount + '].size" data-valmsg-replace="true"></span></div><label class="control-label col-md-1">Weight(kg): </label><div class="col-md-2"><input  class="form-control text-box single-line" data-val="true" data-val-number="The field weight must be a number." data-val-required="The weight field is required." id="packages_' + rowCount + '__weight" name="packages[' + rowCount + '].weight" type="text"><span class="field-validation-valid text-danger" data-valmsg-for="packages[' + rowCount + '].weight" data-valmsg-replace="true"></span></div><div class="col-md-3"><i class="fa fa-2x fa-minus-circle remRow" style="color:red" aria-hidden="true"></i></div></div>');
+            }
+            else {
+                alert('The maximum number of packages is 10.');
+            }
+        });
 
-        <tr>
-            <td>
-                Destination
-            </td>
-            <td>
-                @ViewBag.currentDestination
-            </td>
-        </tr>
+        $("#packageList").on('click', '.remRow', function () {
 
-        <tr>
-            <td>
-                Package Type
-            </td>
-            <td>
-                @ViewBag.currentPackageType
-            </td>
-        </tr>
+            $(this).closest('.packageRow').remove();
 
-        <tr>
-            <td>
-                Package Size
-            </td>
-            <td>
-                @ViewBag.currentSize
-            </td>
-        </tr>
+            $('.packageType').each(function (index) {
+                $(this).attr('name', 'packages[' + index + '].packageType');
+            });
 
-        <tr>
-            <td>
-                Weight
-            </td>
-            <td>
-                @ViewBag.currentWeight<text>kg</text>
-            </td>
-        </tr>
+            $('.packageSize').each(function (index) {
+                $(this).attr('name', 'packages[' + index + '].size');
+            });
 
-        <tr>
-            <td>
-                Service Type
-            </td>
-            <td>
-                @ViewBag.currentServiceType
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                Fee
-            </td>
-            <td>
-                 @ViewBag.currency&nbsp;@ViewBag.price @if(ViewBag.penalty == true){
-                    <div class = "text-danger">(Including ¥500 penalty)</div>
-}
-            </td>
-        </tr>
-
-        @if (ViewBag.limit != null)
-        {
-        <tr>
-            <td>
-                Weight Limit
-            </td>
-            <td>
-                @ViewBag.limit <text>kg</text>
-            </td>
-        </tr>
-        }
-    </table>
-}
+            $('.packageWeight').each(function (index) {
+                $(this).attr('name', 'packages[' + index + '].weight');
+            });
+        })
+    });
 
 
-<script type="text/javascript">
     function AppendUrlParamTokens(url, params) {
 
         for (var param in params) {
@@ -148,14 +132,19 @@
 
     function OnPackageTypesChange(ddl) {
         jQuery.getJSON(AppendUrlParamTokens('@Url.Action("GetSizes", "Calculate")', { packageType: ddl.options[ddl.selectedIndex].value }), function (result) {
-            var target = jQuery('#sizes_ddl');
+            var id = "#sizes_ddl_" + ddl.getAttribute('about');
+            var target = $(id);
             target.empty();
-            jQuery(result).each(function() {
+            jQuery(result).each(function () {
                 jQuery(document.createElement('option'))
                     .text(this.Text)
                     .appendTo(target);
             });
         });
     };
+
+
+
+
 </script>
 

@@ -22,13 +22,6 @@
         @Html.HiddenFor(model => model.PickupDate)
         @Html.HiddenFor(model => model.NumberOfPackages)
 
-
-
-
-
-
-
-
         <hr />
         <h4>General Info</h4>
         <div class="form-group">
@@ -86,6 +79,22 @@
                 {
                     <span class="field-validation-error text-danger" data-valmsg-for="RecipientShippingAccountID" data-valmsg-replace="true">@ViewBag.ErrorMsg</span>
                 }
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NotifySenderOrNot, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.NotifySenderOrNot, new List<SelectListItem>() { new SelectListItem() { Text = "Yes", Value = "True" }, new SelectListItem() { Text = "No", Value = "False" } }, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.NotifySenderOrNot, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NotifyRecipientOrNot, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.NotifyRecipientOrNot, new List<SelectListItem>() { new SelectListItem() { Text = "Yes", Value = "True" }, new SelectListItem() { Text = "No", Value = "False" } }, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.NotifyRecipientOrNot, "", new { @class = "text-danger" })
             </div>
         </div>
         <hr />
