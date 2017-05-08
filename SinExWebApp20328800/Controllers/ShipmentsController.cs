@@ -618,7 +618,6 @@ namespace SinExWebApp20328800.Controllers
         // POST: Shipments/Pickup/5
         [HttpPost, ActionName("Pickup")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Employee")]
         public async Task<ActionResult> Pickup([Bind(Include = "WaybillId,ReferenceNumber,Origin,Destination,NumberOfPackages,ShipmentPayer,TaxPayer,Duty,Tax,ConfirmOrNot,PickupOrNot,CancelledOrNot,PickupType,PickupDate,RecipientaddressNickname,RecipientFullName,RecipientCompanyName,RecipientDepartmentName,RecipientDeliveryBuilding,RecipientDeliveryStreet,RecipientDeliveryCity,RecipientDeliveryProvince,RecipientDeliveryPostcode,RecipientPhoneNumber,RecipientEmail,ServiceTypeID,PickupLocationNickname,PickupLocation,SenderShippingAccountID,RecipientShippingAccountID,RecipientAddressNickname,DeliveredOrNot,ShipmentTotalAmount,EstimatedShipmentTotalAmount,NotifyRecipientOrNot,NotifySenderOrNot")] Shipment shipment)
         {
 
