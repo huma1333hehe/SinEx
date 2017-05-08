@@ -63,9 +63,9 @@
                             @Html.ValidationMessageFor(a => a.packages[i].size, "", new { @class = "text-danger" })
                         </div>
 
-                        @Html.LabelFor(a => a.packages[i].weight, "Weight(kg): ", new { @class = "control-label col-md-1" })
-                        <div class="col-md-2">
-                            @Html.EditorFor(a => a.packages[i].weight, new { htmlAttributes = new { @class = "form-control", Value = ViewBag.currentWeight } })
+                        @Html.LabelFor(a => a.packages[i].weight, "Weight(kg): ", new { @class = "control-label col-md-1", name =@i })
+                        <div class="col-md-2" name="packages[@i].weight.div">
+                            @Html.EditorFor(a => a.packages[i].weight, new { htmlAttributes = new { @class = "form-control", Value = ViewBag.currentWeight, id="weight" } })
                             @Html.ValidationMessageFor(a => a.packages[i].weight, "", new { @class = "text-danger" })
                         </div>
 
@@ -93,7 +93,7 @@
         $(".addRow").click(function () {
             var rowCount = $('.packageRow').length;
             if (rowCount < 10) {
-                $("#packageList").append('<div class="packageRow col-md-12"><label class="control-label col-md-1">Package Type: </label><div class="col-md-2"><select class="form-control" id="packageTypes_ddl" name="packages[' + rowCount + '].packageType" about="' + rowCount + '" onchange="+OnPackageTypesChange(this)"><option value="">Please select...</option>@foreach (SelectListItem item in Model.param.packageTypes){<option value="@item.Value">@item.Text</option>}</select><span class="field-validation-valid text-danger" data-valmsg-for="packages[' + rowCount + '].packageType" data-valmsg-replace="true"></span></div><label class="control-label col-md-1">Size: </label><div class="col-md-2"><select class="form-control" id="sizes_ddl_' + rowCount + '" name="packages[' + rowCount + '].size">@foreach (SelectListItem item in Model.param.sizes){<option value="@item.Value">@item.Text</option>}</select><span class="field-validation-valid text-danger" data-valmsg-for="packages[' + rowCount + '].size" data-valmsg-replace="true"></span></div><label class="control-label col-md-1">Weight(kg): </label><div class="col-md-2"><input  class="form-control text-box single-line" data-val="true" data-val-number="The field weight must be a number." data-val-required="The weight field is required." id="packages_' + rowCount + '__weight" name="packages[' + rowCount + '].weight" type="text"><span class="field-validation-valid text-danger" data-valmsg-for="packages[' + rowCount + '].weight" data-valmsg-replace="true"></span></div><div class="col-md-3"><i class="fa fa-2x fa-minus-circle remRow" style="color:red" aria-hidden="true"></i></div></div>');
+                $("#packageList").append('<div class="packageRow col-md-12"><label class="control-label col-md-1">Package Type: </label><div class="col-md-2"><select class="form-control" id="packageTypes_ddl" name="packages[' + rowCount + '].packageType" about="' + rowCount + '" onchange="+OnPackageTypesChange(this)"><option value="">Please select...</option>@foreach (SelectListItem item in Model.param.packageTypes){<option value="@item.Value">@item.Text</option>}</select><span class="field-validation-valid text-danger" data-valmsg-for="packages[' + rowCount + '].packageType" data-valmsg-replace="true"></span></div><label class="control-label col-md-1">Size: </label><div class="col-md-2"><select class="form-control" id="sizes_ddl_' + rowCount + '" name="packages[' + rowCount + '].size">@foreach (SelectListItem item in Model.param.sizes){<option value="@item.Value">@item.Text</option>}</select><span class="field-validation-valid text-danger" data-valmsg-for="packages[' + rowCount + '].size" data-valmsg-replace="true"></span></div><label class="control-label col-md-1" for="packages_' + rowCount + '__weight">Weight(kg): </label><div class="col-md-2" name="packages[' + rowCount + '].weight.div"><input  class="form-control text-box single-line" data-val="true" data-val-number="The field weight must be a number." data-val-required="The weight field is required." id="packages_' + rowCount + '__weight" name="packages[' + rowCount + '].weight" type="text"><span class="field-validation-valid text-danger" data-valmsg-for="packages[' + rowCount + '].weight" data-valmsg-replace="true"></span></div><div class="col-md-3"><i class="fa fa-2x fa-minus-circle remRow" style="color:red" aria-hidden="true"></i></div></div>');
             }
             else {
                 alert('The maximum number of packages is 10.');
@@ -132,6 +132,16 @@
 
     function OnPackageTypesChange(ddl) {
         jQuery.getJSON(AppendUrlParamTokens('@Url.Action("GetSizes", "Calculate")', { packageType: ddl.options[ddl.selectedIndex].value }), function (result) {
+            if (ddl.options[ddl.selectedIndex].value == "Envelope") {
+                var destination = $("[name='packages[" + ddl.getAttribute('about') + "].weight.div']");
+                destination.children(".text-box").val('0.0');
+                $("[for='packages_" + ddl.getAttribute('about') + "__weight']").hide();
+                destination.hide();
+            } else {
+                var destination = $("[name='packages[" + ddl.getAttribute('about') + "].weight.div']");
+                $("[for='packages_" + ddl.getAttribute('about') + "__weight']").show();
+                destination.show();
+            }
             var id = "#sizes_ddl_" + ddl.getAttribute('about');
             var target = $(id);
             target.empty();

@@ -15,9 +15,6 @@ using System.Net;
 
 namespace SinExWebApp20328800.Controllers
 {
-    //HU
-
-    //ZHANG
     [Authorize]
     public class AccountController : Controller
     {
