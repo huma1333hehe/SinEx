@@ -150,6 +150,7 @@ namespace SinExWebApp20328800.Controllers
                 m.ServiceType = db.ServiceTypes.Single(a => a.ServiceTypeID == ship.ServiceTypeID).Type;
                 m.TotalPaymentAmount = v.PaymentAmount;
                 m.PaymentDescription = v.PaymentDescription;
+                m.CurrencyCode = v.CurrencyCode;
                 list.Add(m);
             }
             var paymentQuery = list.AsQueryable();

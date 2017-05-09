@@ -49,6 +49,7 @@
                 else
                 {
                     @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                    <p>You are not allowed to change this tracking record into "Delivered", "Returned" or "Lost". You can add such one thing here.</p>@Html.ActionLink("Terminated", "../Trackings/Create", new { WaybillId = ViewBag.WaybillId, terminated = true })
                 }
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>

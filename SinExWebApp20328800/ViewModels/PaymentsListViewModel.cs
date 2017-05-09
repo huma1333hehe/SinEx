@@ -16,5 +16,6 @@ namespace SinExWebApp20328800.ViewModels
         public virtual string ServiceType { get; set; }
         public virtual decimal TotalPaymentAmount { get; set; }
         public virtual string PaymentDescription { get; set; }
+        public virtual string CurrencyCode { get; set; }
     }
 }
