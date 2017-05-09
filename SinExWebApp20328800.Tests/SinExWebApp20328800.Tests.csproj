@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountControllerTests.cs" />
     <Compile Include="Controllers\CurrenciesControllerTests.cs" />
+    <Compile Include="Controllers\ManageControllerTests.cs" />
     <Compile Include="Controllers\PackageTypesControllerTests.cs" />
     <Compile Include="Controllers\ServiceTypesControllerTests.cs" />
     <Compile Include="Controllers\ShipmentsControllerTests.cs" />
