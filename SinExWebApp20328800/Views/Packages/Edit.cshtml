@@ -89,6 +89,7 @@
     @Html.ActionLink("Back to List", "Index", new { WaybillId = ViewBag.WaybillId })
 </div>
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
     function AppendUrlParamTokens(url, params) {
 
@@ -121,4 +122,7 @@
             });
         });
     };
+    $(document).ready(function () {
+        OnPackageTypesChange($('#packageTypes_ddl'));
+    });
 </script>

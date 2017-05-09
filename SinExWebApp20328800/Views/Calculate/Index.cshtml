@@ -15,16 +15,6 @@
         <div class="col-md-12">
             <h3>Shipment</h3>
             <hr />
-            @Html.LabelFor(a => a.origin, "Origin: ", new { @class = "control-label col-md-4" })
-            <div class="col-md-8">
-                @Html.DropDownListFor(a => a.origin, Model.param.origins, "Please select...", new { @class = "form-control", Value = ViewBag.currentOrigin })
-                @Html.ValidationMessageFor(a => a.origin, "", new { @class = "text-danger" })
-            </div>
-            @Html.LabelFor(a => a.destination, "Destination: ", new { @class = "control-label col-md-4" })
-            <div class="col-md-8">
-                @Html.DropDownListFor(a => a.destination, Model.param.destinations, "Please select...", new { @class = "form-control", Value = ViewBag.currentDestination })
-                @Html.ValidationMessageFor(a => a.destination, "", new { @class = "text-danger" })
-            </div>
             @Html.LabelFor(a => a.serviceType, "Service Type: ", new { @class = "control-label col-md-4" })
             <div class="col-md-8">
                 @Html.DropDownListFor(a => a.serviceType, Model.param.serviceTypes, "Please select...", new { @class = "form-control", Value = ViewBag.currentServiceType })

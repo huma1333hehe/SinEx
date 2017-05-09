@@ -67,7 +67,7 @@ namespace SinExWebApp20328800.Controllers
             int WaybillId
             )
         {
-            Shipment shipment = db.Shipments.Single(s => s.WaybillId == WaybillId && s.CancelledOrNot == false && s.ConfirmOrNot == false);
+            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == WaybillId && s.CancelledOrNot == false && s.ConfirmOrNot == false);
             if (shipment == null)
             {
                 return HttpNotFound();

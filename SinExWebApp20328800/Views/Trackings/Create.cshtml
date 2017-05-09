@@ -61,7 +61,7 @@
                 else
                 {
                     @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                    <p>If you want to add tracking record such as "Delivered", "Returned", "Lost", click here. </p>@Html.ActionLink("Terminated", "../Trackings/Create", new { WaybillId = ViewBag.WaybillId, terminated = true })
+                    <p style="color:red">If you want to add tracking record such as "Delivered", "Returned", "Lost", click "Terminated". </p>@Html.ActionLink("Terminated", "../Trackings/Create", new { WaybillId = ViewBag.WaybillId, terminated = true })
                 }
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
