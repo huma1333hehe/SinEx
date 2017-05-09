@@ -23,6 +23,7 @@ namespace SinExWebApp20328800.Controllers.Tests
 
         [TestCase("")]
         [TestCase("1")]
+        [TestCase("100")]
         public void GetCurrentDateTimeTest(string PickupType)
         {
             ShipmentsController controller = new ShipmentsController();
