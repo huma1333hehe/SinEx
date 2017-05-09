@@ -10,11 +10,7 @@
 <p>Only shipments which have been picked up can be tracked here.</p>
 <hr />
 
-@if (ViewBag.ShowResult && !ViewBag.delivered)
-{
-    <p>@Html.ActionLink("Add tracking", "Create", new { WaybillId = ViewBag.shipment })</p>
-    <p>@Html.ActionLink("Terminated", "Create", new { WaybillId = ViewBag.shipment, terminated = true })</p>
-}
+
 
 
 @using (Html.BeginForm("Index", "Trackings", FormMethod.Get))
@@ -31,138 +27,153 @@
                 }
 
             </select>
-            <input class="col-md-2 col-md-offset-1" type="submit" value="Search" />
+            <input class="btn btn-default col-md-2 col-md-offset-1" type="submit" value="Search" />
         </div>
     </div>
 }
 
-@if (ViewBag.ShowResult)
-{
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Shipment.SenderShippingAccount.UserName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.First().Shipment.SenderShippingAccount.UserName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.WaybillId)
-        </dt>
-        <dd>
-            @Model.First().WaybillId.ToString("0000000000000000")
-        </dd>
 
 
-
-        <dt>
-            Delivered to:
-        </dt>
-        <dd>
-            @if (ViewBag.delivered)
-            {
-                @ViewBag.DeliveredTo
-            }
-        </dd>
-        <dt>
-            Delivered at:
-        </dt>
-        <dd>
-            @if (ViewBag.delivered)
-            {
-                @ViewBag.DeliveredAt
-            }
-        </dd>
-        <dt>
-            Status:
-        </dt>
-        <dd>
-            @if (ViewBag.delivered)
-            {
-                @ViewBag.StatusInformation
-            }
-        </dd>
-
-        <dt>
-            Service type:
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.First().Shipment.ServiceType.Type)
-        </dd>
-        <dt>
-            Package type:
-        </dt>
-        <dd>
-            @foreach (var hehe in Model.First().Shipment.Packages)
-            {
-                @hehe.PackageType.Type@:
-            }
-        </dd>
-        <dt>
-            Weight:
-        </dt>
-        <dd>
-            @foreach (var hehe in Model.First().Shipment.Packages)
-            {
-                @hehe.DeclaredWeight@: kg
-            }
-        </dd>
-    </dl>
-}
-
-
-<table class="table">
-    <tr>
-
-        <th>
-            @Html.DisplayNameFor(model => model.Time.Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Time)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Location)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Remark)
-        </th>
-        <th></th>
-    </tr>
+<div class="col-md-12">
 
     @if (ViewBag.ShowResult)
     {
-        foreach (var item in Model)
-        {
-            string datestring = item.Time.ToString("yyyy/MM/dd");
-            string timestring = item.Time.ToString("HH:mm");
-            <tr>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Shipment.SenderShippingAccount.UserName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.First().Shipment.SenderShippingAccount.UserName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.WaybillId)
+            </dt>
+            <dd>
+                @Model.First().WaybillId.ToString("0000000000000000")
+            </dd>
 
-                <td>
-                    @datestring
-                </td>
-                <td>
-                    @timestring
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Remark)
-                </td>
 
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.TrackingID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.TrackingID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.TrackingID })
-                </td>
-            </tr>
-        }
+
+            <dt>
+                Delivered to:
+            </dt>
+            <dd>
+                @if (ViewBag.delivered)
+                {
+                    @ViewBag.DeliveredTo
+                }
+            </dd>
+            <dt>
+                Delivered at:
+            </dt>
+            <dd>
+                @if (ViewBag.delivered)
+                {
+                    @ViewBag.DeliveredAt
+                }
+            </dd>
+            <dt>
+                Status:
+            </dt>
+            <dd>
+                @if (ViewBag.delivered)
+                {
+                    @ViewBag.StatusInformation
+                }
+            </dd>
+
+            <dt>
+                Service type:
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.First().Shipment.ServiceType.Type)
+            </dd>
+            <dt>
+                Package type:
+            </dt>
+            <dd>
+                @foreach (var hehe in Model.First().Shipment.Packages)
+                {
+                    @hehe.PackageType.Type@: &emsp;&emsp;
+            }
+            </dd>
+            <dt>
+                Weight:
+            </dt>
+            <dd>
+                @foreach (var hehe in Model.First().Shipment.Packages)
+                {
+                    if (hehe.PackageType.Type != "Envelope")
+                    {
+                        @hehe.ActualWeight.Value.ToString("F1")@: kg &emsp;
+                    }else
+                    {
+                        <text>N/A&emsp;&emsp;&emsp;</text>
+    }
+}
+            </dd>
+        </dl>
     }
 
+    @if (ViewBag.ShowResult && !ViewBag.delivered)
+    {
+        <p>@Html.ActionLink("Add tracking", "Create", new { WaybillId = ViewBag.shipment })  | @Html.ActionLink("Terminated", "Create", new { WaybillId = ViewBag.shipment, terminated = true })</p>
+    }
+    <table class="table">
+        <tr>
 
-</table>
+            <th>
+                @Html.DisplayNameFor(model => model.Time.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remark)
+            </th>
+            <th></th>
+        </tr>
+
+        @if (ViewBag.ShowResult)
+        {
+            foreach (var item in Model)
+            {
+                string datestring = item.Time.ToString("yyyy/MM/dd");
+                string timestring = item.Time.ToString("HH:mm");
+                <tr>
+
+                    <td>
+                        @datestring
+                    </td>
+                    <td>
+                        @timestring
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Remark)
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.TrackingID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.TrackingID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.TrackingID })
+                    </td>
+                </tr>
+            }
+        }
+
+
+    </table>
+</div>
+

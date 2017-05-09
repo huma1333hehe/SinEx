@@ -28,9 +28,7 @@
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
-        <th>
-            Currency
-        </th>
+
         <th>
             @Html.DisplayNameFor(model => model.Value)
         </th>
@@ -63,10 +61,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Currency.CurrencyCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Value)
+                @Html.DisplayFor(modelItem => item.Currency.CurrencyCode)  @Html.DisplayFor(modelItem => item.Value)
             </td>
             <td>
 
@@ -78,7 +73,7 @@
                 {
                     @item.DeclaredWeight.ToString("F1")
                 }
-                
+
             </td>
             <td>
                 @if (item.ActualWeight != null)

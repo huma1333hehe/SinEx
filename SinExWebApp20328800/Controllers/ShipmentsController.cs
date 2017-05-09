@@ -210,9 +210,10 @@ namespace SinExWebApp20328800.Controllers
         [Authorize(Roles = "Customer")]
         public ActionResult MultipleConfirm()
         {
-            var shipments = db.Shipments.Include(s => s.RecipientShippingAccount).Include(s => s.SenderShippingAccount).Include(s => s.ServiceType).
-                Where(s => s.CancelledOrNot == false && s.ConfirmOrNot == false && s.PickupOrNot == false && s.NumberOfPackages > 0);
             ShippingAccount current_account = GetCurrentAccount();
+            var shipments = db.Shipments.Include(s => s.RecipientShippingAccount).Include(s => s.SenderShippingAccount).Include(s => s.ServiceType).
+                Where(s => s.CancelledOrNot == false && s.ConfirmOrNot == false && s.PickupOrNot == false && s.NumberOfPackages > 0 && s.SenderShippingAccountID== current_account.ShippingAccountId);
+            
             IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
             ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
             return View(shipments.ToList());

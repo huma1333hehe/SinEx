@@ -85,6 +85,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Trackings/Create
+
         public ActionResult Create(int? WaybillId, bool? terminated)
         {
 
