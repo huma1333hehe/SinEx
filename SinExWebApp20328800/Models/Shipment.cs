@@ -69,7 +69,7 @@ namespace SinExWebApp20328800.Models
         [Display(Name = "Cancelled")]
         public virtual bool CancelledOrNot { get; set; }
         [Required]
-        [Display(Name = "Delivered")]
+        [Display(Name = "Terminated")]
         public virtual bool DeliveredOrNot { get; set; }
         [Required]
         [Display(Name ="Notify sender")]
