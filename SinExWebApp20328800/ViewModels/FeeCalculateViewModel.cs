@@ -14,12 +14,6 @@ namespace SinExWebApp20328800.ViewModels
 
         public virtual List<FeeCalculatePackageViewModel> packages { get; set; }
 
-
-
-        [Required]
-        public virtual string origin { get; set; }
-        [Required]
-        public virtual string destination { get; set; }
         [Required]
         public virtual string serviceType { get; set; }
         [Required]
