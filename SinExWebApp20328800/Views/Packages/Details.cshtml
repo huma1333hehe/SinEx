@@ -63,7 +63,14 @@
         </dt>
 
         <dd>
-            @Model.DeclaredWeight.ToString("F1")
+            @if (Model.PackageType.Type == "Envelope")
+            {
+                <text>N/A</text>
+            }
+            else
+            {
+                @Model.DeclaredWeight.ToString("F1")
+            }
         </dd>
 
         <dt>
@@ -71,7 +78,18 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ActualWeight)
+            @if (Model.PackageType.Type == "Envelope")
+            {
+                <text>N/A</text>
+            }
+            else
+            {
+                if (@Model.ActualWeight != null)
+                {
+                    @Model.ActualWeight.Value.ToString("F1")
+
+                }
+            }
         </dd>
 
         <dt>

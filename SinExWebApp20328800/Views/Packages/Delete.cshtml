@@ -36,11 +36,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Shipment.ReferenceNumber)
+            @Html.DisplayNameFor(model => model.PackageTypeSize.TypeSize)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Shipment.ReferenceNumber)
+            @Html.DisplayFor(model => model.PackageTypeSize.TypeSize)
         </dd>
 
         <dt>
@@ -64,7 +64,14 @@
         </dt>
 
         <dd>
-            @Model.DeclaredWeight.ToString("F1")
+            @if (Model.PackageType.Type == "Envelope")
+            {
+                <text>N/A</text>
+            }
+            else
+            {
+                @Model.DeclaredWeight.ToString("F1")
+            }
         </dd>
 
         <dt>
@@ -72,18 +79,39 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ActualWeight)
+            @if (Model.PackageType.Type == "Envelope")
+            {
+                <text>N/A</text>
+            }
+            else
+            {
+                if (@Model.ActualWeight != null)
+                {
+                    @Model.ActualWeight.Value.ToString("F1")
+
+                }
+            }
+        </dd>
+
+        <dt>
+            Estimated Fee
+        </dt>
+
+        <dd>
+            ¥ @Html.DisplayFor(model => model.DeclaredFee)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ActualFee)
+        </dt>
+
+        <dd>
+            @if (Model.ActualFee != null)
+            {
+                <text>¥</text>
+            }
+            @Html.DisplayFor(model => model.ActualFee)
         </dd>
 
     </dl>
-
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index", new { WaybillId = Model.WaybillId })
-        </div>
-    }
 </div>

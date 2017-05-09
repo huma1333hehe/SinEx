@@ -11,11 +11,11 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Shipment.ReferenceNumber)
+            Waybill ID
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Shipment.ReferenceNumber)
+            @Model.Shipment.WaybillId.ToString("0000000000000000")
         </dd>
 
         <dt>
@@ -79,9 +79,7 @@
     </dl>
 </div>
 <p>
-    @if (User.IsInRole("Employee"))
-    {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.TrackingID }) <text>|</text>
-    }
-    @Html.ActionLink("Back to List", "Index")
+
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TrackingID }) <text>|</text>
+    @Html.ActionLink("Back to List", "Index", new { WaybillId = Model.WaybillId })
 </p>
