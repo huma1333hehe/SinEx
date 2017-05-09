@@ -39,9 +39,31 @@ namespace SinExWebApp20328800.Controllers.Tests
         [Test()]
         public void ForgotPasswordTest()
         {
-            AccountController controller = new AccountController();
-
             ViewResult result = controller.ForgotPassword() as ViewResult;
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestCase("testing##")]
+        [TestCase("testing")]
+        [TestCase("")]
+        public void ResetPasswordTest(string code)
+        {
+            Assert.That(controller.ResetPassword(code), Is.Not.Null);
+        }
+
+        [Test()]
+        public void ResetPasswordConfirmationTest()
+        {
+            ViewResult result = controller.ResetPasswordConfirmation() as ViewResult;
+
+            Assert.IsNotNull(result);
+        }
+
+        [Test()]
+        public void ExternalLoginFailureTest()
+        {
+            ViewResult result = controller.ExternalLoginFailure() as ViewResult;
 
             Assert.IsNotNull(result);
         }
