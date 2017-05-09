@@ -69,6 +69,34 @@
                sortOrder = ViewBag.InvoiceAmountSortParm
            })
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SenderReferenceNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SenderFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SenderMailingAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecipientFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecipientDeliveryAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreditCardType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreditCardNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorizationCode)
+            </th>
+
             <th></th>
         </tr>
 
@@ -96,10 +124,71 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CurrencyCode) @Html.DisplayFor(modelItem => item.TotalPaymentAmount)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SenderReferenceNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SenderFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SenderMailingAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecipientFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecipientDeliveryAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreditCardType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreditCardNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthorizationCode)
+                </td>
             </tr>
         }
 
     </table>
+    <p></p>
+    if (ViewBag.ShowShipmentPackages != null)
+    {
+        <table>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Packages.First().PackageType.Type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Packages.First().ActualWeight)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Packages.First().ActualFee)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var hehe in Model.First().Packages)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => hehe.PackageType.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => hehe.ActualWeight) kg
+                    </td>
+                    <td>
+                        RMB @Html.DisplayFor(modelItem => hehe.ActualFee)
+                    </td>
+                </tr>
+            }
+            
+        </table>
+    }
 }
 else
 {

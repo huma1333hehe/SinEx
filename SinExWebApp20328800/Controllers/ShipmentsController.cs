@@ -212,8 +212,8 @@ namespace SinExWebApp20328800.Controllers
         {
             ShippingAccount current_account = GetCurrentAccount();
             var shipments = db.Shipments.Include(s => s.RecipientShippingAccount).Include(s => s.SenderShippingAccount).Include(s => s.ServiceType).
-                Where(s => s.CancelledOrNot == false && s.ConfirmOrNot == false && s.PickupOrNot == false && s.NumberOfPackages > 0 && s.SenderShippingAccountID== current_account.ShippingAccountId);
-            
+                Where(s => s.CancelledOrNot == false && s.ConfirmOrNot == false && s.PickupOrNot == false && s.NumberOfPackages > 0 && s.SenderShippingAccountID == current_account.ShippingAccountId);
+
             IEnumerable<PickupLocation> lala = db.PickupLocations.Select(s => s).Where(s => s.ShippingAccountId == current_account.ShippingAccountId);
             ViewBag.PickupLocationNickname = new SelectList(lala, "Nickname", "Nickname");
             return View(shipments.ToList());
@@ -299,6 +299,7 @@ namespace SinExWebApp20328800.Controllers
             }
             Shipment shipment = db.Shipments.Find(id);
             ViewBag.taxCurrency = shipment.TaxPayer == TaxPayer.Recipient ? db.Destinations.SingleOrDefault(d => d.City == shipment.RecipientShippingAccount.City).CurrencyCode : db.Destinations.SingleOrDefault(d => d.City == shipment.SenderShippingAccount.City).CurrencyCode;
+            ViewBag.dutyandtaxpayercity = shipment.TaxPayer == TaxPayer.Recipient ? shipment.RecipientShippingAccount.City : shipment.SenderShippingAccount.City;
             if (shipment == null)
             {
                 return HttpNotFound();
@@ -508,7 +509,7 @@ namespace SinExWebApp20328800.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
+            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false && s.PickupOrNot == false);
             if (shipment == null)
             {
                 return HttpNotFound();
@@ -545,7 +546,7 @@ namespace SinExWebApp20328800.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
+            Shipment shipment = db.Shipments.SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false && s.PickupOrNot == false && s.ConfirmOrNot == false);
             ViewBag.taxCurrency = shipment.TaxPayer == TaxPayer.Recipient ? db.Destinations.SingleOrDefault(d => d.City == shipment.RecipientShippingAccount.City).CurrencyCode : db.Destinations.SingleOrDefault(d => d.City == shipment.SenderShippingAccount.City).CurrencyCode;
             if (shipment == null)
             {
@@ -599,8 +600,9 @@ namespace SinExWebApp20328800.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Shipment shipment = db.Shipments.Include(s => s.Packages).SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false);
+            Shipment shipment = db.Shipments.Include(s => s.Packages).SingleOrDefault(s => s.WaybillId == id && s.CancelledOrNot == false && s.PickupOrNot == false && s.ConfirmOrNot == true);
             ViewBag.taxCurrency = shipment.TaxPayer == TaxPayer.Recipient ? db.Destinations.SingleOrDefault(d => d.City == shipment.RecipientShippingAccount.City).CurrencyCode : db.Destinations.SingleOrDefault(d => d.City == shipment.SenderShippingAccount.City).CurrencyCode;
+            ViewBag.dutyandtaxpayercity = shipment.TaxPayer == TaxPayer.Recipient ? shipment.RecipientShippingAccount.City : shipment.SenderShippingAccount.City;
             if (shipment == null)
             {
                 return HttpNotFound();
@@ -747,9 +749,10 @@ namespace SinExWebApp20328800.Controllers
 
                 if (shipment.NotifyRecipientOrNot)
                 {
-                    var body_pickup = "<p>Dear user {0}: </p><p>The shipment with the following details has been picked up.</p><p>Shipment waybill Id: {1}</p><p>Pick up remark: {2}</p><p>Sender name: {3}</p><p>Sender address: {4}</p><p>Pick up date: {5}</p>";
+                    var body_pickup = "<p>Dear user {0}: </p><p>The shipment with the following details has been picked up.It's now on tis way to meet you in {1}</p><p>Shipment waybill Id: {2}</p><p>Pick up remark: {3}</p><p>Sender name: {4}</p><p>Sender address: {5}</p><p>Pick up date: {6}</p>";
                     var message_pickup = new MailMessage();
                     string Username = shipment.RecipientShippingAccountID == shipment.SenderShippingAccountID ? shipment.RecipientFullName : shipment.RecipientShippingAccount.UserName;
+                    string RecipientCity = shipment.RecipientShippingAccountID == shipment.SenderShippingAccountID ? shipment.RecipientDeliveryCity : shipment.RecipientShippingAccount.City;
                     string WaybillId = shipment.WaybillId.ToString("000000000000");
                     string Notification = tracking.Remark;
                     string SenderName = "";
@@ -767,7 +770,7 @@ namespace SinExWebApp20328800.Controllers
                     string PickupDate = ((DateTime)(shipment.PickupDate)).ToString("yyyy/MM/dd HH:mm");
                     message_pickup.To.Add(new MailAddress(shipment.RecipientShippingAccountID == shipment.SenderShippingAccountID ? shipment.RecipientEmail : shipment.RecipientShippingAccount.EmailAddress));
                     message_pickup.Subject = "Pick up Notification Email";
-                    message_pickup.Body = String.Format(body_pickup, Username, WaybillId, Notification, SenderName, SenderAddress, PickupDate);
+                    message_pickup.Body = String.Format(body_pickup, Username, RecipientCity, WaybillId, Notification, SenderName, SenderAddress, PickupDate);
                     message_pickup.IsBodyHtml = true;
                     using (var smtp = new SmtpClient())
                     {
@@ -781,7 +784,7 @@ namespace SinExWebApp20328800.Controllers
 
                 foreach (Payment lala in shipment.Payments)
                 {
-                    var body = "<p>Dear user {0}: </p><p>You have just paid for a shipment. Here are the details.</p><p>Shipping account number: {1}</p><p>Shipment waybill Id: {2}</p><p>Ship(pickup) date: {3}</p><p>Service type: {4}</p><p>Sender's reference number: {5}</p><p>Sender full name: {6}</p><p>Sender mailing address: {7}</p><p>Recipient full name: {8}</p><p>Recipient delivery address: {9}</p><p>Credit card type: {10}</p><p>Credit card number(last four digits only): {11}</p><p>Authorization code: {12}</p><p>Total amount payable: {13}</p><p>Currency you are using: {14}</p><p>Payment type: {15}</p>";
+                    var body = "<p>Dear user {0}: </p><p>You have just paid for a shipment. Here are the details.</p><p>Shipping account number: {1}</p><p>Shipment waybill Id: {2}</p><p>Ship(pickup) date: {3}</p><p>Service type: {4}</p><p>Sender's reference number: {5}</p><p>Sender full name: {6}</p><p>Sender mailing address: {7}</p><p>Recipient full name: {8}</p><p>Recipient delivery address: {9}</p><p>Credit card type: {10}</p><p>Credit card number(last four digits only): {11}</p><p>Authorization code: {12}</p><p>Total amount payable: {13} {14}</p><p>Payment type: {15}</p><p>The detailed packages information of this shipment can be found below: </p>";
                     var message = new MailMessage();
                     ShippingAccount lala_account = db.ShippingAccounts.Single(a => a.UserName == lala.UserName);
                     Shipment lala_shipment = db.Shipments.Single(a => a.WaybillId == lala.WaybillID);
@@ -808,8 +811,8 @@ namespace SinExWebApp20328800.Controllers
                     string CreditCardType = lala_account.Type;
                     string CreditCardNumber = lala_account.Number.Substring(lala_account.Number.Length - 4);
                     string AuthorizationCode = lala.AuthorizationCode;
-                    string TotalAmountPayable = lala.PaymentAmount.ToString("0.00");
                     string CurrencyCode = lala.CurrencyCode;
+                    string TotalAmountPayable = lala.PaymentAmount.ToString("0.00");
                     string PaymentType = lala.PaymentDescription;
 
                     var body_package = "";
@@ -819,12 +822,12 @@ namespace SinExWebApp20328800.Controllers
                         string PackageType = haha.PackageType.Type;
                         string ActualWeight = haha.ActualWeight.ToString();
                         string Cost = ((decimal)(CalculatePackageFee(haha) * db.Currencies.Single(a => a.CurrencyCode == lala.CurrencyCode).ExchangeRate)).ToString("0.00");
-                        body_package += ("<p> Package No. " + index.ToString() + "</p>" + "<p>Package type: " + PackageType + "</p>" + "<p>Actual weight: " + ActualWeight + " kg</p>" + "<p>Cost: " + Cost + "</p>");
+                        body_package += ("<p> Package No. " + index.ToString() + "</p>" + "<p>Package type: " + PackageType + "</p>" + "<p>Actual weight: " + ActualWeight + " kg</p>" + "<p>Cost: " + CurrencyCode + " " + Cost + "</p>");
                         index++;
                     }
                     message.To.Add(new MailAddress(db.ShippingAccounts.Single(a => a.UserName == lala.UserName).EmailAddress));
                     message.Subject = "Payment Notification and Invoice";
-                    message.Body = String.Format(body, ShippingAccountUsername, ShippingAccountNumber, ShipmentWaybillID, ShipDate, ServiceType, SenderReferenceNumber, SenderFullName, SenderMailingAddress, RecipientFullName, RecipientDeliveryAddress, CreditCardType, CreditCardNumber, AuthorizationCode, TotalAmountPayable, CurrencyCode, PaymentType) + body_package;
+                    message.Body = String.Format(body, ShippingAccountUsername, ShippingAccountNumber, ShipmentWaybillID, ShipDate, ServiceType, SenderReferenceNumber, SenderFullName, SenderMailingAddress, RecipientFullName, RecipientDeliveryAddress, CreditCardType, CreditCardNumber, AuthorizationCode, CurrencyCode, TotalAmountPayable, PaymentType) + body_package;
                     message.IsBodyHtml = true;
                     using (var smtp = new SmtpClient())
                     {

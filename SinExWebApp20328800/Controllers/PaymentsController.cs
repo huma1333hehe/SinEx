@@ -151,6 +151,29 @@ namespace SinExWebApp20328800.Controllers
                 m.TotalPaymentAmount = v.PaymentAmount;
                 m.PaymentDescription = v.PaymentDescription;
                 m.CurrencyCode = v.CurrencyCode;
+
+                ShippingAccount lala_account = db.ShippingAccounts.Single(a => a.UserName == v.UserName);
+                Shipment lala_shipment = db.Shipments.Single(a => a.WaybillId == v.WaybillID);
+                m.SenderReferenceNumber = lala_shipment.ReferenceNumber;
+                m.SenderFullName = "";
+                if (lala_shipment.SenderShippingAccount is PersonalShippingAccount)
+                {
+                    PersonalShippingAccount temp = (PersonalShippingAccount)db.ShippingAccounts.Single(a => a.ShippingAccountId == lala_shipment.SenderShippingAccountID);
+                    m.SenderFullName = temp.FirstName + temp.LastName;
+                }
+                else
+                {
+                    BusinessShippingAccount temp = (BusinessShippingAccount)db.ShippingAccounts.Single(a => a.ShippingAccountId == lala_shipment.SenderShippingAccountID);
+                    m.SenderFullName = temp.ContactPersonName;
+                }
+                m.SenderMailingAddress = lala_shipment.SenderShippingAccount.ProvinceCode + ", " + lala_shipment.SenderShippingAccount.City + ", " + lala_shipment.SenderShippingAccount.StreetInformation + ", " + lala_shipment.SenderShippingAccount.BuildingInformation;
+                m.RecipientFullName = lala_shipment.RecipientFullName;
+                m.RecipientDeliveryAddress = lala_shipment.RecipientDeliveryProvince + ", " + lala_shipment.RecipientDeliveryCity + ", " + lala_shipment.RecipientDeliveryStreet + ", " + lala_shipment.RecipientDeliveryBuilding;
+                m.CreditCardType = lala_account.Type;
+                m.CreditCardNumber = lala_account.Number.Substring(lala_account.Number.Length - 4);
+                m.AuthorizationCode = v.AuthorizationCode;
+
+                m.Packages = lala_shipment.Packages;
                 list.Add(m);
             }
             var paymentQuery = list.AsQueryable();
@@ -239,6 +262,13 @@ namespace SinExWebApp20328800.Controllers
                     break;
             }
             PaymentReport.PaymentList = paymentQuery.ToPagedList(pageNumber, pageSize);
+            if (ShippingAccountId != null && ShippingAccountId != 0 && WaybillId != 0 && WaybillId != null)
+            {
+                ViewBag.ShowShipmentPackages = true;
+            }else
+            {
+                ViewBag.ShowShipmentPackages = null;
+            }
             return View(PaymentReport);
         }
 

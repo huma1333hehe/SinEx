@@ -51,7 +51,7 @@
             <hr />
             <h4>Input Duty and Tax Fee</h4>
 
-            Currency: @ViewBag.taxCurrency (the currency of the city in which the tax and duty payer is located)
+            <p style="color:red">Currency: @ViewBag.taxCurrency. Please make sure the duty and tax amount is in correct currency code! This is because the payer for duty and tax lives in @ViewBag.dutyandtaxpayercity</p>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Duty, htmlAttributes: new { @class = "control-label col-md-2" })
