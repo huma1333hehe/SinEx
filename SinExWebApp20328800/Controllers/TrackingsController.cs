@@ -85,7 +85,7 @@ namespace SinExWebApp20328800.Controllers
         }
 
         // GET: Trackings/Create
-        [Authorize(Roles = "Employee")]
+
         public ActionResult Create(int? WaybillId, bool? terminated)
         {
 
