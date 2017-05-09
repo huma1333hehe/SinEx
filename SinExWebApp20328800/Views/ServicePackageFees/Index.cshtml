@@ -10,7 +10,7 @@
 @using (Html.BeginForm("index", "ServicePackageFees", FormMethod.Get))
 {
     <div class="form-group">
-        <div class="col-md-8">
+        <div class="col-md-7">
             @Html.DropDownListFor(a => a.CurrencyCode, new SelectList(new List<string> { "CNY", "HKD", "TWD", "MOP" }).ToList(), new { @Value = ViewBag.currentCurrencyCode })
             <input type="submit" value="Change Currency" />
         </div>
