@@ -36,6 +36,16 @@ namespace SinExWebApp20328800.Controllers.Tests
             Assert.That(result, Is.Not.Null);
         }
 
+        [Test()]
+        public void ForgotPasswordTest()
+        {
+            AccountController controller = new AccountController();
+
+            ViewResult result = controller.ForgotPassword() as ViewResult;
+
+            Assert.IsNotNull(result);
+        }
+
         [OneTimeTearDown]
         public void TestTearDown()
         {
